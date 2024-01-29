@@ -25,10 +25,15 @@ const Model = () => {
   };
 
   const sbox = {
-
-  };
+    width: '60px', 
+    height: '30px', 
+    backgroundColor: 'lightgreen', 
+    borderRadius: '5px', 
+    marginLeft: '5px', 
+    };
+  
   const smallBoxStyle = {
-    width: '90%',
+    width: '80%',
     height: '30px',
     backgroundColor: 'lightblue',
     border: '1px solid gray',
@@ -36,7 +41,8 @@ const Model = () => {
     textAlign: 'center',
     lineHeight: '30px',
     margin: '5px',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    marginTop: '0'
   };
   
   const handleSmallBoxClick = (value) => {
@@ -44,22 +50,25 @@ const Model = () => {
   };
 
   const renderSmallBoxes = () => {
-    const groups = Array.from({ length: 4 }, (_, groupIndex) =>
-      Array.from({ length: 10 }, (_, index) => `TAG ${groupIndex * 10 + index + 1}`)
-    );
+  const groups = Array.from({ length: 4 }, (_, groupIndex) =>
+    Array.from({ length: 10 }, (_, index) => `TAG ${groupIndex * 10 + index + 1}`)
+  );
 
-    const groupDivs = groups.map((group, groupIndex) => (
-      <div key={groupIndex} style={rectangleStyle}>
-        {group.map((text, index) => (
-          <div key={index} style={smallBoxStyle} onClick={() => handleSmallBoxClick(text)}>
+  const groupDivs = groups.map((group, groupIndex) => (
+    <div key={groupIndex} style={rectangleStyle}>
+      {group.map((text, index) => (
+        <div key={index} style={{ display: 'flex' }}>
+          <div style={smallBoxStyle} onClick={() => handleSmallBoxClick(text)}>
             {text}
           </div>
-        ))}
-      </div>
-    ));
+          <div style={sbox}></div>
+        </div>
+      ))}
+    </div>
+  ));
 
-    return groupDivs;
-  };
+  return groupDivs;
+};
 
   return (
     <div>
