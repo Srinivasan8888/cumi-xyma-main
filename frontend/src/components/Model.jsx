@@ -9,13 +9,24 @@ const Model = () => {
     border: '2px solid gray',
     borderRadius: '10px',
     display: 'flex',
-    flexWrap: 'wrap',
+    flexDirection: 'column',  // Change flex direction to column
     justifyContent: 'space-between',
     padding: '10px',
     overflowX: 'auto',
     direction: 'rtl',
+
+    // Additional styles for mobile view
+    '@media (max-width: 600px)': {
+      width: '100%',
+      overflowX: 'auto',
+      flexDirection: 'row',
+      whiteSpace: 'nowrap',
+    },
   };
 
+  const sbox = {
+
+  };
   const smallBoxStyle = {
     width: '90%',
     height: '30px',
@@ -27,36 +38,33 @@ const Model = () => {
     margin: '5px',
     cursor: 'pointer'
   };
-
+  
   const handleSmallBoxClick = (value) => {
     alert(`Small box ${value} clicked!`);
   };
 
   const renderSmallBoxes = () => {
-    const texts = Array.from({ length: 10 }, (_, index) => `TAG ${index + 1}`);
-    const smallBoxes = texts.map((text, index) => (
-      <div key={index} style={smallBoxStyle} onClick={() => handleSmallBoxClick(text)}>
-        {text}
+    const groups = Array.from({ length: 4 }, (_, groupIndex) =>
+      Array.from({ length: 10 }, (_, index) => `TAG ${groupIndex * 10 + index + 1}`)
+    );
+
+    const groupDivs = groups.map((group, groupIndex) => (
+      <div key={groupIndex} style={rectangleStyle}>
+        {group.map((text, index) => (
+          <div key={index} style={smallBoxStyle} onClick={() => handleSmallBoxClick(text)}>
+            {text}
+          </div>
+        ))}
       </div>
     ));
-    return smallBoxes;
+
+    return groupDivs;
   };
 
   return (
     <div>
       <div className='flex gap-4 items-center justify-center w-full overflow-x-auto md:overflow-x-hidden'>
-        <div className='flex justify-center' style={rectangleStyle}>
-          {renderSmallBoxes()}
-        </div>
-        <div className='flex justify-center' style={rectangleStyle}>
-          {renderSmallBoxes()}
-        </div>
-        <div className='flex justify-center' style={rectangleStyle}>
-          {renderSmallBoxes()}
-        </div>
-        <div className='flex justify-center' style={rectangleStyle}>
-          {renderSmallBoxes()}
-        </div>
+        {renderSmallBoxes()}
       </div>
     </div>
   );
