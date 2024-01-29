@@ -33,7 +33,7 @@ const Model = () => {
   };
 
   const renderSmallBoxes = () => {
-    const texts = Array.from({ length: 40 }, (_, index) => `TAG ${index + 1}`);
+    const texts = Array.from({ length: 10 }, (_, index) => `TAG ${index + 1}`);
     const smallBoxes = texts.map((text, index) => (
       <div key={index} style={smallBoxStyle} onClick={() => handleSmallBoxClick(text)}>
         {text}
