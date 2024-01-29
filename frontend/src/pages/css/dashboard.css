@@ -1,0 +1,30 @@
+/* dashboard.css */
+
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  text-decoration: none;
+  /* Optionally, you can add more styling here, e.g., background-color, height, etc. */
+}
+
+.dashboard_dec{
+  text-decoration: none;
+}
+
+.main-content {
+  flex-grow: 1;
+  overflow: auto; /* Add this if you want the content to be scrollable */
+  padding: 20px; /* Adjust the padding as needed */
+  box-sizing: border-box;
+  text-decoration: none;
+  /* Optionally, you can add padding, margins, or other styling here */
+}
+
+/* dashboard.css */
+
+body,
+html {
+  height: 100%;
+  margin: 0;
+  text-decoration: none;
+}

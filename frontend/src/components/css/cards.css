@@ -1,0 +1,13 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Adjust the alpha (0.5) for the desired level of blur */
+  backdrop-filter: blur(5px); /* Adjust the blur radius (5px) as needed */
+  z-index: 49; /* Ensure the backdrop is below the modal (z-50) */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
