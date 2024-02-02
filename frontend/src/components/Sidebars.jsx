@@ -43,7 +43,7 @@ const Sidebars = () => {
                 className="flex items-center dashboard_dec  p-2 text-white rounded-lg hover:bg-gray-700 group transition-all duration-300"
               >
                 <SlGraph className="w-7 h-7" />
-                <span className="flex-1 ms-3 whitespace-nowrap">Analytics</span>
+                <span className="flex-1 ms-3 whitespace-nowrap">Graph</span>
               </a>
             </li>
             <li>

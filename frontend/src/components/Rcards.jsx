@@ -65,10 +65,10 @@ const Rcards = () => {
             <div className="text-sm font-medium text-gray-600 text-center sm:text-left">
               <p>Thickness</p>
               <p className="text-lg font-bold text-gray-700 mt-1">37.35%</p>
-              <p className="text-lg font-bold text-gray-600 mt-2 sm:mt-0">
-                15.35/77 mm
-              </p>
             </div>
+            <p className="text-lg font-bold text-gray-600 mt-2 sm:mt-0 ">
+              15.35/77 mm
+            </p>
           </div>
         </div>
       </div>

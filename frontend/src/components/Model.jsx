@@ -51,8 +51,10 @@ const Model = () => {
 
   const renderSmallBoxes = () => {
   const groups = Array.from({ length: 4 }, (_, groupIndex) =>
-    Array.from({ length: 10 }, (_, index) => `TAG ${groupIndex * 10 + index + 1}`)
+    Array.from({ length: 10 }, (_, index) => `Device ${groupIndex * 10 + index + 1}`)
   );
+
+  
 
   const groupDivs = groups.map((group, groupIndex) => (
     <div key={groupIndex} style={rectangleStyle}>

@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { AppBar, Box, Grid, Typography } from "@mui/material";
 import { IoNotificationsCircleOutline, IoAlertCircleSharp } from "react-icons/io5";
 import { Menu, Transition } from "@headlessui/react";
-import Button from "react-bootstrap/Button";
 
 const Navbar = () => {
   function classNames(...classes) {
@@ -18,7 +17,7 @@ const Navbar = () => {
         borderRadius: "75px",
         boxShadow: 3,
         marginTop: "1px",
-        marginBottom: "30px",
+        marginBottom: "20px",
       }}
     >
       <AppBar
@@ -33,7 +32,7 @@ const Navbar = () => {
         >
            <div className="flex items-center"> {/* Container for icon and text */}
             <IoAlertCircleSharp className="text-xl text-green-500 align-items-start" />
-            <p className="ml-2 mt-2 text-green-500 font-bold text-base">Active</p>
+            <p className="ml-2 mt-3 text-green-500 font-bold text-base">Active</p>
           </div>
 
           <Typography

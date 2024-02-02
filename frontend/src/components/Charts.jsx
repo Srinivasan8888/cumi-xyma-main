@@ -66,7 +66,7 @@ const Charts = () => {
       className="flex items-center bg-gray-50 shadow-md rounded-lg"
       style={{ width: "100%", height: "90.5%" }}
     >
-      <Line {...config} className="mt-5"/>
+      <Line {...config} className="mt-1"/>
     </div>
   );
 };
