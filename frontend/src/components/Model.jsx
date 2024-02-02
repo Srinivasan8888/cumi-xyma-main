@@ -2,6 +2,8 @@ import React from 'react';
 
 const Model = () => {
 
+  
+
   const rectangleStyle = {
     width: '320px',
     height: '430px',
@@ -30,6 +32,7 @@ const Model = () => {
     backgroundColor: 'lightgreen', 
     borderRadius: '5px', 
     marginLeft: '5px', 
+    textAlign: 'center'
     };
   
   const smallBoxStyle = {
@@ -54,7 +57,9 @@ const Model = () => {
     Array.from({ length: 10 }, (_, index) => `Device ${groupIndex * 10 + index + 1}`)
   );
 
-  
+  const dataArray = [
+    1, 15, 22, 8, 37, 4, 30, 12, 26, 18, 9, 35, 3, 20, 7, 29, 14, 31, 25, 10, 36, 2, 19, 5, 28, 13, 32, 23, 6, 38, 17, 27, 11, 33, 16, 39, 21, 34, 24, 40
+  ];
 
   const groupDivs = groups.map((group, groupIndex) => (
     <div key={groupIndex} style={rectangleStyle}>
@@ -63,7 +68,7 @@ const Model = () => {
           <div style={smallBoxStyle} onClick={() => handleSmallBoxClick(text)}>
             {text}
           </div>
-          <div style={sbox}></div>
+          <div style={sbox}> {dataArray[index]} </div>
         </div>
       ))}
     </div>
