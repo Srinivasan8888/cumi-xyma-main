@@ -5,6 +5,7 @@ import Login from '../src/pages/Login';
 import Dashboard from '../src/pages/Dashboard';
 import Signup from './pages/Signup';
 import Graph from './pages/Graph';
+import Test from './pages/Test';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path='/signup' element={<Signup/>}/>
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/graph' element={<Graph/>}/>
+          <Route path='/test' element={<Test/>}/>
         </Routes>
       </BrowserRouter>
     

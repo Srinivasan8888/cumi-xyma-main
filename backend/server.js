@@ -1,71 +1,36 @@
-const express = require("express");
-const mongoose = require('mongoose');
-// const Level = require("../backend/model/level");
-const Asset = require("../backend/model/asset");
-// const apiRoute = require("./api/data");
-mongoose.set('bufferCommands', false);
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import router from "./routes/router.js";
 
-const cors = require('cors');
-const app = express();
+const app = express(); // Use `express()` instead of `Express()`
+
 const connect = async () => {
-    try {
-        await mongoose.connect('mongodb://0.0.0.0:27017/cumi');
-        console.log('Mongodb Connected..');
-
-        // Save the document after the connection is established
-        // const levels = new Level({ id: "91SR01000001", level: 55, battery: 56, signal: 30, lat: 65.0987, lon: 69.5785, obt: 23 });
-        // await levels.save();
-        // console.log('level value updated');
-
-        // Level.find({}).then((ans) => {
-        //     console.log(ans);
-        // });
-
-        //Assets type oda 
-
-        // const asset = new Asset({ id: "91SR01000003", tcylinder: "R410A(NonFlammable)", fcylinder: 84, ecylinder: 36, gasweigth: 48, status: "Inactive" });
-        // await asset.save();
-        // console.log('Asset value updated');
-
-        // Asset.find({}).then((ans) => {
-        //     console.log(ans);
-        // });
-
-    } catch (error) {
-        console.error('Error:', error.message);
-    }
+  try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/cumi");
+    console.log("Mongodb Connected..");
+  } catch (error) {
+    throw error;
+  }
 };
 
-app.use(express.json());
-app.use(cors());
-
-// app.get("/leveldata", async(req, res) =>{
-//     try{
-//         Level.find({}).then((ans) => {
-//             res.json(ans);
-//         })
-//     }
-//     catch(error){
-//         console.error('Error:', error.message);
-//     }
-// })
-
-// app.get("/assetdata", async(req, res) =>{
-//     try{
-//         Asset.find({}).then((ans) => {
-//             res.json(ans);
-//         })
-//     }
-//     catch(error){
-//         console.error('Error:', error.message);
-//     }
-// })
-
-app.listen(4000, async () => {
-    console.log('Server Started on port 4000..');
-    await connect();  // Connect to MongoDB after the server starts
+mongoose.connection.on("connected", () => {
+  console.log("Connected to MongoDB!");
 });
 
-mongoose.connection.on('disconnected', () => {
-    console.log('Mongodb disconnected...');
+mongoose.connection.on("disconnected", () => {
+  console.log("Mongodb disconnected...");
+});
+
+//middlewares
+//for json
+app.use(express.json()); // Use `express.json()` instead of `Express.json()`
+// Enable CORS for all routes
+app.use(cors());
+
+app.use("/sensor", router);
+
+app.listen(4000, () => {
+  connect();
+  console.log("Server Started..");
 });

@@ -1,15 +1,33 @@
 import { useState } from 'react';
 import { Switch } from '@headlessui/react';
 
-function Toggle() {
-  const [enabled, setEnabled] = useState(false);
+function Toggle({ onToggle }) {
+  const [enabled, setEnabled] = useState(true);
+  const [buttonEnabled, setButtonEnabled] = useState(true);
+  
+  const handleToggleChange = () => {
+    setEnabled(!enabled);
+    onToggle(enabled); // Passes the current state of the toggle to the parent component
+    setButtonEnabled(!enabled);
+  };
+
+  // const handleToggle = () => {
+  //   setEnabled(!enabled);
+  //   if (!enabled) {
+  //     alert('Toggle turned on');
+  //   } else {
+  //     alert('Toggle turned off');
+  //   }
+  // };
 
   return (
     <Switch.Group>
       <div className="flex items-center mb-4 mt-4">
         <Switch
           checked={enabled}
-          onChange={setEnabled}
+          // onChange={handleToggle}
+          onChange={handleToggleChange}
+          // onChange={setEnabled}
           className={`${
             enabled ? 'bg-blue-600' : 'bg-gray-200'
           } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}

@@ -10,8 +10,8 @@ import Model from "./Model";
 const Card = () => {
   return (
     <div style={{ width: "100%" }}>
-      <div className="grid gap-2 items-stretch grid-rows-2 md:grid md:grid-rows-2 sm:grid sm:grid-rows-2">
-          <div className="sm:grid sm:grid-cols-2 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2">
+      <div className="grid gap-2 items-stretch grid-rows-2 md:grid md:grid-rows-2 sm:grid sm:grid-rows-1">
+          <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2">
             
             <div>
               <Model />
@@ -23,13 +23,13 @@ const Card = () => {
 
           </div>
 
-          <div className="sm:grid sm:grid-cols-2 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2">
+          <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2">
             
             <div>
               <RTables />
             </div>
 
-            <div className="ml-5">
+            <div className="ml-5 ">
               <Charts />
             </div>
 

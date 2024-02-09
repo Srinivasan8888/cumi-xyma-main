@@ -15,10 +15,10 @@ const Charts = () => {
   };
 
   const data = {
-    labels: ["May1", "May 8", "May 9", "May 10", "May 11", "May 12"],
+    labels: ["May1", "May 8", "May 9", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "may 16"],
     datasets: [
       {
-        data: [3, 4, 2, 2, 11, 12, 14],
+        data: [3, 4, 2, 2, 11, 12, 14, 13, 14, 55, 88],
         borderColor: CHART_COLORS.red,
         fill: false,
         cubicInterpolationMode: "monotone",
@@ -63,10 +63,10 @@ const Charts = () => {
 
   return (
     <div
-      className="flex items-center bg-gray-50 shadow-md rounded-lg"
-      style={{ width: "100%", height: "90.5%" }}
+      className="flex items-center bg-gray-50 shadow-md rounded-lg "
+      style={{ width: "100%", height: "100%" }}
     >
-      <Line {...config} className="mt-1"/>
+      <Line {...config} className="mt-2"/>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const assetSchema = new mongoose.Schema({
@@ -9,16 +9,15 @@ const assetSchema = new mongoose.Schema({
         type: String,
     },
     devicetemp: {
-        type: Number,
+        type: String,
     },
     signal: {
-        type: Number,
+        type: String,
     },
     batterylevel: {
-        type: Number,
+        type: String,
     }
-});
+},{timestamps: true}); 
 
-const Asset = mongoose.model('Asset', assetSchema);
 
-module.exports = Asset;
+export default mongoose.model('asset', assetSchema)
