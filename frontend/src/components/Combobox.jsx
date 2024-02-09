@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/solid";
 import Toggle from "../components/Toggle";
-import CircularProgress from '@mui/material/CircularProgress';
+
 
 export default function Combobox({ onChartData }) {
   const [infoGraph, setInfoGraph] = useState([]);
@@ -54,6 +54,8 @@ export default function Combobox({ onChartData }) {
     };
 
     apidate();
+    const intervalId = setInterval(apidate, 1000);
+    return () => clearInterval(intervalId); 
   }, [selectedId, valuebat, valuethick]);
 
   const handleBatteryToggle = () => {

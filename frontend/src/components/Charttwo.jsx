@@ -2,22 +2,23 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 
 const Charttwo = ({ chartData }) => {
-  const maxBatteryLevel = Math.max(...chartData.map(dataItem => parseFloat(dataItem.batterylevel)));
-  const maxThickness = Math.max(...chartData.map(dataItem => parseFloat(dataItem.thickness)));
+  const reversedChartData = [...chartData].reverse(); // Reverse the chartData array
+  const maxBatteryLevel = Math.max(...reversedChartData.map(dataItem => parseFloat(dataItem.batterylevel)));
+  const maxThickness = Math.max(...reversedChartData.map(dataItem => parseFloat(dataItem.thickness)));
 
   const data = {
-    labels: chartData.map(dataItem => dataItem.createdAt),
+    labels: reversedChartData.map(dataItem => dataItem.createdAt),
     datasets: [
       {
         label: "Battery",
-        data: chartData.map(dataItem => parseFloat(dataItem.batterylevel)),
+        data: reversedChartData.map(dataItem => parseFloat(dataItem.batterylevel)),
         borderColor: "rgba(255, 99, 132, 1)",
         backgroundColor: "rgba(255, 99, 132, 0.2)",
         fill: false,
       },
       {
         label: "Thickness",
-        data: chartData.map(dataItem => parseFloat(dataItem.thickness)),
+        data: reversedChartData.map(dataItem => parseFloat(dataItem.thickness)),
         borderColor: "rgba(54, 162, 235, 1)",
         backgroundColor: "rgba(54, 162, 235, 0.2)",
         fill: false,
@@ -49,7 +50,6 @@ const Charttwo = ({ chartData }) => {
       </div>
     </div>
   );
-  
 };
 
 export default Charttwo;
