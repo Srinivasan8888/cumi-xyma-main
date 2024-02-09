@@ -2,40 +2,22 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/solid";
 import Toggle from "../components/Toggle";
+import CircularProgress from '@mui/material/CircularProgress';
 
-export default function Combobox() {
+export default function Combobox({ onChartData }) {
   const [infoGraph, setInfoGraph] = useState([]);
-  const [idval, setIdval] = useState([]);
-  const [selectid, setselectid] = useState(null);
   const [selectedCylinder, setSelectedCylinder] = useState(null);
   const [batteryEnabled, setBatteryEnabled] = useState(false);
   const [thicknessEnabled, setThicknessEnabled] = useState(false);
-  const [deviceNumberForEffect, setDeviceNumberForEffect] = useState("xy001"); // Initialize with default value
   const [selectedId, setSelectedId] = useState("xy001"); // Initialize with default value
-
-  const handleBatteryToggle = () => {
-    setBatteryEnabled(!batteryEnabled); 
-    if (!batteryEnabled) {
-      console.log("Battery toggle disabled, value: 0");
-    } else {
-      console.log("Battery toggle enabled, value: 1");
-    }
-  };
-
-  const handleThicknessToggle = () => {
-    setThicknessEnabled(!thicknessEnabled); 
-    if (!thicknessEnabled) {
-      console.log("Battery toggle disabled, value: 0");
-    } else {
-      console.log("Battery toggle enabled, value: 1");
-    }
-  };
+  const [valuebat, setValueBat] = useState("true");
+  const [valuethick, setValueThick] = useState("true");
 
   const fetchData = async () => {
     try {
       const response = await fetch("http://localhost:4000/sensor/data");
       let infoVal = await response.json();
-      infoVal = infoVal.reverse(); 
+      infoVal = infoVal.reverse();
       setInfoGraph(infoVal);
       if (infoVal.length > 0) {
         setSelectedCylinder(infoVal[0].id);
@@ -51,37 +33,38 @@ export default function Combobox() {
 
   const handleCylinderChange = (cylinderId) => {
     setSelectedCylinder(cylinderId);
-    setSelectedId(cylinderId); 
+    setSelectedId(cylinderId);
     console.log("Selected Cylinder ID:", cylinderId);
   };
 
-  
   useEffect(() => {
     const apidate = async () => {
-      if (deviceNumberForEffect !== null && selectedId !== null) {
+      if (selectedId !== null) {
         try {
-          const response = await fetch(`http://localhost:4000/sensor/getdata/${selectedId}`);
+          const response = await fetch(
+            `http://localhost:4000/sensor/getdata/${selectedId}?battery=${valuebat}&thickness=${valuethick}`
+          );
           const data = await response.json();
           console.log("Data:", data);
-          setIdval(data); 
-          if (data && data.length > 0) {
-            setselectid(data[0].id); 
-            console.log("Selected ID:", data[0].id);
-          }
+          onChartData(data); // Pass chart data to parent component
         } catch (error) {
-          console.error('Error fetching data:', error);
+          console.error("Error fetching data:", error);
         }
       }
     };
-  
+
     apidate();
-    // const intervalId = setInterval(apidate, 1000);
-    // return () => clearInterval(intervalId);
-  }, [deviceNumberForEffect, selectedId]);
-  
-  
-  
-  
+  }, [selectedId, valuebat, valuethick]);
+
+  const handleBatteryToggle = () => {
+    setBatteryEnabled(!batteryEnabled);
+    setValueBat(batteryEnabled ? "true" : "false");
+  };
+
+  const handleThicknessToggle = () => {
+    setThicknessEnabled(!thicknessEnabled);
+    setValueThick(thicknessEnabled ? "true" : "false");
+  };
 
   return (
     <div className="relative flex justify-center items-center mt-24 sm:mt-0 z-20">
@@ -145,10 +128,8 @@ export default function Combobox() {
                               className={`text-xs md:text-base ${
                                 active ? "font-semibold" : "font-normal"
                               } pl-8`}
-                              
                             >
                               {cylinderItem.id}
-                            
                             </span>
                           </div>
                         )}

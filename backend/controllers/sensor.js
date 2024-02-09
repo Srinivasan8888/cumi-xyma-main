@@ -86,8 +86,81 @@ export const getSensorData = async (req, res) => {
 //   }
 // };
 
+// export const iddata = async (req, res) => {
+//   const { id } = req.query;
+//   const { battery, thickness } = req.query;
+//   console.log("Received id:", id);
+
+//   try {
+//     const sensorData = await idModel({
+//       id: String(id),
+//     });
+
+//     const dataid = await sensorData.save();
+//     const deviceid = dataid.id;
+
+//     const assetDocument = await mongoose.model("asset").findOne({
+//       id: deviceid,
+//     });
+
+//     if (!assetDocument) {
+//       res.status(404).json({ error: "Asset not found" });
+//       return;
+//     }
+
+//     res.json(assetDocument);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
+
+// export const iddata = async (req, res) => {
+//   const { id } = req.params;
+//   console.log("Received id:", id);
+
+//   try {
+//     const sensorData = await idModel({
+//       id: String(id),
+//     });
+
+//     const dataid = await sensorData.save();
+//     const deviceid = dataid.id;
+
+//     const assetDocument = await mongoose.model("asset").findOne({
+//       id: deviceid,
+//     });
+
+//     if (!assetDocument) {
+//       res.status(404).json({ error: "Asset not found" });
+//       return;
+//     }
+
+//     const response = {
+//       createdAt: assetDocument.createdAt,
+//       devicetemp: assetDocument.devicetemp,
+//       id: assetDocument.id,
+//       signal: assetDocument.signal,
+//       updatedAt: assetDocument.updatedAt,
+//       __v: assetDocument.__v,
+//       _id: assetDocument._id
+//     };
+
+//     if (req.query.battery === 'true') {
+//       response.batterylevel = assetDocument.batterylevel;
+//     }
+
+//     if (req.query.thickness === 'true') {
+//       response.thickness = assetDocument.thickness;
+//     }
+
+//     res.json(response);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
+
 export const iddata = async (req, res) => {
-  const { id, batter, thickness } = req.params;
+  const { id } = req.params;
   console.log("Received id:", id);
 
   try {
@@ -98,16 +171,38 @@ export const iddata = async (req, res) => {
     const dataid = await sensorData.save();
     const deviceid = dataid.id;
 
-    const assetDocument = await mongoose.model("asset").findOne({
+    const assetDocumentArray = await mongoose.model("asset").find({
       id: deviceid,
-    });
+    }).sort({ createdAt: -1 }).limit(30);
 
-    if (!assetDocument) {
+    if (!assetDocumentArray || assetDocumentArray.length === 0) {
       res.status(404).json({ error: "Asset not found" });
       return;
     }
 
-    res.json(assetDocument);
+    const response = assetDocumentArray.map(assetDocument => {
+      const responseData = {
+        createdAt: assetDocument.createdAt,
+        devicetemp: assetDocument.devicetemp,
+        id: assetDocument.id,
+        signal: assetDocument.signal,
+        updatedAt: assetDocument.updatedAt,
+        __v: assetDocument.__v,
+        _id: assetDocument._id
+      };
+
+      if (req.query.battery === 'true') {
+        responseData.batterylevel = assetDocument.batterylevel;
+      }
+
+      if (req.query.thickness === 'true') {
+        responseData.thickness = assetDocument.thickness;
+      }
+
+      return responseData;
+    });
+
+    res.json(response);
   } catch (error) {
     res.status(500).json(error);
   }
