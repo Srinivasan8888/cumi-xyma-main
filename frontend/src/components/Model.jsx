@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-const Model = () => {
-   const [dataArray, setDataArray] = useState([]);
+const Model = ({ setDeviceNumberForEffectProp }) => {
+  const [dataArray, setDataArray] = useState([]);
+  const [deviceNumberForEffect, setDeviceNumberForEffect] = useState();
+
   // const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -70,27 +72,26 @@ const Model = () => {
   const handleSmallBoxClick = (text) => {
     const deviceNumber = parseInt(text.replace("Device ", ""), 10);
     // alert(`Small box ${deviceNumber} clicked!`);
-      setDeviceNumberForEffect(deviceNumber);
+    setDeviceNumberForEffect(deviceNumber);
   };
-
-  const [deviceNumberForEffect, setDeviceNumberForEffect] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       if (deviceNumberForEffect !== null) {
         try {
-          const response = await fetch(`http://localhost:4000/sensor/getdata/xy00${deviceNumberForEffect}`);
+          const response = await fetch(
+            `http://localhost:4000/sensor/getdata/xy00${deviceNumberForEffect}`
+          );
           const data = await response.json();
           console.log(data);
         } catch (error) {
-          console.error('Error fetching data:', error);
+          console.error("Error fetching data:", error);
         }
       }
     };
 
     fetchData();
-  }, [deviceNumberForEffect]); 
-  
+  }, [deviceNumberForEffect]);
 
   const renderSmallBoxes = () => {
     const groups = Array.from({ length: 4 }, (_, groupIndex) =>

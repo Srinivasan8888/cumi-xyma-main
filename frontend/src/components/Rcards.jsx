@@ -3,8 +3,7 @@ import { FaTemperatureLow, FaSignal, FaSortAmountUpAlt } from "react-icons/fa";
 import { PiBatteryFullFill } from "react-icons/pi";
 import Carddrop from "./Carddrop";
 import CUMI from "../img/CUMI.png";
-import { circularProgressClasses } from "@mui/material";
-// import "./css/rcard.css"
+import PropTypes from "prop-types";
 
 const circle = {
   height: "25px",
@@ -13,7 +12,7 @@ const circle = {
   display: "inline-block",
 };
 
-const Rcards = () => {
+const Rcards = ({ modelData }) => {
   const [id, setid] = useState(null);
   const [thickness, setThickness] = useState(null);
   const [devicetemp, setDevicetemp] = useState(null);
@@ -22,59 +21,36 @@ const Rcards = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:4000/sensor/data");
-        const data = await response.json();
-        const apiid = data[0].id;
-        setid(apiid);
-        const apiThickness = data[0].thickness;
-        setThickness(apiThickness);
-        const apidevicetemp = data[0].devicetemp;
-        setDevicetemp(apidevicetemp);
-        const apisignal = data[0].signal;
-        setSignal(apisignal);
-        const apibattery = data[0].batterylevel;
-        setBattery(apibattery);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError("Error fetching data");
-      }
-    };
+    if (modelData) {
+      setid(modelData.id);
+      setThickness(modelData.thickness);
+      setDevicetemp(modelData.devicetemp);
+      setSignal(modelData.signal);
+      setBattery(modelData.batterylevel);
+    }
+  }, [modelData]);
 
-    fetchData();
-    const intervalId = setInterval(fetchData, 1000);
-    return () => clearInterval(intervalId);
-  }, []);
-
-  // const getColorBasedOnPercentage = (percentage) => {
-  //   if (percentage >= 75) {
-  //     return "lightgreen";
-  //   } else if (percentage >= 50) {
-  //     return "orange";
-  //   } else {
-  //     return "red";
-  //   }
-  // };
+  Rcards.propTypes = {
+    modelData: PropTypes.shape({
+      id: PropTypes.string,
+      thickness: PropTypes.string,
+      devicetemp: PropTypes.string,
+      signal: PropTypes.string,
+      batterylevel: PropTypes.string
+    })
+  };
 
   const getColorBasedOnPercentage = (percentage) => {
     if (percentage >= 75) {
-      return;
+      return "lightgreen";
     } else if (percentage >= 50) {
       return "orange";
     } else {
       return "red";
-      // return "#FF7074";
     }
   };
 
   const backgroundColor = getColorBasedOnPercentage(thickness);
-
-
-  // if (error) {
-  //   return <p>{error}</p>;
-
-  // }
 
   return (
     <div className="max-w-screen-lg mx-auto">
@@ -131,24 +107,24 @@ const Rcards = () => {
         </div>
 
         <div className="col-span-2">
-        <div className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mt-3 mb-4 sm:flex-row`} style={{ backgroundColor }}>
-        <div className="p-3 mb-2 mr-4 text-blue-500 bg-blue-100 rounded-full sm:mb-0">
-          <svg className="w-6 h-6" fill="currentColor" viewBox="-1 -2 18 18">
-            <FaSortAmountUpAlt />
-          </svg>
-        </div>
-        <div className="text-sm font-medium text-gray-600 text-center sm:text-left">
-          <h5 className="font-bold text-black">Thickness</h5>
-          <p className="text-2xl font-bold text-black mt-1">
-            {thickness ? `${thickness}%` : "Loading..."}
-          </p>
-        </div>
-        <div className="flex-grow"></div>{" "}
-        {/* This will make the next element take up the remaining space */}
-        <p className="text-2xl font-bold text-black mt-2 sm:mt-0">
-          15.35/77 mm
-        </p>
-      </div>
+          <div className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mt-3 mb-4 sm:flex-row`} style={{ backgroundColor }}>
+            <div className="p-3 mb-2 mr-4 text-blue-500 bg-blue-100 rounded-full sm:mb-0">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="-1 -2 18 18">
+                <FaSortAmountUpAlt />
+              </svg>
+            </div>
+            <div className="text-sm font-medium text-gray-600 text-center sm:text-left">
+              <h5 className="font-bold text-black">Thickness</h5>
+              <p className="text-2xl font-bold text-black mt-1">
+                {thickness ? `${thickness}%` : "Loading..."}
+              </p>
+            </div>
+            <div className="flex-grow"></div>{" "}
+            {/* This will make the next element take up the remaining space */}
+            <p className="text-2xl font-bold text-black mt-2 sm:mt-0">
+              15.35/77 mm
+            </p>
+          </div>
         </div>
       </div>
 

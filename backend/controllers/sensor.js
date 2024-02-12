@@ -55,6 +55,57 @@ export const getSensorData = async (req, res) => {
       .json({ error: "Internal Server Error", details: error.message });
   }
 };
+
+
+export const iddata = async (req, res) => {
+  const { id } = req.params;
+  console.log("Received id:", id);
+
+  try {
+    const sensorData = await idModel({
+      id: String(id),
+    });
+
+    const dataid = await sensorData.save();
+    const deviceid = dataid.id;
+
+    const assetDocumentArray = await mongoose.model("asset").find({
+      id: deviceid,
+    }).sort({ createdAt: -1 }).limit(30);
+
+    if (!assetDocumentArray || assetDocumentArray.length === 0) {
+      res.status(404).json({ error: "Asset not found" });
+      return;
+    }
+
+    const response = assetDocumentArray.map(assetDocument => {
+      const responseData = {
+        createdAt: assetDocument.createdAt,
+        devicetemp: assetDocument.devicetemp,
+        id: assetDocument.id,
+        signal: assetDocument.signal,
+        updatedAt: assetDocument.updatedAt,
+        __v: assetDocument.__v,
+        _id: assetDocument._id
+      };
+
+      if (req.query.battery === 'true') {
+        responseData.batterylevel = assetDocument.batterylevel;
+      }
+
+      if (req.query.thickness === 'true') {
+        responseData.thickness = assetDocument.thickness;
+      }
+
+      return responseData;
+    });
+
+    res.json(response);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
 //   try {
 //     // Create a new document with the given id
 //     const getdata = new idmodel({
@@ -158,52 +209,3 @@ export const getSensorData = async (req, res) => {
 //     res.status(500).json(error);
 //   }
 // };
-
-export const iddata = async (req, res) => {
-  const { id } = req.params;
-  console.log("Received id:", id);
-
-  try {
-    const sensorData = await idModel({
-      id: String(id),
-    });
-
-    const dataid = await sensorData.save();
-    const deviceid = dataid.id;
-
-    const assetDocumentArray = await mongoose.model("asset").find({
-      id: deviceid,
-    }).sort({ createdAt: -1 }).limit(30);
-
-    if (!assetDocumentArray || assetDocumentArray.length === 0) {
-      res.status(404).json({ error: "Asset not found" });
-      return;
-    }
-
-    const response = assetDocumentArray.map(assetDocument => {
-      const responseData = {
-        createdAt: assetDocument.createdAt,
-        devicetemp: assetDocument.devicetemp,
-        id: assetDocument.id,
-        signal: assetDocument.signal,
-        updatedAt: assetDocument.updatedAt,
-        __v: assetDocument.__v,
-        _id: assetDocument._id
-      };
-
-      if (req.query.battery === 'true') {
-        responseData.batterylevel = assetDocument.batterylevel;
-      }
-
-      if (req.query.thickness === 'true') {
-        responseData.thickness = assetDocument.thickness;
-      }
-
-      return responseData;
-    });
-
-    res.json(response);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-};
