@@ -6,48 +6,56 @@ import RTables from "./RTables";
 import Model from "./Model";
 
 const Card = () => {
-  const [deviceNumberForEffect, setDeviceNumberForEffect] = useState('1');
-  const [dataForRcards, setDataForRcards] = useState('null'); // Define dataForRcards state
+  const [deviceData, setDeviceData] = useState(null);
+  const [deviceNumberForEffect, setDeviceNumberForEffect] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (deviceNumberForEffect !== null) {
-        try {
-          const response = await fetch(
-            `http://localhost:4000/sensor/getdata/xy00${deviceNumberForEffect}`
-          );
-          const data = await response.json();
-          setDataForRcards(data); // Set dataForRcards state
-        } catch (error) {
-          console.error("Error fetching data:", error);
+      try {
+        const response = await fetch(
+          `http://localhost:4000/sensor/getdata/xy00${deviceNumberForEffect}?battery=true&thickness=true`
+        );
+        const data = await response.json();
+        console.log(data);
+        // Assuming you want to send the first data item to Rcards
+        if (data && data.length > 0) {
+          setDeviceData(data[0]);
         }
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
+    const intervalId = setInterval(fetchData, 1000);
+    return () => clearInterval(intervalId);
   }, [deviceNumberForEffect]);
+
+  const handleSmallBoxClick = async (text) => {
+    const deviceNumber = parseInt(text.replace("Device ", ""), 10);
+    // alert(`Small box ${deviceNumber} clicked!`);
+    setDeviceNumberForEffect(deviceNumber);
+    
+  };
+
 
   return (
     <div style={{ width: "100%" }}>
       <div className="grid gap-2 items-stretch grid-rows-2 md:grid md:grid-rows-2 sm:grid sm:grid-rows-1">
         <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 gap-2">
           <div>
-            <Model setDeviceNumberForEffect={setDeviceNumberForEffect} />{" "}
-            {/* Pass setDeviceNumberForEffect as a prop */}
+            <Model handleSmallBoxClick={handleSmallBoxClick} />
           </div>
           <div className="ml-5">
-            <Rcards
-              deviceNumberForEffect={deviceNumberForEffect}
-              dataForRcards={dataForRcards} // Pass dataForRcards as a prop
-            />
+            <Rcards deviceData={deviceData} />
           </div>
         </div>
         <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 gap-2">
           <div>
-            <RTables />
+            <RTables deviceNumber={deviceNumberForEffect} />
           </div>
           <div className="ml-5">
-            <Charts />
+            <Charts deviceNumber={deviceNumberForEffect} />
           </div>
         </div>
       </div>

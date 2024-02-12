@@ -11,8 +11,6 @@ function Dashboard() {
       <div className="p-4 sm:ml-64">
         <Navbar />
         <Card />
-
-        {/* Move the Logout link here */}
       </div>
     </div>
   );

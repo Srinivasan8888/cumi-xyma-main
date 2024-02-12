@@ -3,7 +3,6 @@ import { FaTemperatureLow, FaSignal, FaSortAmountUpAlt } from "react-icons/fa";
 import { PiBatteryFullFill } from "react-icons/pi";
 import Carddrop from "./Carddrop";
 import CUMI from "../img/CUMI.png";
-import PropTypes from "prop-types";
 
 const circle = {
   height: "25px",
@@ -12,33 +11,22 @@ const circle = {
   display: "inline-block",
 };
 
-const Rcards = ({ modelData }) => {
-  const [id, setid] = useState(null);
+const Rcards = ({ deviceData }) => {
+  const [id, setId] = useState(null);
   const [thickness, setThickness] = useState(null);
   const [devicetemp, setDevicetemp] = useState(null);
   const [signal, setSignal] = useState(null);
   const [batterylevel, setBattery] = useState(null);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (modelData) {
-      setid(modelData.id);
-      setThickness(modelData.thickness);
-      setDevicetemp(modelData.devicetemp);
-      setSignal(modelData.signal);
-      setBattery(modelData.batterylevel);
+    if (deviceData) {
+      setId(deviceData.id);
+      setThickness(deviceData.thickness);
+      setDevicetemp(deviceData.devicetemp);
+      setSignal(deviceData.signal);
+      setBattery(deviceData.batterylevel);
     }
-  }, [modelData]);
-
-  Rcards.propTypes = {
-    modelData: PropTypes.shape({
-      id: PropTypes.string,
-      thickness: PropTypes.string,
-      devicetemp: PropTypes.string,
-      signal: PropTypes.string,
-      batterylevel: PropTypes.string
-    })
-  };
+  }, [deviceData]);
 
   const getColorBasedOnPercentage = (percentage) => {
     if (percentage >= 75) {

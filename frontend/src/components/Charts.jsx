@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -9,16 +9,48 @@ import {
 } from "chart.js";
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
-const Charts = () => {
+const Charts = ({ deviceNumber }) => {
+  const [chartDataState, setChartData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/sensor/table/xy00${deviceNumber}`
+        );
+        const data = await response.json();
+        console.log(data);
+        setChartData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+    const intervalId = setInterval(fetchData, 1000);
+    return () => clearInterval(intervalId);
+  }, [deviceNumber]);
+
+  const extractDataForChart = (data) => {
+    const labels = data.map((entry) => entry.createdAt);
+    const thicknessValues = data.map((entry) => parseInt(entry.thickness, 10));
+    return {
+      labels: labels,
+      data: thicknessValues,
+    };
+  };
+
+  const { labels, data: thicknessData } = extractDataForChart(chartDataState);
+
   const CHART_COLORS = {
     red: "#f26c6d",
   };
 
-  const data = {
-    labels: ["May1", "May 8", "May 9", "May 10", "May 11", "May 12", "May 13", "May 14", "May 15", "may 16"],
+  const chartData = {
+    labels: labels,
     datasets: [
       {
-        data: [3, 4, 2, 2, 11, 12, 14, 13, 14, 55, 88],
+        data: thicknessData,
         borderColor: CHART_COLORS.red,
         fill: false,
         cubicInterpolationMode: "monotone",
@@ -27,9 +59,9 @@ const Charts = () => {
     ],
   };
 
-  const config = {
+  const chartConfig = {
     type: "line",
-    data: data,
+    data: chartData,
     options: {
       responsive: true,
       plugins: {
@@ -52,10 +84,10 @@ const Charts = () => {
           display: true,
           title: {
             display: true,
-            text: "Value",
+            text: "Thickness",
           },
-          suggestedMin: -10,
-          suggestedMax: 10,
+          suggestedMin: Math.min(...thicknessData),
+          suggestedMax: Math.max(...thicknessData),
         },
       },
     },
@@ -63,10 +95,10 @@ const Charts = () => {
 
   return (
     <div
-      className="flex items-center bg-gray-50 shadow-md rounded-lg "
+      className="flex items-center bg-gray-50 shadow-md rounded-lg"
       style={{ width: "100%", height: "100%" }}
     >
-      <Line {...config} className="mt-2"/>
+      <Line {...chartConfig} className="mt-2" />
     </div>
   );
 };
