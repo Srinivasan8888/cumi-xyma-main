@@ -40,17 +40,18 @@ const Card = () => {
 
 
   return (
-    <div style={{ width: "100%" }}>
-      <div className="grid gap-2 items-stretch grid-rows-2 md:grid md:grid-rows-2 sm:grid sm:grid-rows-1">
-        <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 gap-2">
+    <div style={{ width: "100%", overflow: "hidden"}}>
+      <div className="grid items-stretch grid-rows-2 md:grid md:grid-rows-2 sm:grid sm:grid-rows-1">
+        <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 ">
+         
           <div>
             <Model handleSmallBoxClick={handleSmallBoxClick} />
-          </div>
-          <div className="ml-5">
+          </div >
+          <div>
             <Rcards deviceData={deviceData} />
           </div>
         </div>
-        <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 gap-2">
+        <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 gap-2 mt-3">
           <div>
             <RTables deviceNumber={deviceNumberForEffect} />
           </div>

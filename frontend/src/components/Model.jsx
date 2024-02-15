@@ -3,15 +3,13 @@ import React, { useEffect, useState } from "react";
 const Model = ({ handleSmallBoxClick }) => {
   const [dataArray, setDataArray] = useState([]);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:4000/sensor/data");
         const data = await response.json();
         const thicknessArray = data
-          .map((sensor) => parseInt(sensor.thickness))
-          .reverse();
+          .map((sensor) => parseInt(sensor.thickness));
         setDataArray(thicknessArray);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -67,7 +65,6 @@ const Model = ({ handleSmallBoxClick }) => {
     marginTop: "0",
   };
 
-
   const renderSmallBoxes = () => {
     const groups = Array.from({ length: 4 }, (_, groupIndex) =>
       Array.from(
@@ -113,10 +110,8 @@ const Model = ({ handleSmallBoxClick }) => {
   };
 
   return (
-    <div>
-      <div className="flex gap-4 items-center justify-center w-full overflow-x-auto md:overflow-x-hidden">
-        {renderSmallBoxes()}
-      </div>
+    <div className="flex gap-2 items-center justify-center w-full overflow-x-auto md:overflow-x-hidden">
+      {renderSmallBoxes()}
     </div>
   );
 };

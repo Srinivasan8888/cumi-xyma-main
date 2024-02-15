@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-} from "chart.js";
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
+import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Tooltip } from "chart.js";
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip);
 
 const Charts = ({ deviceNumber }) => {
   const [chartDataState, setChartData] = useState([]);
@@ -69,9 +63,22 @@ const Charts = ({ deviceNumber }) => {
           display: true,
           text: "Chart.js Line Chart - Cubic interpolation mode",
         },
-      },
-      interaction: {
-        intersect: false,
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: function(context) {
+              var label = context.dataset.label || '';
+              if (label) {
+                label += ': ';
+              }
+              if (context.parsed.y !== null) {
+                label += context.parsed.y;
+              }
+              return label;
+            }
+          }
+        }
       },
       scales: {
         x: {
@@ -92,11 +99,12 @@ const Charts = ({ deviceNumber }) => {
       },
     },
   };
+  
 
   return (
     <div
       className="flex items-center bg-gray-50 shadow-md rounded-lg"
-      style={{ width: "100%", height: "100%" }}
+      style={{ width: "100%", height: "99%" }}
     >
       <Line {...chartConfig} className="mt-2" />
     </div>

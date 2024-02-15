@@ -1,8 +1,5 @@
-.circle {
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    display: inline-block;
-    background-color: Green;
-  }
-  
+.colormeter{
+  text-size-adjust: 10px;
+  margin-left: 1px;
+  height: 90px;
+}

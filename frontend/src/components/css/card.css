@@ -2,3 +2,12 @@
     width: 100%;
     height: 400px;
   }
+
+  body {
+    overflow: hidden;
+  }
+  
+  .card-container {
+    width: 100%;
+  }
+  

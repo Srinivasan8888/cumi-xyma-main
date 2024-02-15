@@ -42,7 +42,7 @@ const Charttwo = ({ chartData }) => {
   };
 
   return (
-    <div className="container w-full mx-auto" style={{ width: "190%", height: "800px", display: "flex", justifyContent: "center" }}>
+    <div className="container w-full mx-auto" style={{ width: "100%", height: "910px", display: "flex", justifyContent: "center" }}>
       <div className="bg-gray-100 p-4 rounded shadow" style={{ width: "190%", height: "100%" }}>
         <div style={{ width: "190%", height: "100%" }}>
           <Line data={data} options={options} />

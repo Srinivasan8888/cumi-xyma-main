@@ -13,30 +13,30 @@ const Navbar = () => {
   return (
     <Box
       sx={{
-        margin: "25px",
-        borderRadius: "75px",
+        margin: "4px",
+        borderRadius: "50px",
         boxShadow: 3,
-        marginTop: "1px",
-        marginBottom: "20px",
+        marginBottom: "10px",
+        marginTop: "-10px",
       }}
     >
       <AppBar
         position="static"
-        sx={{ background: "#f0f1f2", p: 2, borderRadius: "35px" }}
+        sx={{ background: "#f0f1f2", p: 1, borderRadius: "25px" }}
       >
         <Grid
           container
           alignItems="center"
-          justifyContent="space-between" // Use space-between to push items to the edges
-          sx={{ height: "100%" }}
+          justifyContent="space-between" 
+          sx={{ height: "40px" }} 
         >
-           <div className="flex items-center"> {/* Container for icon and text */}
-            <IoAlertCircleSharp className="text-xl text-green-500 align-items-start" />
-            <p className="ml-2 mt-3 text-green-500 font-bold text-base">Active</p>
+          <div className="flex items-center"> 
+            <IoAlertCircleSharp className="text-lg text-green-500 align-items-start" /> 
+            <p className="ml-1 flex text-green-500 font-bold text-sm h-1">Active</p> 
           </div>
 
           <Typography
-            variant="h4"
+            variant="h6" // Reduced font size
             fontWeight="bold"
             color="black"
             sx={{ textAlign: "center" }}
@@ -46,8 +46,8 @@ const Navbar = () => {
 
           <Menu as="div" className="inline-block relative items-end">
             <div>
-              <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                <IoNotificationsCircleOutline className="text-3xl" />
+              <Menu.Button className="inline-flex w-full justify-center gap-x-1 rounded-md bg-white px-2 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <IoNotificationsCircleOutline className="text-xl" /> 
               </Menu.Button>
             </div>
 
@@ -60,7 +60,7 @@ const Navbar = () => {
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"></Menu.Items>
+              <Menu.Items className="absolute right-0 z-10 mt-1 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"></Menu.Items>
             </Transition>
           </Menu>
         </Grid>

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import asset from "../model/asset.js";
-import idModel from "../model/idmodel.js";
+import idModel from "../model/idModel.js";
+import limit from "../model/limit.js";
 
 export const createSensor = async (req, res) => {
   const { id, thickness, devicetemp, signal, batterylevel, time } = req.query;
@@ -22,14 +23,34 @@ export const createSensor = async (req, res) => {
   }
 };
 
+export const timelimit = async (req, res) => {
+  const { id, time, inputthickness, } = req.query;
+
+  try {
+    const tlimit = new limit({
+      id: String(id),
+      time: String(time),
+      inputthickness: String(inputthickness),
+      
+    });
+
+    const savelimit = await tlimit.save();
+    res.status(200).json(savelimit);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
 export const getlogdata = async (req, res) => {
   try {
-    const logdata = await asset.find().sort({ updatedAt: -1 }).limit(40);
+    const logdata = (await asset.find().sort({ updatedAt: -1 }).limit(40)).reverse();
     res.status(200).json(logdata);
   } catch (error) {
     res.status(500).json(error);
   }
 };
+
+
 
 export const getSensorData = async (req, res) => {
   const sensorId = req.params.id;
@@ -145,6 +166,35 @@ export const tabledatas = async (req, res) => {
 
     res.json(response);
   } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+export const getdatalimit = async (req, res) => {
+  try {
+    // Fetch all documents in the collection
+    const assetLimitArray = await mongoose.model("limit").find().sort({ createdAt: -1 });
+
+    if (!assetLimitArray || assetLimitArray.length === 0) {
+      res.status(404).json({ error: "No assets found" });
+      return;
+    }
+
+    const response = assetLimitArray.map(assetDocument => {
+      const responseData = {
+        id: assetDocument.id,
+        time: assetDocument.time,
+        inputthickness: assetDocument.inputthickness,
+        updatedAt: assetDocument.updatedAt,
+        __v: assetDocument.__v,
+        _id: assetDocument._id
+      };
+      return responseData;
+    });
+
+    res.json(response);
+  } catch (error) {
+    console.error("Error fetching assets:", error);
     res.status(500).json(error);
   }
 };
