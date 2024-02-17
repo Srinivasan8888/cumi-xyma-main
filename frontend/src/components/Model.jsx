@@ -18,19 +18,19 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
 
         console.log("thicknessArray:" , thicknessArray);
         console.log("limitData:" , limitData);
-        // const limitValues = thicknessArray.map(thickness => {
-        //   return ((thickness - 0) * (100 - 0)) / (Math.max(...limitData, 0) - 0) + 0;
-        // });
+        
 
-        // const maxLimit = Math.max(...limitData, 0); // Ensure the maximum limit is not less than 0
-        // const limitValues = thicknessArray.map(thickness => {
-        //   return ((thickness || 0) * 100) / maxLimit; // Ensure thickness is a valid number
+        // const limitValues = thicknessArray.map((thickness, index) => {
+        //   const limitValue = ((limitData[index] - 0) * (100 - 0)) / (thickness - 0) + 0;
+        //   return limitValue.toFixed(2); // Round to 2 decimal places
         // });
 
         const limitValues = thicknessArray.map((thickness, index) => {
-          const limitValue = ((limitData[index] - 0) * (100 - 0)) / (thickness - 0) + 0;
+          const limitValue = ((thickness - 0) * (100 - 0)) / (limitData[index] - 0) + 0;
           return limitValue.toFixed(2); // Round to 2 decimal places
         });
+        
+
         console.log("limitvalues", limitValues);
         // setLimitValues(limitValues);
         // setLimitData(limitData);

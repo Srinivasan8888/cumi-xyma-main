@@ -14,10 +14,7 @@ const circle = {
 
 const Rcards = ({
   deviceData,
-  limitValues,
-  limitData,
-  thicknessArray,
-  onLimitValuesChange,
+ 
 }) => {
   const [id, setId] = useState(null);
   const [thickness, setThickness] = useState(null);
@@ -218,7 +215,8 @@ const Rcards = ({
               {sensorData ? (
   <>
     <p className="text-lg sm:text-2xl font-bold text-black mt-1">
-      {(((sensorData.inputthickness - 0) * (100 - 0)) / (thickness - 0) + 0).toFixed(2)}%
+      {/* {(((sensorData.inputthickness - 0) * (100 - 0)) / (thickness - 0) + 0).toFixed(2)}% */}
+      {(((thickness - 0) * (100 - 0)) / (sensorData.inputthickness - 0) + 0).toFixed(2)}%
     </p>
     {console.log("inputthickness: ",sensorData.inputthickness)}
     {console.log("device thickness: ", thickness)}

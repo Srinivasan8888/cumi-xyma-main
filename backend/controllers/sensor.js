@@ -224,9 +224,29 @@ export const getsetlimits = async (req, res) => {
   }
 };
 
+// export const allsetlimit = async (req, res) => {
+//   try {
+//     const sensorData = await limit.aggregate([
+//       { $sort: { updatedAt: -1, id: 1 } },
+//       { $limit: 40 }
+//     ]);
+
+//     if (!sensorData || sensorData.length === 0) {
+//       return res.status(404).json({ error: "No assets found" });
+//     }
+
+//     res.json(sensorData);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
+
 export const allsetlimit = async (req, res) => {
   try {
-    const sensorData = (await limit.find().sort({ updatedAt: -1 }).limit(40)).reverse();
+    const sensorData = await limit.aggregate([
+      { $sort: {  updatedAt: 1, } }, // Sort by id in ascending order
+      { $limit: 40 }
+    ]);
 
     if (!sensorData || sensorData.length === 0) {
       return res.status(404).json({ error: "No assets found" });
@@ -238,34 +258,6 @@ export const allsetlimit = async (req, res) => {
   }
 };
 
-
-export const percentagedata = async (req, res) => {
-  try {
-    const logData = await asset.find().sort({ updatedAt: -1 }).limit(40);
-    
-    // Process data and calculate limitValue
-    const processedData = logData.map(data => {
-      const { inputthickness, thickness } = data;
-      
-      // Check if inputthickness and thickness are valid numbers
-      if (typeof inputthickness !== 'number' || typeof thickness !== 'number') {
-        throw new Error('Invalid inputthickness or thickness value');
-      }
-      
-      // Check if thickness is not zero to avoid division by zero
-      if (thickness === 0) {
-        throw new Error('Thickness should not be zero');
-      }
-
-      const limitValue = ((inputthickness - 0) * (100 - 0)) / (thickness - 0) + 0;
-      return { ...data._doc, limitValue };
-    }).reverse();
-    
-    res.status(200).json(processedData);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
 //   try {
 //     // Create a new document with the given id
