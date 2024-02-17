@@ -8,6 +8,8 @@ import Model from "./Model";
 const Card = () => {
   const [deviceData, setDeviceData] = useState(null);
   const [deviceNumberForEffect, setDeviceNumberForEffect] = useState(1);
+  const [limitValues, setLimitValues] = useState([]);
+  const [limitData, setLimitData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,15 +33,21 @@ const Card = () => {
     return () => clearInterval(intervalId);
   }, [deviceNumberForEffect]);
 
-  
+
 
   const handleSmallBoxClick = async (text) => {
     const deviceNumber = parseInt(text.replace("Device ", ""), 10);
-    // alert(`Small box ${deviceNumber} clicked!`);
-    setDeviceNumberForEffect(deviceNumber);
-    
+  setDeviceNumberForEffect(deviceNumber);
+  // Pass limitValues to Rcards component
+  // setLimitValues(limitValues);
   };
 
+ const handleLimitValuesChange = (newLimitValues, newLimitData) => {
+    setLimitValues(newLimitValues);
+    setLimitData(newLimitData);
+  };
+
+  // console.log("devicedata", deviceData);
 
   return (
     <div style={{ width: "100%", overflow: "hidden"}}>
@@ -47,10 +55,13 @@ const Card = () => {
         <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 ">
          
           <div>
-            <Model handleSmallBoxClick={handleSmallBoxClick} />
+            <Model handleSmallBoxClick={handleSmallBoxClick} onLimitValuesChange={handleLimitValuesChange} />
+
           </div >
           <div>
-            <Rcards deviceData={deviceData} />
+          <Rcards deviceData={deviceData} limitValues={limitValues} limitData={limitData} />
+          
+
           </div>
         </div>
         <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 gap-2 mt-3">

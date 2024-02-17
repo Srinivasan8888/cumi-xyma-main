@@ -1,60 +1,51 @@
 import React, { useEffect, useState } from "react";
 
-const Model = ({ handleSmallBoxClick }) => {
+const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
+  const [limitValues, setLimitValues] = useState([]);
   const [dataArray, setDataArray] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch("http://localhost:4000/sensor/data");
-  //       const data = await response.json();
-  //       const thicknessArray = data
-  //         .map((sensor) => parseInt(sensor.thickness));
-  //         // console.log( "SAmaple thickness array", thicknessArray);
-  //       // const limitvalue = ((intconvert-0)*(100-0))/(thicknessArray-0)+0;
-  //       setDataArray(thicknessArray);
-
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  //   const intervalId = setInterval(fetchData, 1000);
-  //   return () => clearInterval(intervalId);
-  // }, []);
+  const [limitData, setLimitData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-        try {
+      try {
+        const response1 = await fetch("http://localhost:4000/sensor/data");
+        const data1 = await response1.json();
+        const thicknessArray = data1.map(sensor => parseInt(sensor.thickness));
 
-            const response1 = await fetch("http://localhost:4000/sensor/data");
-            const data1 = await response1.json();
-            const thicknessArray = data1.map(sensor => parseInt(sensor.thickness));
+        const response2 = await fetch("http://localhost:4000/sensor/alllimitdata");
+        const data2 = await response2.json();
+        const limitData = data2.map(sensor => parseInt(sensor.inputthickness));
 
-            console.log("Data of thickness array", thicknessArray);
+        console.log("thicknessArray:" , thicknessArray);
+        console.log("limitData:" , limitData);
+        // const limitValues = thicknessArray.map(thickness => {
+        //   return ((thickness - 0) * (100 - 0)) / (Math.max(...limitData, 0) - 0) + 0;
+        // });
 
-            const response2 = await fetch("http://localhost:4000/sensor/alllimitdata");
-            const data2 = await response2.json();
-            const limitData = data2.map(sensor => parseInt(sensor.inputthickness));
+        // const maxLimit = Math.max(...limitData, 0); // Ensure the maximum limit is not less than 0
+        // const limitValues = thicknessArray.map(thickness => {
+        //   return ((thickness || 0) * 100) / maxLimit; // Ensure thickness is a valid number
+        // });
 
-            console.log("Data of inputthickness array", limitData);
-
-            const limitValues = thicknessArray.map(thickness => {
-                return ((thickness - 0) * (100 - 0)) / (Math.max(...limitData, 0) - 0) + 0;
-            });
-
-            
-            setDataArray(limitValues);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
+        const limitValues = thicknessArray.map((thickness, index) => {
+          const limitValue = ((limitData[index] - 0) * (100 - 0)) / (thickness - 0) + 0;
+          return limitValue.toFixed(2); // Round to 2 decimal places
+        });
+        console.log("limitvalues", limitValues);
+        // setLimitValues(limitValues);
+        // setLimitData(limitData);
+        setDataArray(limitValues);
+        // console.log("limitsdata", limitData);
+        onLimitValuesChange(limitValues, limitData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
     fetchData();
     const intervalId = setInterval(fetchData, 1000);
     return () => clearInterval(intervalId);
-}, []);
+  }, []);
 
 
   const getColorBasedOnPercentage = (percentage) => {
@@ -63,7 +54,6 @@ const Model = ({ handleSmallBoxClick }) => {
     } else if (percentage >= 50) {
       return "orange";
     } else {
-      // return "#FF7074";
       return "red";
     }
   };
@@ -121,7 +111,7 @@ const Model = ({ handleSmallBoxClick }) => {
                   ...smallBoxStyle,
                   backgroundColor: backgroundColor,
                 }}
-                onClick={() => handleSmallBoxClick(text)}
+                onClick={() => handleSmallBoxClick(text, limitValues)}
               >
                 {text}
               </div>
@@ -132,7 +122,7 @@ const Model = ({ handleSmallBoxClick }) => {
                   backgroundColor: backgroundColor,
                   marginLeft: "5px",
                 }}
-                onClick={() => handleSmallBoxClick(text)}
+                onClick={() => handleSmallBoxClick(text, limitValues)}
               >
                 {value}
               </div>

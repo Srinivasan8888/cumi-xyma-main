@@ -1,5 +1,5 @@
 import express from 'express';
-import { createSensor, getlogdata, getSensorData, iddata, tabledatas, timelimit, getdatalimit, getsetlimits, allsetlimit } from '../controllers/sensor.js';
+import { createSensor, getlogdata, getSensorData, iddata, tabledatas, timelimit, getdatalimit, getsetlimits, allsetlimit, percentagedata } from '../controllers/sensor.js';
 
 const router = express.Router();
 
@@ -12,7 +12,9 @@ router.get('/limitdata/:id', getdatalimit);
 router.get('/setlimitdata/:id', getsetlimits);
 router.get('/alllimitdata', allsetlimit);
 router.get('/setlimit', timelimit);
+router.get('/datapercentage', percentagedata)
 router.post('/setlimit', timelimit);
+
 
 
 
