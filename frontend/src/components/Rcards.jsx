@@ -49,6 +49,9 @@ const Rcards = ({ deviceData }) => {
     console.log(value); // Log the value entered by the user
   };
 
+ 
+  // const limitvalue = ((intconvert-0)*(100-0))/(device_thickness-0)+0;
+
   const handleSelectionChange = (selectedValue) => {
     setSelectedValue(selectedValue);
     alert(`Selected value: ${selectedValue}`);

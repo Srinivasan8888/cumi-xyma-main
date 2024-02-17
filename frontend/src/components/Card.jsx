@@ -31,6 +31,8 @@ const Card = () => {
     return () => clearInterval(intervalId);
   }, [deviceNumberForEffect]);
 
+  
+
   const handleSmallBoxClick = async (text) => {
     const deviceNumber = parseInt(text.replace("Device ", ""), 10);
     // alert(`Small box ${deviceNumber} clicked!`);

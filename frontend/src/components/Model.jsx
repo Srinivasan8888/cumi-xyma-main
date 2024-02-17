@@ -3,23 +3,59 @@ import React, { useEffect, useState } from "react";
 const Model = ({ handleSmallBoxClick }) => {
   const [dataArray, setDataArray] = useState([]);
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:4000/sensor/data");
+  //       const data = await response.json();
+  //       const thicknessArray = data
+  //         .map((sensor) => parseInt(sensor.thickness));
+  //         // console.log( "SAmaple thickness array", thicknessArray);
+  //       // const limitvalue = ((intconvert-0)*(100-0))/(thicknessArray-0)+0;
+  //       setDataArray(thicknessArray);
+
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  //   const intervalId = setInterval(fetchData, 1000);
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:4000/sensor/data");
-        const data = await response.json();
-        const thicknessArray = data
-          .map((sensor) => parseInt(sensor.thickness));
-        setDataArray(thicknessArray);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+        try {
+
+            const response1 = await fetch("http://localhost:4000/sensor/data");
+            const data1 = await response1.json();
+            const thicknessArray = data1.map(sensor => parseInt(sensor.thickness));
+
+            console.log("Data of thickness array", thicknessArray);
+
+            const response2 = await fetch("http://localhost:4000/sensor/alllimitdata");
+            const data2 = await response2.json();
+            const limitData = data2.map(sensor => parseInt(sensor.inputthickness));
+
+            console.log("Data of inputthickness array", limitData);
+
+            const limitValues = thicknessArray.map(thickness => {
+                return ((thickness - 0) * (100 - 0)) / (Math.max(...limitData, 0) - 0) + 0;
+            });
+
+            
+            setDataArray(limitValues);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
     };
 
     fetchData();
     const intervalId = setInterval(fetchData, 1000);
     return () => clearInterval(intervalId);
-  }, []);
+}, []);
+
 
   const getColorBasedOnPercentage = (percentage) => {
     if (percentage >= 75) {

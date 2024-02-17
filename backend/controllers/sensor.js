@@ -24,14 +24,13 @@ export const createSensor = async (req, res) => {
 };
 
 export const timelimit = async (req, res) => {
-  const { id, time, inputthickness, } = req.query;
+  const { id, time, inputthickness } = req.query;
 
   try {
     const tlimit = new limit({
       id: String(id),
       time: String(time),
       inputthickness: String(inputthickness),
-      
     });
 
     const savelimit = await tlimit.save();
@@ -43,14 +42,14 @@ export const timelimit = async (req, res) => {
 
 export const getlogdata = async (req, res) => {
   try {
-    const logdata = (await asset.find().sort({ updatedAt: -1 }).limit(40)).reverse();
+    const logdata = (
+      await asset.find().sort({ updatedAt: -1 }).limit(40)
+    ).reverse();
     res.status(200).json(logdata);
   } catch (error) {
     res.status(500).json(error);
   }
 };
-
-
 
 export const getSensorData = async (req, res) => {
   const sensorId = req.params.id;
@@ -77,7 +76,6 @@ export const getSensorData = async (req, res) => {
   }
 };
 
-
 export const iddata = async (req, res) => {
   const { id } = req.params;
   console.log("Received id:", id);
@@ -90,16 +88,20 @@ export const iddata = async (req, res) => {
     const dataid = await sensorData.save();
     const deviceid = dataid.id;
 
-    const assetDocumentArray = await mongoose.model("asset").find({
-      id: deviceid,
-    }).sort({ createdAt: -1 }).limit(30);
+    const assetDocumentArray = await mongoose
+      .model("asset")
+      .find({
+        id: deviceid,
+      })
+      .sort({ createdAt: -1 })
+      .limit(30);
 
     if (!assetDocumentArray || assetDocumentArray.length === 0) {
       res.status(404).json({ error: "Asset not found" });
       return;
     }
 
-    const response = assetDocumentArray.map(assetDocument => {
+    const response = assetDocumentArray.map((assetDocument) => {
       const responseData = {
         createdAt: assetDocument.createdAt,
         devicetemp: assetDocument.devicetemp,
@@ -107,14 +109,14 @@ export const iddata = async (req, res) => {
         signal: assetDocument.signal,
         updatedAt: assetDocument.updatedAt,
         __v: assetDocument.__v,
-        _id: assetDocument._id
+        _id: assetDocument._id,
       };
 
-      if (req.query.battery === 'true') {
+      if (req.query.battery === "true") {
         responseData.batterylevel = assetDocument.batterylevel;
       }
 
-      if (req.query.thickness === 'true') {
+      if (req.query.thickness === "true") {
         responseData.thickness = assetDocument.thickness;
       }
 
@@ -126,7 +128,6 @@ export const iddata = async (req, res) => {
     res.status(500).json(error);
   }
 };
-
 
 export const tabledatas = async (req, res) => {
   const { id } = req.params;
@@ -140,16 +141,20 @@ export const tabledatas = async (req, res) => {
     const dataid = await sensorData.save();
     const deviceid = dataid.id;
 
-    const assetDocumentArray = await mongoose.model("asset").find({
-      id: deviceid,
-    }).sort({ createdAt: -1 }).limit(30);
+    const assetDocumentArray = await mongoose
+      .model("asset")
+      .find({
+        id: deviceid,
+      })
+      .sort({ createdAt: -1 })
+      .limit(30);
 
     if (!assetDocumentArray || assetDocumentArray.length === 0) {
       res.status(404).json({ error: "Asset not found" });
       return;
     }
 
-    const response = assetDocumentArray.map(assetDocument => {
+    const response = assetDocumentArray.map((assetDocument) => {
       const responseData = {
         id: assetDocument.id,
         createdAt: assetDocument.createdAt,
@@ -159,7 +164,7 @@ export const tabledatas = async (req, res) => {
         signal: assetDocument.signal,
         updatedAt: assetDocument.updatedAt,
         __v: assetDocument.__v,
-        _id: assetDocument._id
+        _id: assetDocument._id,
       };
       return responseData;
     });
@@ -173,21 +178,24 @@ export const tabledatas = async (req, res) => {
 export const getdatalimit = async (req, res) => {
   try {
     // Fetch all documents in the collection
-    const assetLimitArray = await mongoose.model("limit").find().sort({ createdAt: -1 });
+    const assetLimitArray = await mongoose
+      .model("limit")
+      .find()
+      .sort({ createdAt: -1 });
 
     if (!assetLimitArray || assetLimitArray.length === 0) {
       res.status(404).json({ error: "No assets found" });
       return;
     }
 
-    const response = assetLimitArray.map(assetDocument => {
+    const response = assetLimitArray.map((assetDocument) => {
       const responseData = {
         id: assetDocument.id,
         time: assetDocument.time,
         inputthickness: assetDocument.inputthickness,
         updatedAt: assetDocument.updatedAt,
         __v: assetDocument.__v,
-        _id: assetDocument._id
+        _id: assetDocument._id,
       };
       return responseData;
     });
@@ -195,6 +203,37 @@ export const getdatalimit = async (req, res) => {
     res.json(response);
   } catch (error) {
     console.error("Error fetching assets:", error);
+    res.status(500).json(error);
+  }
+};
+
+export const getsetlimits = async (req, res) => {
+  const { id } = req.params;
+  console.log("Received id:", id);
+
+  try {
+    const sensorData = await limit.findOne({ id: id });
+
+    if (!sensorData) {
+      return res.status(404).json({ error: "Asset not found" });
+    }
+
+    res.json(sensorData);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+export const allsetlimit = async (req, res) => {
+  try {
+    const sensorData = (await limit.find().sort({ updatedAt: -1 }).limit(40)).reverse();
+
+    if (!sensorData || sensorData.length === 0) {
+      return res.status(404).json({ error: "No assets found" });
+    }
+
+    res.json(sensorData);
+  } catch (error) {
     res.status(500).json(error);
   }
 };
