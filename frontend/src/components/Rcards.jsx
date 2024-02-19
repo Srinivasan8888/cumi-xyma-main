@@ -12,10 +12,7 @@ const circle = {
   display: "inline-block",
 };
 
-const Rcards = ({
-  deviceData,
- 
-}) => {
+const Rcards = ({ deviceData }) => {
   const [id, setId] = useState(null);
   const [thickness, setThickness] = useState(null);
   const [devicetemp, setDevicetemp] = useState(null);
@@ -24,6 +21,7 @@ const Rcards = ({
   const [selectedValue, setSelectedValue] = useState("5 Min");
   const [userInput, setUserInput] = useState("");
   const [sensorData, setSensorData] = useState(null); // Define sensorData state
+  const [limitvalue, setLimitValue] = useState(null); // Define limitvalue state
 
   useEffect(() => {
     if (deviceData) {
@@ -35,17 +33,58 @@ const Rcards = ({
     }
   }, [deviceData]);
 
-  const getColorBasedOnPercentage = (percentage) => {
-    if (percentage >= 75) {
+  const getColorBasedOnPercentage = (limitvalue) => {
+    if (limitvalue >= 75) {
       return "lightgreen";
-    } else if (percentage >= 50) {
+    } else if (limitvalue >= 50) {
       return "orange";
     } else {
       return "red";
     }
   };
 
-  const backgroundColor = getColorBasedOnPercentage(thickness);
+  const backgroundColor = getColorBasedOnPercentage(limitvalue);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:4000/sensor/alllimitdata"
+        );
+        //          `http://localhost:4000/sensor/idlimit/${id}`
+
+        const data = await response.json();
+
+        const sensorData = data.find((sensor) => sensor.id === id);
+        setSensorData(sensorData); // Set sensorData state
+
+        if (sensorData) {
+          console.log("Sensor data for ID:", id);
+          console.log("Input Thickness:", sensorData.inputthickness);
+          console.log("Other sensor data:", sensorData);
+
+          // Check if inputthickness is a valid number
+          if (!isNaN(sensorData.inputthickness)) {
+            const limitvalue =
+              ((thickness - 0) * (100 - 0)) / (sensorData.inputthickness - 0) +
+              0;
+            console.log("limit value of", limitvalue);
+            setLimitValue(limitvalue); // Set the limit value
+          } else {
+            console.error("Input thickness is not a valid number.");
+          }
+        } else {
+          console.error("Sensor data not found for id:", id);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+    const intervalId = setInterval(fetchData, 1000);
+    return () => clearInterval(intervalId);
+  }, [id, thickness]);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -89,44 +128,6 @@ const Rcards = ({
       console.error("Selected value or user input is empty.");
     }
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:4000/sensor/alllimitdata"
-        );
-        const data = await response.json();
-
-        const sensorData = data.find((sensor) => sensor.id === id);
-        setSensorData(sensorData); // Set sensorData state
-
-        if (sensorData) {
-          console.log("Sensor data for ID:", id);
-          console.log("Input Thickness:", sensorData.inputthickness);
-          console.log("Other sensor data:", sensorData);
-
-          // Check if inputthickness is a valid number
-          if (!isNaN(sensorData.inputthickness)) {
-            const limitvalue =
-              ((thickness - 0) * (100 - 0)) / (sensorData.inputthickness - 0) +
-              0;
-            console.log("limit value of", limitvalue);
-          } else {
-            console.error("Input thickness is not a valid number.");
-          }
-        } else {
-          console.error("Sensor data not found for id:", id);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-    const intervalId = setInterval(fetchData, 1000);
-    return () => clearInterval(intervalId);
-  }, [id]);
 
   return (
     <div className="max-w-fit h-0 ml-5 ">
@@ -207,29 +208,20 @@ const Rcards = ({
             </div>
             <div className="text-sm font-medium text-gray-600 text-center sm:text-left">
               <h5 className="font-bold text-black">Thickness</h5>
-              {/* <p className="text-lg sm:text-2xl font-bold text-black mt-1">
-              {limitvalue ? `${limitvalue}%` : "Loading..."}
-              </p> */}
-
-              {/* const limitvalue = ((intconvert-0)*(100-0))/(device_thickness-0)+0; */}
-              {sensorData ? (
-  <>
-    <p className="text-lg sm:text-2xl font-bold text-black mt-1">
-      {/* {(((sensorData.inputthickness - 0) * (100 - 0)) / (thickness - 0) + 0).toFixed(2)}% */}
-      {(((thickness - 0) * (100 - 0)) / (sensorData.inputthickness - 0) + 0).toFixed(2)}%
-    </p>
-    {console.log("inputthickness: ",sensorData.inputthickness)}
-    {console.log("device thickness: ", thickness)}
-  </>
-) : (
-  <p className="text-lg sm:text-2xl font-bold text-black mt-1">
-    Loading...
-  </p>
-)}
-
+              {limitvalue !== null ? (
+                <>
+                  <p className="text-lg sm:text-2xl font-bold text-black mt-1">
+                    {limitvalue.toFixed(2)}%
+                  </p>
+                  {console.log("limit value: ", limitvalue)}
+                </>
+              ) : (
+                <p className="text-lg sm:text-2xl font-bold text-black mt-1">
+                  Loading...
+                </p>
+              )}
             </div>
             <div className="flex-grow"></div>
-            {/* This will make the next element take up the remaining space */}
             <p className="text-lg sm:text-2xl font-bold text-black mt-2 sm:mt-0">
               {thickness ? `${thickness}` : "Loading..."} /{" "}
               {sensorData

@@ -224,6 +224,26 @@ export const getsetlimits = async (req, res) => {
   }
 };
 
+
+export const idallsetlimit = async (req, res) => {
+  const { id } = req.params;
+  console.log("Received id for limit:", id);
+
+  try {
+    const sensorData = await limit.findOne({ id: id }).sort({ updatedAt: -1 });
+
+    if (!sensorData) {
+      return res.status(404).json({ error: "No assets found" });
+    }
+
+    res.json(sensorData);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+
+
 // export const allsetlimit = async (req, res) => {
 //   try {
 //     const sensorData = await limit.aggregate([
@@ -241,11 +261,34 @@ export const getsetlimits = async (req, res) => {
 //   }
 // };
 
+// export const allsetlimit = async (req, res) => {
+//   try {
+//     const sensorData = await limit.aggregate([
+//       { $sort: {  updatedAt: 1, } },
+//       { $limit: 40 }
+//     ]);
+
+//     if (!sensorData || sensorData.length === 0) {
+//       return res.status(404).json({ error: "No assets found" });
+//     }
+
+//     res.json(sensorData);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
+
+
 export const allsetlimit = async (req, res) => {
   try {
     const sensorData = await limit.aggregate([
-      { $sort: {  updatedAt: 1, } }, // Sort by id in ascending order
-      { $limit: 40 }
+      { $sort: { id: 1, updatedAt: -1 } },
+      { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
+      { $replaceRoot: { newRoot: "$data" } },
+      { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
+      { $sort: { idNumber: 1 } }, 
+      { $project: { idNumber: 0 } },
+      { $limit: 40 } 
     ]);
 
     if (!sensorData || sensorData.length === 0) {
@@ -257,6 +300,7 @@ export const allsetlimit = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
 
 
 //   try {
