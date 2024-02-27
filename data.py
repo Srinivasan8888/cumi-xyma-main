@@ -6,7 +6,7 @@ import random
 for i in range(1, 41):
 
     
-    r1 = random.randint(1, 100)
+    r1 = random.randint(1, 80)
     r2 = random.randint(1, 100)
     r3 = random.randint(1, 100)
     r4 = random.randint(1, 100)

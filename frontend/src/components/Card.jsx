@@ -10,6 +10,8 @@ const Card = () => {
   const [deviceNumberForEffect, setDeviceNumberForEffect] = useState(1);
   const [limitValues, setLimitValues] = useState([]);
   const [limitData, setLimitData] = useState([]);
+  
+  // formattedDates
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,13 +57,11 @@ const Card = () => {
         <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 ">
          
           <div>
-            <Model handleSmallBoxClick={handleSmallBoxClick} onLimitValuesChange={handleLimitValuesChange} />
+            <Model handleSmallBoxClick={handleSmallBoxClick} onLimitValuesChange={handleLimitValuesChange}  />
 
           </div >
           <div>
-          <Rcards deviceData={deviceData} limitValues={limitValues} limitData={limitData} />
-          
-
+          <Rcards deviceData={deviceData} limitValues={limitValues} limitData={limitData}  />
           </div>
         </div>
         <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 gap-2 mt-3">

@@ -17,7 +17,7 @@ export default function Combobox({ onChartData }) {
     try {
       const response = await fetch("http://localhost:4000/sensor/data");
       let infoVal = await response.json();
-      infoVal = infoVal.reverse();
+      infoVal = infoVal;
       setInfoGraph(infoVal);
       if (infoVal.length > 0) {
         setSelectedCylinder(infoVal[0].id);

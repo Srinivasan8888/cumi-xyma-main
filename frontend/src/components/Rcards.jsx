@@ -30,11 +30,14 @@ const Rcards = ({ deviceData }) => {
       setDevicetemp(deviceData.devicetemp);
       setSignal(deviceData.signal);
       setBattery(deviceData.batterylevel);
+     
     }
   }, [deviceData]);
 
   const getColorBasedOnPercentage = (limitvalue) => {
-    if (limitvalue >= 75) {
+    if(limitvalue > 100){
+      return "lightblue";
+    }else if (limitvalue >= 75) {
       return "lightgreen";
     } else if (limitvalue >= 50) {
       return "orange";
@@ -56,20 +59,19 @@ const Rcards = ({ deviceData }) => {
         const data = await response.json();
 
         const sensorData = data.find((sensor) => sensor.id === id);
-        setSensorData(sensorData); // Set sensorData state
-
+        setSensorData(sensorData); 
         if (sensorData) {
           console.log("Sensor data for ID:", id);
           console.log("Input Thickness:", sensorData.inputthickness);
           console.log("Other sensor data:", sensorData);
 
-          // Check if inputthickness is a valid number
+          
           if (!isNaN(sensorData.inputthickness)) {
             const limitvalue =
               ((thickness - 0) * (100 - 0)) / (sensorData.inputthickness - 0) +
               0;
             console.log("limit value of", limitvalue);
-            setLimitValue(limitvalue); // Set the limit value
+            setLimitValue(limitvalue); 
           } else {
             console.error("Input thickness is not a valid number.");
           }
@@ -89,7 +91,7 @@ const Rcards = ({ deviceData }) => {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setUserInput(value);
-    console.log(value); // Log the value entered by the user
+    console.log(value);
   };
 
   const handleSelectionChange = (selectedValue) => {
@@ -130,7 +132,7 @@ const Rcards = ({ deviceData }) => {
   };
 
   return (
-    <div className="max-w-fit h-0 ml-5 ">
+    <div className="max-w-full h-0 ml-5" style={{height: "20px"}}>
       <div className="flex items-end justify-end">
         <p className="mr-3 font-bold text-base mb-1">
           {id ? `${id}` : "Loading..."}

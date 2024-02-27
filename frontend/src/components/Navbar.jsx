@@ -2,7 +2,10 @@ import React, { Fragment } from "react";
 import "@coreui/coreui/dist/css/coreui.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { AppBar, Box, Grid, Typography } from "@mui/material";
-import { IoNotificationsCircleOutline, IoAlertCircleSharp } from "react-icons/io5";
+import {
+  IoNotificationsCircleOutline,
+  IoAlertCircleSharp,
+} from "react-icons/io5";
 import { Menu, Transition } from "@headlessui/react";
 
 const Navbar = () => {
@@ -27,12 +30,14 @@ const Navbar = () => {
         <Grid
           container
           alignItems="center"
-          justifyContent="space-between" 
-          sx={{ height: "40px" }} 
+          justifyContent="space-between"
+          sx={{ height: "40px" }}
         >
-          <div className="flex items-center"> 
-            <IoAlertCircleSharp className="text-lg text-green-500 align-items-start" /> 
-            <p className="ml-1 flex text-green-500 font-bold text-sm h-1">Active</p> 
+          <div className="flex items-center">
+            <IoAlertCircleSharp className="text-lg text-green-500 align-items-start" />
+            <p className="ml-1 flex text-green-500 font-bold text-sm h-1">
+              Active
+            </p>
           </div>
 
           <Typography
@@ -44,13 +49,13 @@ const Navbar = () => {
             Wear Monitoring Device
           </Typography>
 
-          <Menu as="div" className="inline-block relative items-end">
+          <Menu as="div" className="inline-block relative items-end mr-4">
             <div>
-              <Menu.Button className="inline-flex w-full justify-center gap-x-1 rounded-md bg-white px-2 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                <IoNotificationsCircleOutline className="text-xl" /> 
+              <Menu.Button className="inline-flex justify-center gap-x-1 rounded-full bg-white p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <IoNotificationsCircleOutline className="text-xl" />
               </Menu.Button>
             </div>
-
+           
             <Transition
               as={Fragment}
               enter="transition ease-out duration-100"

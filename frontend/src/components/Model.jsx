@@ -12,6 +12,14 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
         const data1 = await response1.json();
         const thicknessArray = data1.map(sensor => parseInt(sensor.thickness));
 
+        const timevalue1 = data1.map(sensor=> (sensor.createdAt));
+        const formatDate = (timevalue1) => {
+          const date = new Date(timevalue1);
+          return date.toLocaleString(); 
+        }
+        const formattedDates = timevalue1.map(formatDate);
+        console.log("json for time", formattedDates);
+
         const response2 = await fetch("http://localhost:4000/sensor/alllimitdata");
         const data2 = await response2.json();
         const limitData = data2.map(sensor => parseInt(sensor.inputthickness));
@@ -19,19 +27,13 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
         console.log("thicknessArray:" , thicknessArray);
         console.log("limitData:" , limitData);
         
-
-        // const limitValues = thicknessArray.map((thickness, index) => {
-        //   const limitValue = ((limitData[index] - 0) * (100 - 0)) / (thickness - 0) + 0;
-        //   return limitValue.toFixed(2); // Round to 2 decimal places
-        // });
-
         const limitValues = thicknessArray.map((thickness, index) => {
           const limitValue = ((thickness - 0) * (100 - 0)) / (limitData[index] - 0) + 0;
-          return limitValue.toFixed(2); // Round to 2 decimal places
+          return limitValue.toFixed(2);
         });
-        
-
         console.log("limitvalues", limitValues);
+
+
         // setLimitValues(limitValues);
         // setLimitData(limitData);
         setDataArray(limitValues);
@@ -49,7 +51,10 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
 
 
   const getColorBasedOnPercentage = (percentage) => {
-    if (percentage >= 75) {
+
+    if(percentage > 100){
+      return "lightblue";
+    }else if (percentage >= 75) {
       return "lightgreen";
     } else if (percentage >= 50) {
       return "orange";
@@ -57,6 +62,8 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
       return "red";
     }
   };
+
+   
 
   const rectangleStyle = {
     width: "320px",
