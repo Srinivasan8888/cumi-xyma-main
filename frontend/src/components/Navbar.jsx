@@ -7,6 +7,7 @@ import {
   IoAlertCircleSharp,
 } from "react-icons/io5";
 import { Menu, Transition } from "@headlessui/react";
+import Popover from "./popover";
 
 const Navbar = () => {
   function classNames(...classes) {
@@ -49,6 +50,9 @@ const Navbar = () => {
             Wear Monitoring Device
           </Typography>
 
+         
+
+          {/* <Popover/> */}
           <Menu as="div" className="inline-block relative items-end mr-4">
             <div>
               <Menu.Button className="inline-flex justify-center gap-x-1 rounded-full bg-white p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">

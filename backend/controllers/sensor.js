@@ -40,16 +40,85 @@ export const timelimit = async (req, res) => {
   }
 };
 
+// export const getlogdata = async (req, res) => {
+//   try {
+//     // Step 1: Retrieve data sorted by updatedAt
+//     const logData = await asset.find().sort({ updatedAt: 1 }).limit(40);
+
+//     // Step 2: Manipulate data to update id based on timestamp
+//     const updatedLogData = logData.map((item, index) => ({
+//       ...item.toObject(),
+//       id: `xy${(index + 1).toString().padStart(3, '0')}` // Assuming index starts from 0
+//     }));
+
+//     res.status(200).json(updatedLogData);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
+
+
 export const getlogdata = async (req, res) => {
   try {
-    const logdata = (
-      await asset.find().sort({ updatedAt: -1 }).limit(40)
-    ).reverse();
-    res.status(200).json(logdata);
+    const logdata = await asset.aggregate([
+      { $sort: { id: 1, updatedAt: -1 } },
+      { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
+      { $replaceRoot: { newRoot: "$data" } },
+      { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
+      { $sort: { idNumber: 1 } }, 
+      { $project: { idNumber: 0 } },
+      { $limit: 40 } 
+    ]);
+
+    if (!logdata || logdata.length === 0) {
+      return res.status(404).json({ error: "No assets found" });
+    }
+
+    res.json(logdata);
   } catch (error) {
     res.status(500).json(error);
   }
 };
+
+// export const getlogdata = async (req, res) => {
+//   try {
+//     const logdata = await asset.aggregate([
+//       { $sort: { updatedAt: -1 } }, // Sort documents by updatedAt in descending order
+//       { $group: { _id: "$id", data: { $first: "$$ROOT" } } }, // Group by id and take the first document (latest)
+//       { $replaceRoot: { newRoot: "$data" } }, // Replace the root with the grouped document
+//       { $limit: 40 } // Limit the result to 40 documents
+//     ]);
+
+//     if (!logdata || logdata.length === 0) {
+//       return res.status(404).json({ error: "No assets found" });
+//     }
+
+//     res.json(logdata);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
+
+
+
+// export const getlogdata1 = async (req, res) => {
+//   try {
+//     const logdata = await Asset.aggregate([
+//       { $sort: { updatedAt: -1 } },
+//       { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
+//       { $replaceRoot: { newRoot: "$data" } },
+//       { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
+//       { $sort: { idNumber: 1 } }, 
+//       { $project: { idNumber: 0 } },
+//       { $limit: 40 } 
+//     ]);
+
+//     res.status(200).json(logdata);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
+
 
 export const getSensorData = async (req, res) => {
   const sensorId = req.params.id;

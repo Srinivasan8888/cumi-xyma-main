@@ -54,7 +54,7 @@ const Rcards = ({ deviceData }) => {
         const response = await fetch(
           "http://localhost:4000/sensor/alllimitdata"
         );
-        //          `http://localhost:4000/sensor/idlimit/${id}`
+        //          `http://192.168.100.24:4000/sensor/idlimit/${id}`
 
         const data = await response.json();
 

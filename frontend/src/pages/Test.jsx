@@ -1,29 +1,9 @@
 // import React, { Fragment, useRef } from "react";
-// import { Popover, Transition } from "@headlessui/react";
-// import { ChevronDownIcon } from "@heroicons/react/solid";
+// import { IoNotificationsCircleOutline, IoAlertCircleSharp } from "react-icons/io5";
+// import { Menu, Transition } from "@headlessui/react";
+// import { Typography } from "@mui/material";
 
-// const solutions = [
-//   {
-//     name: "Insights",
-//     description: "Measure actions your users take",
-//     href: "/insights",
-//     icon: IconOne
-//   },
-//   {
-//     name: "Automations",
-//     description: "Create your own targeted content",
-//     href: "/automations",
-//     icon: IconTwo
-//   },
-//   {
-//     name: "Reports",
-//     description: "Keep track of your growth",
-//     href: "/reports",
-//     icon: IconThree
-//   }
-// ];
-
-// const Test = () => {
+// const Navbar = () => {
 //   const buttonRef = useRef(null);
 //   const timeoutDuration = 200;
 //   let timeout;
@@ -49,88 +29,92 @@
 //     timeout = setTimeout(() => closePopover(), timeoutDuration);
 //   };
 
+//   const solutions = [
+//     {
+//       name: "Insights",
+//       description: "Measure actions your users take",
+//       href: "##",
+//       icon: IconOne
+//     },
+//     {
+//       name: "Automations",
+//       description: "Create your own targeted content",
+//       href: "##",
+//       icon: IconTwo
+//     },
+//     {
+//       name: "Reports",
+//       description: "Keep track of your growth",
+//       href: "##",
+//       icon: IconThree
+//     }
+//   ];
+
+//   function classNames(...classes) {
+//     return classes.filter(Boolean).join(" ");
+//   }
+
 //   return (
-//     <Popover>
-//       {({ open }) => (
-//         <>
-//           <div onMouseLeave={() => onMouseLeave(open)}>
-//             <Popover.Button
-//               ref={buttonRef}
-//               className={`
-//                 ${open ? "" : "text-opacity-90"}
-//                 text-white group bg-orange-700 px-3 py-2 rounded-md inline-flex items-center text-base font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
-//               onMouseEnter={() => onMouseEnter(open)}
-//               onMouseLeave={() => onMouseLeave(open)}
-//             >
-//               <span style={{ color: "black" }}>Solutions</span>
-//               <ChevronDownIcon
-//                 className={`${open ? "" : "text-opacity-70"}
-//                 ml-2 h-5 w-5 text-orange-300 group-hover:text-opacity-80 transition ease-in-out duration-150`}
-//                 aria-hidden="true"
-//               />
-//             </Popover.Button>
-//             <Transition
-//               as={Fragment}
-//               enter="transition ease-out duration-200"
-//               enterFrom="opacity-0 translate-y-1"
-//               enterTo="opacity-100 translate-y-0"
-//               leave="transition ease-in duration-150"
-//               leaveFrom="opacity-100 translate-y-0"
-//               leaveTo="opacity-0 translate-y-1"
-//             >
-//               <Popover.Panel className="absolute z-10 w-screen max-w-sm px-4 mt-0 transform -translate-x-1/2 left-1/2 sm:px-0 lg:max-w-3xl">
-//                 <div
-//                   className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
-//                   onMouseEnter={() => onMouseEnter(open)}
-//                   onMouseLeave={() => onMouseLeave(open)}
-//                 >
-//                   <div className="relative grid gap-8 bg-white p-7 lg:grid-cols-2">
-//                     {solutions.map((item) => (
-//                       <a
-//                         key={item.name}
-//                         href={item.href}
-//                         className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
-//                       >
-//                         <div className="flex items-center justify-center flex-shrink-0 w-10 h-10 text-white sm:h-12 sm:w-12">
-//                           <item.icon aria-hidden="true" />
-//                         </div>
-//                         <div className="ml-4">
-//                           <p className="text-sm font-medium text-gray-900">
-//                             {item.name}
-//                           </p>
-//                           <p className="text-sm text-gray-500">
-//                             {item.description}
-//                           </p>
-//                         </div>
-//                       </a>
-//                     ))}
-//                   </div>
-//                   <div className="p-4 bg-gray-50">
-//                     <a
-//                       href="##"
-//                       className="flow-root px-2 py-2 transition duration-150 ease-in-out rounded-md hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
-//                     >
-//                       <span className="flex items-center">
-//                         <span className="text-sm font-medium text-gray-900">
-//                           Documentation
-//                         </span>
-//                       </span>
-//                       <span className="block text-sm text-gray-500">
-//                         Start integrating products and tools
-//                       </span>
-//                     </a>
-//                   </div>
-//                 </div>
-//               </Popover.Panel>
-//             </Transition>
-//           </div>
-//         </>
-//       )}
-//     </Popover>
+//     <div className="flex items-center justify-between p-4">
+//       <div className="flex items-center">
+//         <IoAlertCircleSharp className="text-lg text-green-500 align-items-start" />
+//         <p className="ml-1 flex text-green-500 font-bold text-sm h-1">Active</p>
+//       </div>
+
+//       <Typography variant="h6" fontWeight="bold" color="black">
+//         Wear Monitoring Device
+//       </Typography>
+
+//       <Menu as="div" className="relative inline-block">
+//         <div>
+//           <Menu.Button
+//             ref={buttonRef}
+//             className="inline-flex justify-center gap-x-1 rounded-full bg-white p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+//             onMouseEnter={() => onMouseEnter(false)}
+//             onMouseLeave={() => onMouseLeave(false)}
+//           >
+//             <IoNotificationsCircleOutline className="text-xl" />
+//           </Menu.Button>
+//         </div>
+
+//         <Transition
+//           as={Fragment}
+//           enter="transition ease-out duration-200"
+//           enterFrom="opacity-0 translate-y-1"
+//           enterTo="opacity-100 translate-y-0"
+//           leave="transition ease-in duration-150"
+//           leaveFrom="opacity-100 translate-y-0"
+//           leaveTo="opacity-0 translate-y-1"
+//         >
+//           <Menu.Items className="absolute right-0 z-10 mt-1 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+//             {/* Your popover menu content here */}
+//             {solutions.map((item) => (
+//               <Menu.Item key={item.name}>
+//                 {({ active }) => (
+//                   <a
+//                     href={item.href}
+//                     className={classNames(
+//                       active ? "bg-gray-100" : "",
+//                       "block px-4 py-2 text-sm text-gray-700"
+//                     )}
+//                     onMouseEnter={() => onMouseEnter(true)}
+//                     onMouseLeave={() => onMouseLeave(true)}
+//                   >
+//                     <div className="flex items-center">
+//                       <item.icon className="w-5 h-5 mr-2" aria-hidden="true" />
+//                       <span>{item.name}</span>
+//                     </div>
+//                     <p className="text-xs text-gray-500">{item.description}</p>
+//                   </a>
+//                 )}
+//               </Menu.Item>
+//             ))}
+//           </Menu.Items>
+//         </Transition>
+//       </Menu>
+//     </div>
 //   );
 // };
-
-// export default Test;
 
 // function IconOne() {
 //   return (
@@ -162,7 +146,7 @@
 //         strokeWidth="2"
 //       />
 //     </svg>
-//   );
+//   )
 // }
 
 // function IconTwo() {
@@ -188,7 +172,7 @@
 //         strokeWidth="2"
 //       />
 //     </svg>
-//   );
+//   )
 // }
 
 // function IconThree() {
@@ -208,15 +192,16 @@
 //       <rect x="29" y="16" width="2" height="20" fill="#FB923C" />
 //       <rect x="33" y="12" width="2" height="24" fill="#FB923C" />
 //     </svg>
-//   );
+//   )
 // }
 
+// export default Navbar;
 
 import React from 'react'
-
+import Popover from '../components/popover'
 const Test = () => {
   return (
-    <div>Test</div>
+    <Popover/>
   )
 }
 
