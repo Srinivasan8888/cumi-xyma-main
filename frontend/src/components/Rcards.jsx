@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FaTemperatureLow, FaSignal, FaSortAmountUpAlt } from "react-icons/fa";
 import { PiBatteryFullFill } from "react-icons/pi";
+import { Button } from "@/components/ui/button"
+
 import Carddrop from "./Carddrop";
 import CUMI from "../img/CUMI.png";
 import "./css/rcard.css";
