@@ -3,30 +3,37 @@ import { VscDashboard } from "react-icons/vsc";
 import { TbReportAnalytics, TbLogout2 } from "react-icons/tb";
 import { SlGraph } from "react-icons/sl";
 import { RiSettings4Line } from "react-icons/ri";
+import logo from "../img/logo4.png";
+import cumi from "../img/cumi_final.png";
+
+
 
 const Sidebars = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  // const toggleSidebar = () => {
+  //   setIsSidebarOpen(!isSidebarOpen);
+  // };
 
   return (
     <div>
-      <button
+      {/* <button
         onClick={toggleSidebar}
         className="fixed top-5 left-5 p-2 text-white rounded-lg bg-gray-700 hover:bg-gray-600 transition-all duration-300 z-50"
       >
         {isSidebarOpen ? "Collapse" : "Expand"}
-      </button>
+      </button> */}
+      
       <aside
+        
         id="logo-sidebar"
         className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${
           isSidebarOpen ? "" : "-translate-x-full"
-        } sm:translate-x-0 bg-[#202020] dark:bg-gray-800 overflow-y-auto`}
+        } sm:translate-x-0 bg-[#030637] dark:bg-gray-800 overflow-y-auto`}
         aria-label="Sidebar"
       >
         <div className="h-full pr-0 py-20">
+        <img src={cumi} className="w-44 mb-4 ml-6" />
           <ul className="space-y-4 font-medium">
             <li>
               <a
@@ -72,10 +79,31 @@ const Sidebars = () => {
             <TbLogout2 className="w-7 h-7" />
             <span className="ms-3 whitespace-nowrap">Logout</span>
           </a>
+          <img src={logo} className="w-32 mt-4 ml-10" />
         </div>
+        
       </aside>
     </div>
   );
 };
 
 export default Sidebars;
+
+
+// import React from 'react'
+// import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+
+// export const Sidebars = () => {
+//   return (
+//     <Sidebar>
+//     <Menu>
+//       <SubMenu label="Charts">
+//         <MenuItem> Pie charts </MenuItem>
+//         <MenuItem> Line charts </MenuItem>
+//       </SubMenu>
+//       <MenuItem> Documentation </MenuItem>
+//       <MenuItem> Calendar </MenuItem>
+//     </Menu>
+//   </Sidebar>
+//   )
+// }

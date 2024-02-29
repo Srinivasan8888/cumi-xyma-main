@@ -70,19 +70,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "main": "tailwind.config.js",
-  "author": "Srinivasan",
+  "author": "",
   "license": "ISC",
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Srinivasan8888/cumi-xyma-main.git"
-  },
-  "keywords": [
-    "CUMI",
-    "XYMA"
-  ],
-  "bugs": {
-    "url": "https://github.com/Srinivasan8888/cumi-xyma-main/issues"
-  },
-  "homepage": "https://github.com/Srinivasan8888/cumi-xyma-main#readme"
+  "description": ""
 }
