@@ -1,0 +1,18 @@
+/* input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+} */
+
+/* Create a custom icon using a pseudo-element */
+input[type="date"] {
+    position: relative;
+}
+
+input[type="date"]:after {
+    content: "\1F4C5"; /* Unicode character for a triangle pointing right */
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: black; /* Change the color to white */
+    pointer-events: none; /* Ensure the pseudo-element doesn't interfere with clicking */
+}

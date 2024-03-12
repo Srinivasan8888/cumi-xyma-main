@@ -27,6 +27,8 @@ const Rcards = ({ deviceData }) => {
   const [limitvalue, setLimitValue] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [errorAlert, setErrorAlert] = useState(false);
+  const [TimeData, setTimeData] = useState(null);
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     if (deviceData) {
@@ -35,6 +37,7 @@ const Rcards = ({ deviceData }) => {
       setDevicetemp(deviceData.devicetemp);
       setSignal(deviceData.signal);
       setBattery(deviceData.batterylevel);
+      setTimeData(new Date(deviceData.createdAt));
     }
   }, [deviceData]);
 
@@ -58,28 +61,212 @@ const Rcards = ({ deviceData }) => {
         const response = await fetch(
           "http://localhost:4000/sensor/alllimitdata"
         );
-        //          `http://192.168.100.24:4000/sensor/idlimit/${id}`
-
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
         const data = await response.json();
-
         const sensorData = data.find((sensor) => sensor.id === id);
         setSensorData(sensorData);
+
+        // if (sensorData) {
+
+        //   // const currentTime = Date.now() / 1000; // Current time in seconds
+        //   // const DBTimeInSeconds = sensorData.time;
+        //   // const createdDBTime = new Date(sensorData.createdAt).getTime() / 1000;
+
+        //   const currentTime = new Date().toISOString();
+        //   const dbTime = sensorData.time;
+        //   const createdDBTime = sensorData.createdAt;
+
+        //   // const mscurrentTime = currentTime * 1000 * 60;
+        //   // const msdbtime = createdDBTime * 1000 * 60;
+
+        //   // console.log("current time in ms:", mscurrentTime);
+        //   // console.log("msdbtime in ms:", msdbtime);
+
+        //   // const cbtdbt = createdDBTime + dbTime;
+
+        //   console.log("Current time:", currentTime);
+        //   console.log("createdDBTime:", createdDBTime);
+        //   console.log("DB Time in mins:", dbTime);
+
+        //   // console.log("cbtdbt time", cbtdbt);
+
+        //   // if (Math.floor(cbtdbt > currentTime)) {
+        //   //  console.log("active");
+        //   // } else {
+        //   //   console.log("inactive");
+        //   // }
+
+        //   if (!isNaN(sensorData.inputthickness)) {
+        //     const limitvalue =
+        //       ((thickness - 0) * (100 - 0)) / (sensorData.inputthickness - 0) + 0;
+        //     setLimitValue(limitvalue);
+        //   } else {
+        //     console.error("Input thickness is not a valid number.");
+        //   }
+        // }
+
         if (sensorData) {
-          console.log("Sensor data for ID:", id);
-          console.log("Input Thickness:", sensorData.inputthickness);
-          console.log("Other sensor data:", sensorData);
+          // function getCurrentIST(date) {
+          //   const options = {
+          //     timeZone: "Asia/Kolkata",
+          //     hour12: true,
+          //     hour: "numeric",
+          //     minute: "numeric",
+          //     second: "numeric",
+          //     year: "numeric",
+          //     month: "numeric",
+          //     day: "numeric",
+          //   };
+          //   return date.toLocaleString("en-US", options);
+          // }
+
+          // const currentTime = getCurrentIST(new Date());
+          // const dbTime = sensorData.time;
+          // const createdDBTime = sensorData.createdAt;
+
+          // console.log("createdDBTime:", createdDBTime);
+
+          // const utcDate = new Date(createdDBTime);
+          // const offsetMinutes = utcDate.getTimezoneOffset();
+          // const localDate = new Date(
+          //   utcDate.getTime() + offsetMinutes * 60 * 1000
+          // );
+
+          // function formatLocalTimeWithSeconds(date) {
+          //   const hours = date.getHours();
+          //   const minutes = date.getMinutes();
+          //   const seconds = date.getSeconds();
+          //   const ampm = hours >= 12 ? "PM" : "AM";
+          //   const formattedHours = hours % 12 || 12;
+          //   const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+          //   const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
+          //   return `${
+          //     date.getMonth() + 1
+          //   }/${date.getDate()}/${date.getFullYear()} ${formattedHours}:${formattedMinutes}:${formattedSeconds} ${ampm}`;
+          // }
+
+          // console.log(
+          //   "db time with 12hours",
+          //   formatLocalTimeWithSeconds(localDate)
+          // );
+          // console.log("Current time (IST):", currentTime);
+          // console.log("DB Time in mins:", dbTime);
+
+          // localDate.setMinutes(localDate.getMinutes() + dbTime);
+          // console.log("Before addition:", localDate);
+          // console.log("dbTime:", dbTime);
+
+          // // Format the updated Date object
+          // const formattedUpdatedLocalDate =
+          //   formatLocalTimeWithSeconds(localDate);
+          // console.log(
+          //   "Updated local time with dbTime added:",
+          //   formattedUpdatedLocalDate
+          // );
+
+          // if (currentISTDate >= new Date(currentTime)) {
+          //   console.log("active");
+          //   setStatus("active");
+          // } else {
+          //   console.log("inactive");
+          //   setStatus("inactive");
+          // }
+
+          // it was working fine untill the date
+          //   function getCurrentIST(date) {
+          //     const options = {
+          //         timeZone: "Asia/Kolkata",
+          //         hour12: true,
+          //         hour: "numeric",
+          //         minute: "numeric",
+          //         second: "numeric",
+          //         year: "numeric",
+          //         month: "numeric",
+          //         day: "numeric",
+          //     };
+          //     return date.toLocaleString("en-IN", options);
+          // }
+
+          // const currentTime = getCurrentIST(new Date());
+          // const dbcreatedtime = new Date(sensorData.createdAt);
+          // const userInputMinutes = parseInt(sensorData.time);
+          // const updatedTime = new Date(dbcreatedtime.getTime());
+          // updatedTime.setMinutes(updatedTime.getMinutes() + userInputMinutes);
+          // const formattedTime = getCurrentIST(updatedTime);
+          // const updatedTimeIST = formattedTime.toLocaleString("en-IN", getCurrentIST);
+
+          // console.log("Current Time in IST:", currentTime);
+          // console.log("dbCreated Time in UTC:", sensorData.createdAt);
+          // console.log("Userinput Time:", sensorData.time);
+          // console.log("12hrs of dbtime in UTC:", dbcreatedtime.toLocaleString());
+          // console.log("Updated Time after adding sensorData.time in UTC:", updatedTime.toLocaleString());
+          // console.log("Updated Time after converting to IST:", updatedTimeIST);
+
+          function getCurrentIST(date) {
+            const options = {
+              timeZone: "Asia/Kolkata",
+              hour12: true,
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+            };
+            return date.toLocaleString("en-IN", options);
+          }
+
+          const currentTime = getCurrentIST(new Date());
+          const dbcreatedtime = new Date(sensorData.createdAt); // Convert UTC string to Date object
+          dbcreatedtime.setHours(dbcreatedtime.getHours() + 5); // Convert to IST
+          dbcreatedtime.setMinutes(dbcreatedtime.getMinutes() + 30); // Add 30 minutes for IST
+
+          const userInputMinutes = parseInt(sensorData.time);
+          const totalMinutes =
+            dbcreatedtime.getTime() / (1000 * 60) + userInputMinutes; // Convert milliseconds to minutes and add user input
+
+          const updatedTime = new Date(dbcreatedtime); // Create a new Date object with the same date
+          updatedTime.setMinutes(totalMinutes); // Set the total minutes
+
+          const formattedTime = getCurrentIST(updatedTime);
+
+          console.log("Current Time in IST:", currentTime);
+          console.log("dbCreated Time in UTC:", sensorData.createdAt);
+          console.log("Userinput Time:", sensorData.time);
+          console.log(
+            "12hrs of dbtime in UTC:",
+            dbcreatedtime.toLocaleString()
+          );
+          console.log(
+            "Updated Time after adding sensorData.time in UTC:",
+            updatedTime.toLocaleString()
+          );
+
+          // Convert updatedTime directly to IST using getCurrentIST function
+          const updatedTimeIST = getCurrentIST(updatedTime);
+          console.log("Updated Time after converting to IST:", updatedTimeIST);
+
+          if (formattedTime <= currentTime) {
+            console.log("Active");
+            setStatus("Active");
+          } else {
+            console.log("In-Active");
+            setStatus("In-Active");
+          }
 
           if (!isNaN(sensorData.inputthickness)) {
             const limitvalue =
               ((thickness - 0) * (100 - 0)) / (sensorData.inputthickness - 0) +
               0;
-            console.log("limit value of", limitvalue);
             setLimitValue(limitvalue);
           } else {
             console.error("Input thickness is not a valid number.");
           }
         } else {
-          console.error("Sensor data not found for id:", id);
+          console.log("Sensor data not found for id:", id);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -90,6 +277,61 @@ const Rcards = ({ deviceData }) => {
     const intervalId = setInterval(fetchData, 1000);
     return () => clearInterval(intervalId);
   }, [id, thickness]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         "http://localhost:4000/sensor/alllimitdata"
+  //       );
+  //       const data = await response.json();
+  //       const sensorData = data.find((sensor) => sensor.id === id);
+  //       setSensorData(sensorData);
+
+  //             if (sensorData) {
+  //               // console.log("Sensor data for ID:", id);
+  //               // console.log("Input Thickness:", sensorData.inputthickness);
+  //               // console.log("Other sensor data:", sensorData);
+  //               // console.log("set time for thickness", sensorData.time);
+  //               // console.log("Created at time for thickness", sensorData.createdAt);
+
+  //               const currentTime = Date.now() / 1000; // Current time in seconds
+  //               const DBTimeInSeconds = sensorData.time;
+  //               const createdDBTime = new Date(sensorData.createdAt).getTime() / 1000;
+
+  //               const cbtdbt = createdDBTime + DBTimeInSeconds;
+  //               console.log("cbtdbt time", cbtdbt);
+
+  //               if (cbtdbt > currentTime) {
+  //                 console.log("active");
+  //               } else {
+  //                 console.log("In-active");
+  //               }
+  //             } else {
+  //               console.log("non"); // You were missing a semicolon here
+  //             }
+
+  //         if (!isNaN(sensorData.inputthickness)) {
+  //           const limitvalue =
+  //             ((thickness - 0) * (100 - 0)) / (sensorData.inputthickness - 0) +
+  //             0;
+  //           // console.log("limit value of", limitvalue);
+  //           setLimitValue(limitvalue);
+  //         } else {
+  //           console.error("Input thickness is not a valid number.");
+  //         }
+  //       } else {
+  //         console.error("Sensor data not found for id:", id);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  //   const intervalId = setInterval(fetchData, 1000);
+  //   return () => clearInterval(intervalId);
+  // }, [id, thickness]);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -145,7 +387,19 @@ const Rcards = ({ deviceData }) => {
       return; // Exit early
     }
 
-    const encodedSelectedValue = encodeURIComponent(selectedValue);
+    let encodedSelectedValue = encodeURIComponent(selectedValue);
+    if ((encodedSelectedValue = "1 Min")) {
+      encodedSelectedValue = "1";
+    } else if ((encodedSelectedValue = "5 Min")) {
+      encodedSelectedValue = "5";
+    } else if ((encodedSelectedValue = "1 Day")) {
+      encodedSelectedValue = "1440";
+    } else if ((encodedSelectedValue = "7 Days")) {
+      encodedSelectedValue = "10080";
+    } else if ((encodedSelectedValue = "30 Days")) {
+      encodedSelectedValue = "43200";
+    }
+
     const url = `http://localhost:4000/sensor/setlimit?id=${id}&time=${encodedSelectedValue}&inputthickness=${userInput}`;
 
     try {
@@ -184,6 +438,8 @@ const Rcards = ({ deviceData }) => {
       <div className="flex items-end justify-end">
         <p className="mr-3 font-bold text-base mb-1">
           {id ? `${id}` : "Loading..."}
+
+          <div>Sensor Status: {status}</div>
         </p>
         <Carddrop
           deviceData={deviceData}
@@ -224,6 +480,8 @@ const Rcards = ({ deviceData }) => {
               type="number"
               className=" h-9  bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Thickness"
+              value={userInput}
+              onChange={handleInputChange}
             />
           </div>
         </form>
@@ -241,7 +499,7 @@ const Rcards = ({ deviceData }) => {
           onClick={handleSubmit}
         >
           Submit
-          <MdAdd className=" ml-2 w-5 h-auto" />
+          {/* <MdAdd className=" ml-2 w-5 h-auto" /> */}
         </button>
 
         {showAlert && (

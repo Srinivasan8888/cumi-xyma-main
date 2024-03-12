@@ -6,6 +6,9 @@ import Dashboard from '../src/pages/Dashboard';
 import Signup from './pages/Signup';
 import Graph from './pages/Graph';
 import Test from './pages/Test';
+import Report from './pages/Report';
+import Settings from './pages/Settings';
+
 
 function App() {
   return (
@@ -18,6 +21,8 @@ function App() {
           <Route path='/signup' element={<Signup/>}/>
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/graph' element={<Graph/>}/>
+          <Route path='/report' element={<Report/>}/>
+          <Route path='/settings' element={<Settings/>}/>
           <Route path='/test' element={<Test/>}/>
         </Routes>
       </BrowserRouter>

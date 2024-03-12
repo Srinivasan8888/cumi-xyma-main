@@ -49,7 +49,7 @@ const Card = () => {
     setLimitData(newLimitData);
   };
 
-  // console.log("devicedata", deviceData);
+  console.log("devicedata", deviceData);
 
   return (
     <div style={{ width: "100%", overflow: "hidden"}}>

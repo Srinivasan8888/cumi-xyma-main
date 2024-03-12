@@ -4,7 +4,7 @@ import idModel from "../model/idModel.js";
 import limit from "../model/limit.js";
 
 export const createSensor = async (req, res) => {
-  const { id, thickness, devicetemp, signal, batterylevel, time } = req.query;
+  const { id, thickness, devicetemp, signal, batterylevel } = req.query;
 
   try {
     const sensor = new asset({
@@ -13,7 +13,7 @@ export const createSensor = async (req, res) => {
       devicetemp: String(devicetemp),
       signal: String(signal),
       batterylevel: String(batterylevel),
-      time: String(time),
+      
     });
 
     const savesensor = await sensor.save();
@@ -40,24 +40,6 @@ export const timelimit = async (req, res) => {
   }
 };
 
-// export const getlogdata = async (req, res) => {
-//   try {
-//     // Step 1: Retrieve data sorted by updatedAt
-//     const logData = await asset.find().sort({ updatedAt: 1 }).limit(40);
-
-//     // Step 2: Manipulate data to update id based on timestamp
-//     const updatedLogData = logData.map((item, index) => ({
-//       ...item.toObject(),
-//       id: `xy${(index + 1).toString().padStart(3, '0')}` // Assuming index starts from 0
-//     }));
-
-//     res.status(200).json(updatedLogData);
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// };
-
-
 export const getlogdata = async (req, res) => {
   try {
     const logdata = await asset.aggregate([
@@ -79,46 +61,6 @@ export const getlogdata = async (req, res) => {
     res.status(500).json(error);
   }
 };
-
-// export const getlogdata = async (req, res) => {
-//   try {
-//     const logdata = await asset.aggregate([
-//       { $sort: { updatedAt: -1 } }, // Sort documents by updatedAt in descending order
-//       { $group: { _id: "$id", data: { $first: "$$ROOT" } } }, // Group by id and take the first document (latest)
-//       { $replaceRoot: { newRoot: "$data" } }, // Replace the root with the grouped document
-//       { $limit: 40 } // Limit the result to 40 documents
-//     ]);
-
-//     if (!logdata || logdata.length === 0) {
-//       return res.status(404).json({ error: "No assets found" });
-//     }
-
-//     res.json(logdata);
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// };
-
-
-
-// export const getlogdata1 = async (req, res) => {
-//   try {
-//     const logdata = await Asset.aggregate([
-//       { $sort: { updatedAt: -1 } },
-//       { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
-//       { $replaceRoot: { newRoot: "$data" } },
-//       { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
-//       { $sort: { idNumber: 1 } }, 
-//       { $project: { idNumber: 0 } },
-//       { $limit: 40 } 
-//     ]);
-
-//     res.status(200).json(logdata);
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// };
-
 
 export const getSensorData = async (req, res) => {
   const sensorId = req.params.id;
@@ -144,6 +86,93 @@ export const getSensorData = async (req, res) => {
       .json({ error: "Internal Server Error", details: error.message });
   }
 };
+
+// export const exceldata = async (req, res) => {
+//   const { id, date1, date2 } = req.query;
+//   console.log("Received id:", id);
+//   console.log("Received date1:", date1);
+//   console.log("Received date2:", date2);
+
+//   try {
+//     const isValidDateRange = !isNaN(Date.parse(date1)) && !isNaN(Date.parse(date2));
+//     if (!isValidDateRange) {
+//       return res.status(400).json({ error: "Invalid date range" });
+//     }
+
+//     const sensorData = await idModel.findOne({ id: id });
+//     if (!sensorData) {
+//       return res.status(404).json({ error: "Sensor data not found" });
+//     }
+
+//     const deviceid = sensorData.id;
+
+//     const assetDocumentArray = await asset.model("asset").find({
+//       id: deviceid,
+//       $and: [
+//         { createdAt: { $gte: date1 } },
+//         { createdAt: { $lte: date1 } }
+//       ]
+//     });
+
+//     // Sorting by id first and by createdAt next
+//     assetDocumentArray.sort((a, b) => {
+//       if (a.id === b.id) {
+//         return a.createdAt - b.createdAt;
+//       }
+//       return a.id.localeCompare(b.id);
+//     });
+
+//     console.log("Found asset documents:", assetDocumentArray);
+
+//     res.json(assetDocumentArray);
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res.status(500).json({ error: "Internal Server Error", details: error.message });
+//   }
+// };
+
+
+// export const exceldata = async (req, res) => {
+//   const { date1, date2 } = req.query;
+
+//   try {
+//     const assetDocumentArray = await asset.model("asset").find({
+//       $and: [
+//         { createdAt: { $gte: date1 } },
+//         { createdAt: { $lte: date2 } }
+//       ]
+//     });
+//     console.log("Found asset documents:", assetDocumentArray);
+
+//     res.json(assetDocumentArray);
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res.status(500).json({ error: "Internal Server Error", details: error.message });
+//   }
+// };
+
+export const exceldata = async (req, res) => {
+  const { id: deviceid, date1, date2 } = req.query;
+
+  try {
+    const assetDocumentArray = await asset.model("asset").find({
+      id: deviceid,
+      $and: [
+        { createdAt: { $gte: date1 } },
+        { createdAt: { $lte: date2 } }
+      ]
+    });
+    
+    console.log("Found asset documents:", assetDocumentArray);
+
+    res.json(assetDocumentArray);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal Server Error", details: error.message });
+  }
+};
+
+
 
 export const iddata = async (req, res) => {
   const { id } = req.params;
@@ -313,6 +342,28 @@ export const idallsetlimit = async (req, res) => {
 
 
 
+export const allsetlimit = async (req, res) => {
+  try {
+    const sensorData = await limit.aggregate([
+      { $sort: { id: 1, updatedAt: -1 } },
+      { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
+      { $replaceRoot: { newRoot: "$data" } },
+      { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
+      { $sort: { idNumber: 1 } }, 
+      { $project: { idNumber: 0 } },
+      { $limit: 40 } 
+    ]);
+
+    if (!sensorData || sensorData.length === 0) {
+      return res.status(404).json({ error: "No assets found" });
+    }
+
+    res.json(sensorData);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
 // export const allsetlimit = async (req, res) => {
 //   try {
 //     const sensorData = await limit.aggregate([
@@ -347,28 +398,6 @@ export const idallsetlimit = async (req, res) => {
 //   }
 // };
 
-
-export const allsetlimit = async (req, res) => {
-  try {
-    const sensorData = await limit.aggregate([
-      { $sort: { id: 1, updatedAt: -1 } },
-      { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
-      { $replaceRoot: { newRoot: "$data" } },
-      { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
-      { $sort: { idNumber: 1 } }, 
-      { $project: { idNumber: 0 } },
-      { $limit: 40 } 
-    ]);
-
-    if (!sensorData || sensorData.length === 0) {
-      return res.status(404).json({ error: "No assets found" });
-    }
-
-    res.json(sensorData);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-};
 
 
 

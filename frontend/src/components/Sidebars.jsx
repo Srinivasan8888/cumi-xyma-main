@@ -55,7 +55,7 @@ const Sidebars = () => {
             </li>
             <li>
               <a
-                href="#"
+                href="/report"
                 className="flex items-center dashboard_dec  p-2 text-white rounded-lg hover:bg-gray-700 group transition-all duration-300"
               >
                 <TbReportAnalytics className="w-7 h-7" />
@@ -64,7 +64,7 @@ const Sidebars = () => {
             </li>
             <li>
               <a
-                href="#"
+                href="/settings"
                 className="flex items-center dashboard_dec  p-2 text-white rounded-lg hover:bg-gray-700 group transition-all duration-300"
               >
                 <RiSettings4Line className="w-7 h-7" />
