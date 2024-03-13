@@ -1,16 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import G from "../img/G.svg"
 
 function Signup() {
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const registerUser = async (event) => {
+    event.preventDefault();
+
+    const response = await fetch("http://localhost:4000/sensor/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.user) {
+      let a = localStorage.setItem("token", data.user);
+      console.log("somedate", a);
+      alert("Login Successful");
+      window.location.href = "/signin";
+    } else {
+      alert("Error : Incorrect Email and Password ");
+    }
+  };
+
   const navigate = useNavigate();
 
   function signinpage() {
     navigate("/signin");
-  }
-
-  function gotodashboard() {
-    navigate("/dashboard");
   }
 
   const containerStyle = {
@@ -33,28 +59,34 @@ function Signup() {
           </div>
         </div>
         <form
-          onSubmit={(e) => e.preventDefault()}
+         onSubmit={registerUser}
           className="mt-8 space-y-5"
         >
           <div>
             <label className="font-medium">Email</label>
             <input
-              type="email"
-              required
+             value={email}
+             onChange={(e) => setEmail(e.target.value)}
+             type="email"
+             required
+             autoComplete="email"
               className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
             />
           </div>
           <div>
             <label className="font-medium">Password</label>
             <input
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               type="password"
               required
+              autoComplete="password"
               className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
             />
           </div>
           <button
             className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150"
-            onClick={gotodashboard}
+            type="submit"
           >
             Create account
           </button>

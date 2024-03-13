@@ -2,6 +2,67 @@ import mongoose from "mongoose";
 import asset from "../model/asset.js";
 import idModel from "../model/idModel.js";
 import limit from "../model/limit.js";
+import User from "../model/userModel.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+//register
+export const userRegister = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({
+      email,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
+
+    const token = jwt.sign(
+      {
+        email: newUser.email,
+      },
+      'secret123'
+    );
+
+    return res.json({ status: 'ok', user: token });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+//login
+export const userData = async (req, res) => {
+  const user = await User.findOne({
+    email: req.body.email,
+  });
+  if (!user) {
+    return { status: "error", error: "Invalid User" };
+  }
+  const isPasswordVaild = await bcrypt.compare(
+    req.body.password,
+    user.password
+  );
+  if (isPasswordVaild) {
+    const token = jwt.sign(
+      {
+        name: user.name,
+        email: user.email,
+      },
+      "secret123"
+    );
+    return res.json({ status: "ok", user: token });
+  } else {
+    return res.json({ status: "error", user: false });
+  }
+};
+
 
 export const createSensor = async (req, res) => {
   const { id, thickness, devicetemp, signal, batterylevel } = req.query;

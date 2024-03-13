@@ -1,25 +1,68 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, Fragment } from "react";
 import Sidebars from "../components/Sidebars";
-import Dropdownbox from "../components/Dropdownbox";
+// import Dropdownbox from "../components/Dropdownbox";
+import { Listbox, Transition } from "@headlessui/react";
+import {
+  CheckIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/solid";
 import { MdOutlineDateRange } from "react-icons/md";
-import "./css/Report.css"
+import "./css/Report.css";
+import * as XLSX from "xlsx"; 
 
 const Report = () => {
-  const [selectedCylinder, setSelectedCylinder] = useState(null);
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedId, setSelectedId] = useState("xy001");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const startDateInputRef = useRef(null);
   const endDateInputRef = useRef(null);
+  const [infoGraph, setInfoGraph] = useState([]);
+  const [selectedCylinder, setSelectedCylinder] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/sensor/data");
+      let infoVal = await response.json();
+      infoVal = infoVal;
+      setInfoGraph(infoVal);
+      if (infoVal.length > 0) {
+        setSelectedCylinder(infoVal[0].id);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // useEffect(() => {
+  //   const apidate = async () => {
+  //     if (selectedId !== null) {
+  //       try {
+  //         const response = await fetch(
+  //           `http://localhost:4000/sensor/dataexcel?id=${selectedId}&date1=${startDate}T00:00:00Z&date2=${endDate}T23:59:59Z`
+  //         );
+  //         const data = await response.json();
+  //         console.log("Data:", data);
+  //       } catch (error) {
+  //         console.error("Error fetching data:", error);
+  //       }
+  //     }
+  //   };
+
+  //   apidate();
+  //   const intervalId = setInterval(apidate, 1000);
+  //   return () => clearInterval(intervalId); 
+  // });
 
   const handleCylinderChange = (cylinderId) => {
     setSelectedCylinder(cylinderId);
     setSelectedId(cylinderId);
-    console.log("Selected Cylinder ID from reports.jsx:", cylinderId);
+    console.log("Selected Cylinder ID:", cylinderId);
   };
-
-
-
   const handleDateChange = (event) => {
     const { name, value } = event.target;
     if (name === "startdate") {
@@ -37,8 +80,33 @@ const Report = () => {
     if (!startDate || !endDate) {
       alert("Please select both start and end dates.");
     } else {
-      console.log("Start Date:", startDate);
-      console.log("End Date:", endDate);
+      const apidate = async () => {
+        if (selectedId !== null) {
+          try {
+            const response = await fetch(
+              `http://localhost:4000/sensor/dataexcel?id=${selectedId}&date1=${startDate}T00:00:00Z&date2=${endDate}T23:59:59Z`
+            );
+            const data = await response.json();
+            
+            const modifiedData = data.map(obj => {
+              const { _id, __v, updatedAt, ...rest } = obj;
+              return rest;
+            });
+  
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(modifiedData);
+            XLSX.utils.book_append_sheet(wb, ws, "Data");
+            XLSX.writeFile(wb, `${selectedId} report.xlsx`);
+            console.log("Data:", modifiedData);
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        }
+      };
+  
+      apidate();
+      // console.log("Start Date:", startDate);
+      // console.log("End Date:", endDate);
     }
   };
 
@@ -46,22 +114,22 @@ const Report = () => {
     <div className="h-full w-full flex flex-col">
       <Sidebars />
       <div className="p-4 sm:ml-64 h-full w-full">
-        <section class="bg-white">
-          <div class="lg:grid lg:min-h-screen lg:grid-cols-12">
-            <aside class="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
+        <section className="bg-white">
+          <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
+            <aside className="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
               <img
                 alt=""
                 src="https://images.unsplash.com/photo-1605106702734-205df224ecce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                class="absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full object-cover"
               />
             </aside>
 
-            <main class="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6">
-              <div class="max-w-xl lg:max-w-3xl">
-                <a class="block text-blue-600">
-                  <span class="sr-only">Home</span>
+            <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6">
+              <div className="max-w-xl lg:max-w-3xl">
+                <a className="block text-blue-600">
+                  <span className="sr-only">Home</span>
                   <svg
-                    class="h-8 sm:h-10"
+                    className="h-8 sm:h-10"
                     viewBox="0 0 28 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -73,15 +141,101 @@ const Report = () => {
                   </svg>
                 </a>
 
-                <h1 class="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
+                <h1 className="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
                   Reports Page 📝
                 </h1>
 
-                <p class="mt-4 leading-relaxed text-gray-500">
-                  Select from two different date!
+                <p className="mt-4 leading-relaxed text-gray-500">
+                  Select from two different dates!
                 </p>
 
-               <Dropdownbox/>
+                {/* <Dropdownbox /> */}
+
+                <div className="relative flex justify-start  mt-24 sm:mt-0 z-20">
+                  <div className="relative w-11/12 sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-44">
+                    <Listbox
+                      value={selectedCylinder}
+                      onChange={handleCylinderChange}
+                    >
+                      {({ open }) => (
+                        <>
+                          <Listbox.Label className="block text-center text-xs md:text-sm font-medium text-gray-700 mb-2">
+                            Select Device
+                          </Listbox.Label>
+                          <div className="relative">
+                            <span className="inline-block w-full">
+                              <Listbox.Button className="flex justify-between items-center pl-2 md:pl-3 py-1 md:py-2 w-full text-left focus:outline-none focus:shadow-outline-blue focus:border-blue-300 relative border shadow-sm border-gray-300 rounded text-gray-800">
+                                <span className="truncate">
+                                  {selectedCylinder}
+                                </span>
+                                {open ? (
+                                  <ChevronUpIcon
+                                    className="h-4 md:h-5 w-4 md:w-5 text-gray-400"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  <ChevronDownIcon
+                                    className="h-4 md:h-5 w-4 md:w-5 text-gray-400"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                              </Listbox.Button>
+                            </span>
+                            <Transition
+                              as={Fragment}
+                              leave="transition ease-in duration-100"
+                              leaveFrom="opacity-100"
+                              leaveTo="opacity-0"
+                            >
+                              <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 pl-0 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                {infoGraph.map((cylinderItem) => (
+                                  <Listbox.Option
+                                    key={cylinderItem.id}
+                                    value={cylinderItem.id}
+                                  >
+                                    {({ selected, active }) => (
+                                      <div
+                                        className={`${
+                                          active
+                                            ? "text-white bg-indigo-600"
+                                            : "text-gray-900"
+                                        } cursor-default select-none relative py-2 md:pl-0`}
+                                      >
+                                        {selected && (
+                                          <span
+                                            className={`${
+                                              active
+                                                ? "text-white"
+                                                : "text-indigo-600"
+                                            } absolute inset-y-0 left-0 flex items-center pl-1 text-amber-600`}
+                                          >
+                                            <CheckIcon
+                                              className="h-4 mt-1 md:h-5 w-4 md:w-5"
+                                              aria-hidden="true"
+                                            />
+                                          </span>
+                                        )}
+                                        <span
+                                          className={`text-xs md:text-base ${
+                                            active
+                                              ? "font-semibold"
+                                              : "font-normal"
+                                          } pl-8`}
+                                        >
+                                          {cylinderItem.id}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </Listbox.Option>
+                                ))}
+                              </Listbox.Options>
+                            </Transition>
+                          </div>
+                        </>
+                      )}
+                    </Listbox>
+                  </div>
+                </div>
 
                 <div className="mt-8 grid grid-cols-6 gap-6">
                   <div className="col-span-6 sm:col-span-3 relative">
@@ -100,7 +254,6 @@ const Report = () => {
                       className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm pl-8"
                       ref={startDateInputRef}
                     />
-                    
                   </div>
 
                   <div className="col-span-6 sm:col-span-3 relative">
@@ -118,9 +271,7 @@ const Report = () => {
                       value={endDate}
                       className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-black shadow-sm pl-8"
                       ref={endDateInputRef}
-                      
                     />
-                   
                   </div>
 
                   <div className="col-span-6 sm:flex sm:items-center sm:gap-4">

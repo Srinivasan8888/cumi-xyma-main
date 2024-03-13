@@ -14,7 +14,11 @@ const Sidebars = () => {
   // const toggleSidebar = () => {
   //   setIsSidebarOpen(!isSidebarOpen);
   // };
-
+  const logout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+    alert('Logout Successful');
+}
   return (
     <div>
       {/* <button
@@ -73,7 +77,7 @@ const Sidebars = () => {
             </li>
           </ul>
           <a
-            href="#"
+            onClick={() => logout()}
             className="fixed dashboard_dec items-center left-5 bottom-10 p-2 text-white rounded-lg hover:bg-gray-700 group transition-all duration-300 flex"
           >
             <TbLogout2 className="w-7 h-7" />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/solid";
-import Toggle from "../components/Toggle";
+
 
 
 export default function Dropdownbox({ onChartData }) {
@@ -37,36 +37,36 @@ export default function Dropdownbox({ onChartData }) {
     console.log("Selected Cylinder ID:", cylinderId);
   };
 
-//   useEffect(() => {
-//     const apidate = async () => {
-//       if (selectedId !== null) {
-//         try {
-//           const response = await fetch(
-//             `http://localhost:4000/sensor/getdata/${selectedId}?battery=${valuebat}&thickness=${valuethick}`
-//           );
-//           const data = await response.json();
-//           console.log("Data:", data);
-//           onChartData(data); // Pass chart data to parent component
-//         } catch (error) {
-//           console.error("Error fetching data:", error);
-//         }
-//       }
-//     };
+  useEffect(() => {
+    const apidate = async () => {
+      if (selectedId !== null) {
+        try {
+          const response = await fetch(
+            `http://localhost:4000/sensor/getdata/${selectedId}?battery=${valuebat}&thickness=${valuethick}`
+          );
+          const data = await response.json();
+          console.log("Data:", data);
+          onChartData(data); // Pass chart data to parent component
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
 
-//     apidate();
-//     const intervalId = setInterval(apidate, 1000);
-//     return () => clearInterval(intervalId); 
-//   }, [selectedId, valuebat, valuethick]);
+    apidate();
+    const intervalId = setInterval(apidate, 1000);
+    return () => clearInterval(intervalId); 
+  }, [selectedId, valuebat, valuethick]);
 
-//   const handleBatteryToggle = () => {
-//     setBatteryEnabled(!batteryEnabled);
-//     setValueBat(batteryEnabled ? "true" : "false");
-//   };
+  const handleBatteryToggle = () => {
+    setBatteryEnabled(!batteryEnabled);
+    setValueBat(batteryEnabled ? "true" : "false");
+  };
 
-//   const handleThicknessToggle = () => {
-//     setThicknessEnabled(!thicknessEnabled);
-//     setValueThick(thicknessEnabled ? "true" : "false");
-//   };
+  const handleThicknessToggle = () => {
+    setThicknessEnabled(!thicknessEnabled);
+    setValueThick(thicknessEnabled ? "true" : "false");
+  };
 
   return (
     <div className="relative flex justify-start  mt-24 sm:mt-0 z-20">
