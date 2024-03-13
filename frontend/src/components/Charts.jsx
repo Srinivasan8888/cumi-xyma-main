@@ -13,6 +13,7 @@ const Charts = ({ deviceNumber }) => {
           `http://localhost:4000/sensor/table/xy00${deviceNumber}`
         );
         const data = await response.json();
+        data.reverse();
         console.log(data);
         setChartData(data);
       } catch (error) {
