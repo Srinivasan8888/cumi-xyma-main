@@ -1,11 +1,12 @@
 import React from "react";
 import { IoWarningOutline } from "react-icons/io5";
 import { GoCheckCircle } from "react-icons/go";
+import Rcards from "../components/dashboardcomp/Rcards";
 
 const Test = () => {
   return (
     <div>
-      <div
+      {/* <div
         className="fixed bottom-4 right-4 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow"
         role="alert"
       >
@@ -78,7 +79,8 @@ const Test = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
+      <Rcards/>
     </div>
   );
 };

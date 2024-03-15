@@ -228,13 +228,13 @@ const Rcards = ({ deviceData }) => {
   };
 
   return (
-    <div className="max-w-full h-0 ml-5" style={{ height: "20px" }}>
+    <div >
       <div className="flex items-end justify-end">
         {/* <p className="mr-3 font-bold text-base mb-1">
           {id ? `${id}` : "Loading..."} */}
 
         {/* <div>Sensor Status: {status}</div> */}
-        {/* <div>
+        <div className="text-xs font-bold mr-3 mb-2">
             Last Updated Time:{" "}
             {TimeData
               ? new Date(TimeData).toLocaleString("en-US", {
@@ -242,7 +242,7 @@ const Rcards = ({ deviceData }) => {
                 })
               : "Loading..."}
           </div>
-        </p>  */}
+        {/* </p>  */}
 
         <Carddrop
           deviceData={deviceData}
@@ -287,15 +287,7 @@ const Rcards = ({ deviceData }) => {
               onChange={handleInputChange}
             />
           </div>
-        </form>
-        {/* <button
-          type="button"
-          className="mr-3 ml-3 inline-block w-20 h-9 font-bold text-center bg-gradient-to-tl from-purple-700 to-pink-500 uppercase align-middle transition-all rounded-lg cursor-pointer leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs text-white"
-          onClick={handleSubmit}
-        >
-          Submit
-        </button> */}
-
+        </form> 
         <button
           type="button"
           class="ml-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -508,7 +500,7 @@ const Rcards = ({ deviceData }) => {
             <p className="font-bold text-sm text-black mb-2">
               Device id: {id ? `${id}` : "Loading..."}
             </p>
-            <p className="font-bold text-sm text-black mb-2">
+            {/* <p className="font-bold text-sm text-black mb-2">
               Last updated Time:
             </p>
             <div className="text-sm font-bold text-black">
@@ -521,7 +513,7 @@ const Rcards = ({ deviceData }) => {
               ) : (
                 "Loading..."
               )}
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -623,3 +615,4 @@ const Rcards = ({ deviceData }) => {
 };
 
 export default Rcards;
+

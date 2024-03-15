@@ -58,6 +58,9 @@ function Dashboard() {
   <div className="flex-grow p-4 sm:ml-64">
     <Navbar />
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 cont1">
+
+      {/* Work on this modal its causing the issue with the responsive */}
+
       <div className="md:col-span-1 ">
         <Model
           handleSmallBoxClick={handleSmallBoxClick}
@@ -80,6 +83,7 @@ function Dashboard() {
         <Charts deviceNumber={deviceNumberForEffect} className="h-full" />
       </div>
     </div>
+    
   </div>
 </div>
 
