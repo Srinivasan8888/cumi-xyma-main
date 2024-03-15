@@ -11,7 +11,7 @@ const fakeData = [
   { id: "5 Min" },
   { id: "1 Day" },
   { id: "7 Days" },
-  { id: "30 Days" },
+  { id: "15 Days" },
 ];
 
 const Carddrop = ({ deviceData, onSelectionChange }) => {

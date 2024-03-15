@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebars from "../components/Sidebars";
+import Sidebars from "../components/Sidebar/Sidebars";
 import { Card } from "flowbite-react";
 
 const Settings = () => {

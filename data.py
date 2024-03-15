@@ -14,5 +14,5 @@ while True:
         url_data = f"http://localhost:4000/sensor/insertdata?id=xy00{i}&thickness={r1}&devicetemp={r2}&signal={r3}&batterylevel={r4}"
         response_data = requests.get(url_data)
         print(f"Data sent for iteration {i} to insert data. Response: {response_data.text}")
-    time.sleep(1)
+    time.sleep(5)
     

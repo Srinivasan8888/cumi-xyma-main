@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, Fragment } from "react";
-import Sidebars from "../components/Sidebars";
+import Sidebars from "../components/Sidebar/Sidebars";
 // import Dropdownbox from "../components/Dropdownbox";
 import { Listbox, Transition } from "@headlessui/react";
 import {

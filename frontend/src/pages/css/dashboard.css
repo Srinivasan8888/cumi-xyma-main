@@ -28,3 +28,37 @@ html {
   margin: 0;
   text-decoration: none;
 }
+
+@media (max-width: 1700px) {
+  .cont1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow-y: auto; 
+    max-height: 90vh; 
+  }
+
+
+  .rcards-container {
+    max-width: 100%; 
+    overflow: hidden;
+  }
+  
+  .rcards-container .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px; 
+  }
+  
+  .rcards-container .grid > div {
+    min-width: 0; 
+    flex-grow: 1; 
+  }
+  
+  .rcards-container .grid > div > div {
+    width: 100%; 
+  }
+
+}
+
+
+

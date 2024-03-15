@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FaTemperatureLow, FaSignal, FaSortAmountUpAlt } from "react-icons/fa";
 import { PiBatteryFullFill } from "react-icons/pi";
-import Carddrop from "./Carddrop";
-import CUMI from "../img/CUMI.png";
-import "./css/rcard.css";
+import Carddrop from "../Carddrop";
+import CUMI from "../../img/CUMI.png";
+import "../css/rcard.css";
 import { GoCheckCircle } from "react-icons/go";
 import { MdAdd } from "react-icons/md";
 import { IoWarningOutline } from "react-icons/io5";
@@ -29,6 +29,8 @@ const Rcards = ({ deviceData }) => {
   const [errorAlert, setErrorAlert] = useState(false);
   const [TimeData, setTimeData] = useState(null);
   const [status, setStatus] = useState("");
+  const [errorAlert1, setErrorAlert1] = useState(false); 
+  const [errorAlert2, setErrorAlert2] = useState(false);
 
   useEffect(() => {
     if (deviceData) {
@@ -40,6 +42,21 @@ const Rcards = ({ deviceData }) => {
       setTimeData(new Date(deviceData.createdAt));
     }
   }, [deviceData]);
+
+  useEffect(() => {
+    if (thickness !== null) {
+      if (thickness <= 0) {
+        setErrorAlert1(true);
+        setErrorAlert2(false);
+      } else if (thickness == 9999) {
+        setErrorAlert1(false);
+        setErrorAlert2(true);
+      } else {
+        setErrorAlert1(false);
+        setErrorAlert2(false);
+      }
+    }
+  }, [thickness]);
 
   const getColorBasedOnPercentage = (limitvalue) => {
     if (limitvalue > 100) {
@@ -68,143 +85,7 @@ const Rcards = ({ deviceData }) => {
         const sensorData = data.find((sensor) => sensor.id === id);
         setSensorData(sensorData);
 
-        // if (sensorData) {
-
-        //   // const currentTime = Date.now() / 1000; // Current time in seconds
-        //   // const DBTimeInSeconds = sensorData.time;
-        //   // const createdDBTime = new Date(sensorData.createdAt).getTime() / 1000;
-
-        //   const currentTime = new Date().toISOString();
-        //   const dbTime = sensorData.time;
-        //   const createdDBTime = sensorData.createdAt;
-
-        //   // const mscurrentTime = currentTime * 1000 * 60;
-        //   // const msdbtime = createdDBTime * 1000 * 60;
-
-        //   // console.log("current time in ms:", mscurrentTime);
-        //   // console.log("msdbtime in ms:", msdbtime);
-
-        //   // const cbtdbt = createdDBTime + dbTime;
-
-        //   console.log("Current time:", currentTime);
-        //   console.log("createdDBTime:", createdDBTime);
-        //   console.log("DB Time in mins:", dbTime);
-
-        //   // console.log("cbtdbt time", cbtdbt);
-
-        //   // if (Math.floor(cbtdbt > currentTime)) {
-        //   //  console.log("active");
-        //   // } else {
-        //   //   console.log("inactive");
-        //   // }
-
-        //   if (!isNaN(sensorData.inputthickness)) {
-        //     const limitvalue =
-        //       ((thickness - 0) * (100 - 0)) / (sensorData.inputthickness - 0) + 0;
-        //     setLimitValue(limitvalue);
-        //   } else {
-        //     console.error("Input thickness is not a valid number.");
-        //   }
-        // }
-
         if (sensorData) {
-          // function getCurrentIST(date) {
-          //   const options = {
-          //     timeZone: "Asia/Kolkata",
-          //     hour12: true,
-          //     hour: "numeric",
-          //     minute: "numeric",
-          //     second: "numeric",
-          //     year: "numeric",
-          //     month: "numeric",
-          //     day: "numeric",
-          //   };
-          //   return date.toLocaleString("en-US", options);
-          // }
-
-          // const currentTime = getCurrentIST(new Date());
-          // const dbTime = sensorData.time;
-          // const createdDBTime = sensorData.createdAt;
-
-          // console.log("createdDBTime:", createdDBTime);
-
-          // const utcDate = new Date(createdDBTime);
-          // const offsetMinutes = utcDate.getTimezoneOffset();
-          // const localDate = new Date(
-          //   utcDate.getTime() + offsetMinutes * 60 * 1000
-          // );
-
-          // function formatLocalTimeWithSeconds(date) {
-          //   const hours = date.getHours();
-          //   const minutes = date.getMinutes();
-          //   const seconds = date.getSeconds();
-          //   const ampm = hours >= 12 ? "PM" : "AM";
-          //   const formattedHours = hours % 12 || 12;
-          //   const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
-          //   const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
-
-          //   return `${
-          //     date.getMonth() + 1
-          //   }/${date.getDate()}/${date.getFullYear()} ${formattedHours}:${formattedMinutes}:${formattedSeconds} ${ampm}`;
-          // }
-
-          // console.log(
-          //   "db time with 12hours",
-          //   formatLocalTimeWithSeconds(localDate)
-          // );
-          // console.log("Current time (IST):", currentTime);
-          // console.log("DB Time in mins:", dbTime);
-
-          // localDate.setMinutes(localDate.getMinutes() + dbTime);
-          // console.log("Before addition:", localDate);
-          // console.log("dbTime:", dbTime);
-
-          // // Format the updated Date object
-          // const formattedUpdatedLocalDate =
-          //   formatLocalTimeWithSeconds(localDate);
-          // console.log(
-          //   "Updated local time with dbTime added:",
-          //   formattedUpdatedLocalDate
-          // );
-
-          // if (currentISTDate >= new Date(currentTime)) {
-          //   console.log("active");
-          //   setStatus("active");
-          // } else {
-          //   console.log("inactive");
-          //   setStatus("inactive");
-          // }
-
-          // it was working fine untill the date
-          //   function getCurrentIST(date) {
-          //     const options = {
-          //         timeZone: "Asia/Kolkata",
-          //         hour12: true,
-          //         hour: "numeric",
-          //         minute: "numeric",
-          //         second: "numeric",
-          //         year: "numeric",
-          //         month: "numeric",
-          //         day: "numeric",
-          //     };
-          //     return date.toLocaleString("en-IN", options);
-          // }
-
-          // const currentTime = getCurrentIST(new Date());
-          // const dbcreatedtime = new Date(sensorData.createdAt);
-          // const userInputMinutes = parseInt(sensorData.time);
-          // const updatedTime = new Date(dbcreatedtime.getTime());
-          // updatedTime.setMinutes(updatedTime.getMinutes() + userInputMinutes);
-          // const formattedTime = getCurrentIST(updatedTime);
-          // const updatedTimeIST = formattedTime.toLocaleString("en-IN", getCurrentIST);
-
-          // console.log("Current Time in IST:", currentTime);
-          // console.log("dbCreated Time in UTC:", sensorData.createdAt);
-          // console.log("Userinput Time:", sensorData.time);
-          // console.log("12hrs of dbtime in UTC:", dbcreatedtime.toLocaleString());
-          // console.log("Updated Time after adding sensorData.time in UTC:", updatedTime.toLocaleString());
-          // console.log("Updated Time after converting to IST:", updatedTimeIST);
-
           function getCurrentIST(date) {
             const options = {
               timeZone: "Asia/Kolkata",
@@ -278,61 +159,6 @@ const Rcards = ({ deviceData }) => {
     return () => clearInterval(intervalId);
   }, [id, thickness]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         "http://localhost:4000/sensor/alllimitdata"
-  //       );
-  //       const data = await response.json();
-  //       const sensorData = data.find((sensor) => sensor.id === id);
-  //       setSensorData(sensorData);
-
-  //             if (sensorData) {
-  //               // console.log("Sensor data for ID:", id);
-  //               // console.log("Input Thickness:", sensorData.inputthickness);
-  //               // console.log("Other sensor data:", sensorData);
-  //               // console.log("set time for thickness", sensorData.time);
-  //               // console.log("Created at time for thickness", sensorData.createdAt);
-
-  //               const currentTime = Date.now() / 1000; // Current time in seconds
-  //               const DBTimeInSeconds = sensorData.time;
-  //               const createdDBTime = new Date(sensorData.createdAt).getTime() / 1000;
-
-  //               const cbtdbt = createdDBTime + DBTimeInSeconds;
-  //               console.log("cbtdbt time", cbtdbt);
-
-  //               if (cbtdbt > currentTime) {
-  //                 console.log("active");
-  //               } else {
-  //                 console.log("In-active");
-  //               }
-  //             } else {
-  //               console.log("non"); // You were missing a semicolon here
-  //             }
-
-  //         if (!isNaN(sensorData.inputthickness)) {
-  //           const limitvalue =
-  //             ((thickness - 0) * (100 - 0)) / (sensorData.inputthickness - 0) +
-  //             0;
-  //           // console.log("limit value of", limitvalue);
-  //           setLimitValue(limitvalue);
-  //         } else {
-  //           console.error("Input thickness is not a valid number.");
-  //         }
-  //       } else {
-  //         console.error("Sensor data not found for id:", id);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  //   const intervalId = setInterval(fetchData, 1000);
-  //   return () => clearInterval(intervalId);
-  // }, [id, thickness]);
-
   const handleInputChange = (e) => {
     const value = e.target.value;
     setUserInput(value);
@@ -343,38 +169,6 @@ const Rcards = ({ deviceData }) => {
     setSelectedValue(selectedValue);
     alert(`Selected value: ${selectedValue}`);
   };
-
-  // const handleSubmit = async () => {
-  //   if (selectedValue && userInput) {
-  //     const encodedSelectedValue = encodeURIComponent(selectedValue);
-  //     const url = `http://localhost:4000/sensor/setlimit?id=${id}&time=${encodedSelectedValue}&inputthickness=${userInput}`;
-
-  //     try {
-  //       const response = await fetch(url, {
-  //         method: "POST",
-  //         body: JSON.stringify({
-  //           id: id,
-  //           time: encodedSelectedValue,
-  //           inputthickness: userInput,
-  //         }),
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       });
-
-  //       if (!response.ok) {
-  //         throw new Error("Network response was not ok");
-  //       }
-
-  //       const result = await response.json();
-  //       console.log(result);
-  //     } catch (error) {
-  //       console.error("There was a problem with the fetch operation:", error);
-  //     }
-  //   } else {
-  //     console.error("Selected value or user input is empty.");
-  //   }
-  // };
 
   const handleSubmit = async () => {
     if (!selectedValue || !userInput) {
@@ -396,8 +190,8 @@ const Rcards = ({ deviceData }) => {
       encodedSelectedValue = "1440";
     } else if ((encodedSelectedValue = "7 Days")) {
       encodedSelectedValue = "10080";
-    } else if ((encodedSelectedValue = "30 Days")) {
-      encodedSelectedValue = "43200";
+    } else if ((encodedSelectedValue = "15 Days")) {
+      encodedSelectedValue = "21600";
     }
 
     const url = `http://localhost:4000/sensor/setlimit?id=${id}&time=${encodedSelectedValue}&inputthickness=${userInput}`;
@@ -436,11 +230,20 @@ const Rcards = ({ deviceData }) => {
   return (
     <div className="max-w-full h-0 ml-5" style={{ height: "20px" }}>
       <div className="flex items-end justify-end">
-        <p className="mr-3 font-bold text-base mb-1">
-          {id ? `${id}` : "Loading..."}
+        {/* <p className="mr-3 font-bold text-base mb-1">
+          {id ? `${id}` : "Loading..."} */}
 
-          <div>Sensor Status: {status}</div>
-        </p>
+        {/* <div>Sensor Status: {status}</div> */}
+        {/* <div>
+            Last Updated Time:{" "}
+            {TimeData
+              ? new Date(TimeData).toLocaleString("en-US", {
+                  timeZone: "Asia/Kolkata",
+                })
+              : "Loading..."}
+          </div>
+        </p>  */}
+
         <Carddrop
           deviceData={deviceData}
           onSelectionChange={handleSelectionChange}
@@ -579,8 +382,74 @@ const Rcards = ({ deviceData }) => {
         )}
       </div>
 
+      {errorAlert1 && (
+        <div className="fixed bottom-4 right-4 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow" role="alert">
+          <div className="flex">
+            <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
+              <IoWarningOutline />
+            </div>
+            <div className="ms-3 text-sm font-normal">
+              <span className="mb-1 text-sm font-semibold text-red-500">ER01</span>
+              <div className="mb-2 text-sm font-normal">
+                Electronics modules and ceramics haven't been set properly or Check the fittings properly to get the signal.
+              </div>
+            </div>
+            <button
+              type="button"
+              className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8"
+              aria-label="Close"
+              onClick={() => setErrorAlert1(false)}
+            >
+              <span className="sr-only">Close</span>
+              <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+{errorAlert2 && (
+        <div className="fixed bottom-4 right-4 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow" role="alert">
+          <div className="flex">
+            <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
+              <IoWarningOutline />
+            </div>
+            <div className="ms-3 text-sm font-normal">
+              <span className="mb-1 text-sm font-semibold text-red-500">ER02</span>
+              <div className="mb-2 text-sm font-normal">
+                Unexpected error cause the FGA to crash!!!
+              </div>
+            </div>
+            <button
+              type="button"
+              className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8"
+              aria-label="Close"
+              onClick={() => setErrorAlert2(false)}
+            >
+              <span className="sr-only">Close</span>
+              <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
       <div class="grid grid-cols-3 gap-4">
-        <div className="flex flex-col lg:flex-row">
+        {/* <div className="flex flex-col lg:flex-row">
           <img src={CUMI} className="w-44" />
           <div className="mt-3 ml-4 lg:flex lg:flex-col">
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -611,6 +480,47 @@ const Rcards = ({ deviceData }) => {
               >
                 &lt;50%
               </p>
+            </div>
+          </div>
+        </div> */}
+
+        <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row">
+          <div className="flex items-center">
+            <div className="flex flex-col mr-2">
+              {/* Container for dots */}
+              <div className="flex items-center">
+                <div className="h-3 w-3 rounded-full bg-green-300 mr-1 "></div>
+                <span className="text-sm font-bold">&gt;75%</span>
+              </div>
+              <div className="flex items-center">
+                <div className="h-3 w-3 rounded-full bg-[#ED7014] mr-1"></div>
+                <span className="text-sm font-bold sm:text-base lg:text-sm xl:text-xs">
+                  75 - 50
+                </span>
+              </div>
+              <div className="flex items-center">
+                <div className="h-3 w-3 rounded-full bg-red-600 mr-1"></div>
+                <span className="text-sm font-bold">&lt;50%</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col ml-auto text-right">
+            <p className="font-bold text-sm text-black mb-2">
+              Device id: {id ? `${id}` : "Loading..."}
+            </p>
+            <p className="font-bold text-sm text-black mb-2">
+              Last updated Time:
+            </p>
+            <div className="text-sm font-bold text-black">
+              {TimeData ? (
+                <span>
+                  {new Date(TimeData).toLocaleString("en-US", {
+                    timeZone: "Asia/Kolkata",
+                  })}
+                </span>
+              ) : (
+                "Loading..."
+              )}
             </div>
           </div>
         </div>
@@ -653,10 +563,13 @@ const Rcards = ({ deviceData }) => {
                   : "Loading..."
                 : "Loading..."}{" "}
               mm
+
+              
             </p>
           </div>
         </div>
       </div>
+
 
       <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-3 sm:grid-cols-1 mb-5">
         <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row">

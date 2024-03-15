@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from "react";
-import Charts from "../components/Charts.jsx";
-import Rcards from "../components/Rcards";
+import Charts from "../components/dashboardcomp/Charts.jsx";
+import Rcards from "../components/dashboardcomp/Rcards.jsx";
 import "../components/css/card.css";
-import RTables from "../components/RTables";
-import Model from "../components/Model";
+import RTables from "../components/dashboardcomp/RTables.jsx";
+import Model from "../components/dashboardcomp/Model.jsx";
 import Navbar from "../components/Navbar.jsx";
 // import Card from "../components/Card.jsx";
 import "./css/dashboard.css";
-import Sidebars from "../components/Sidebars.jsx";
+import Sidebars from "../components/Sidebar/Sidebars.jsx";
 // import Sidebars from "../Sidebar/Sidebars.jsx";
 
 function Dashboard() {
-
   const [deviceData, setDeviceData] = useState(null);
   const [deviceNumberForEffect, setDeviceNumberForEffect] = useState(1);
   const [limitValues, setLimitValues] = useState([]);
   const [limitData, setLimitData] = useState([]);
-  
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -26,7 +24,7 @@ function Dashboard() {
         );
         const data = await response.json();
         console.log(data);
-        // Assuming you want to send the first data item to Rcards
+
         if (data && data.length > 0) {
           setDeviceData(data[0]);
         }
@@ -40,52 +38,52 @@ function Dashboard() {
     return () => clearInterval(intervalId);
   }, [deviceNumberForEffect]);
 
-
-
   const handleSmallBoxClick = async (text) => {
     const deviceNumber = parseInt(text.replace("Device ", ""), 10);
-  setDeviceNumberForEffect(deviceNumber);
-  // Pass limitValues to Rcards component
-  // setLimitValues(limitValues);
+    setDeviceNumberForEffect(deviceNumber);
+
+    // setLimitValues(limitValues);
   };
 
- const handleLimitValuesChange = (newLimitValues, newLimitData) => {
+  const handleLimitValuesChange = (newLimitValues, newLimitData) => {
     setLimitValues(newLimitValues);
     setLimitData(newLimitData);
   };
 
   console.log("devicedata", deviceData);
 
-
   return (
-    <div className="h-fit flex flex-col">
-      <Sidebars />
-      <div className="p-4 sm:ml-64 ">
-        <Navbar />
-        <div style={{ width: "100%", overflow: "hidden"}}>
-      <div className="grid items-stretch grid-rows-2 md:grid md:grid-rows-2 sm:grid sm:grid-rows-1">
-        <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 ">
-         
-          <div>
-            <Model handleSmallBoxClick={handleSmallBoxClick} onLimitValuesChange={handleLimitValuesChange}  />
+    <div className="flex flex-col h-screen">
+  <Sidebars />
+  <div className="flex-grow p-4 sm:ml-64">
+    <Navbar />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 cont1">
+      <div className="md:col-span-1 ">
+        <Model
+          handleSmallBoxClick={handleSmallBoxClick}
+          onLimitValuesChange={handleLimitValuesChange}
+          className="h-full"
+        />
+      </div>
+      <div className="md:col-span-1 rcards-container">
+        <Rcards
+          deviceData={deviceData}
+          limitValues={limitValues}
+          limitData={limitData}
+          className="h-full"
+        />
+      </div>
+      <div className="md:col-span-1">
+        <RTables deviceNumber={deviceNumberForEffect} className="h-full" />
+      </div>
+      <div className="md:col-span-1">
+        <Charts deviceNumber={deviceNumberForEffect} className="h-full" />
+      </div>
+    </div>
+  </div>
+</div>
 
-          </div >
-          <div>
-          <Rcards deviceData={deviceData} limitValues={limitValues} limitData={limitData}  />
-          </div>
-        </div>
-        <div className="sm:grid sm:grid-cols-1 lg:grid lg:grid-cols-2 md:grid md:grid-cols-2 gap-2 mt-3">
-          <div>
-            <RTables deviceNumber={deviceNumberForEffect} />
-          </div>
-          <div className="ml-5">
-            <Charts deviceNumber={deviceNumberForEffect} />
-          </div>
-        </div>
-      </div>
-    </div>
-      </div>
-    </div>
+  
   );
 }
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 
 const Charttwo = ({ chartData }) => {
-  const reversedChartData = [...chartData].reverse(); // Reverse the chartData array
+  const reversedChartData = [...chartData].reverse();
   const maxBatteryLevel = Math.max(...reversedChartData.map(dataItem => parseFloat(dataItem.batterylevel)));
   const maxThickness = Math.max(...reversedChartData.map(dataItem => parseFloat(dataItem.thickness)));
 
@@ -36,19 +36,13 @@ const Charttwo = ({ chartData }) => {
       },
       y: {
         min: 0,
-        max: Math.max(maxBatteryLevel, maxThickness) + 10, // Set max value dynamically
+        max: Math.max(maxBatteryLevel, maxThickness) + 10, 
       },
     },
   };
 
   return (
-    <div className="container w-full mx-auto" style={{ width: "100%", height: "910px", display: "flex", justifyContent: "center" }}>
-      <div className="bg-gray-100 p-4 rounded shadow" style={{ width: "190%", height: "100%" }}>
-        <div style={{ width: "190%", height: "100%" }}>
-          <Line data={data} options={options} />
-        </div>
-      </div>
-    </div>
+    <Line data={data} className="shadow-2xl rounded-2xl bg-gray-100 p-4" options={options} />
   );
 };
 

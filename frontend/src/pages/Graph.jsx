@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Sidebars from "../components/Sidebars";
+import Sidebars from "../components/Sidebar/Sidebars";
 import Combobox from "../components/Combobox";
 import Charttwo from "../components/Charttwo";
 
@@ -16,7 +16,7 @@ const Graph = () => {
       <Sidebars />
       <div className="p-4 sm:ml-64">
         <Combobox onChartData={handleChartData} />
-        {chartData ? <Charttwo chartData={chartData} /> : null}
+        {chartData && <Charttwo chartData={chartData} />} {/* Render Charttwo only if chartData is not null */}
       </div>
     </div>
   );
