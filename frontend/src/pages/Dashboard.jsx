@@ -20,7 +20,7 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/sensor/getdata/xy00${deviceNumberForEffect}?battery=true&thickness=true`
+          `http://localhost:4000/sensor/getdata/XY00${deviceNumberForEffect}?battery=true&thickness=true`
         );
         const data = await response.json();
         console.log(data);
@@ -61,14 +61,14 @@ function Dashboard() {
 
       {/* Work on this modal its causing the issue with the responsive */}
 
-      <div className="md:col-span-1 ">
+      <div className="md:col-span-1 modelview">
         <Model
           handleSmallBoxClick={handleSmallBoxClick}
           onLimitValuesChange={handleLimitValuesChange}
-          className="h-full"
+         
         />
       </div>
-      <div className="md:col-span-1 rcards-container">
+      <div className="md:col-span-1 sm:col-span">
         <Rcards
           deviceData={deviceData}
           limitValues={limitValues}
@@ -76,10 +76,10 @@ function Dashboard() {
           className="h-full"
         />
       </div>
-      <div className="md:col-span-1">
+      <div className="md:col-span-1 sm:col-span-4">
         <RTables deviceNumber={deviceNumberForEffect} className="h-full" />
       </div>
-      <div className="md:col-span-1">
+      <div className="md:col-span-1 sm:col-span-4">
         <Charts deviceNumber={deviceNumberForEffect} className="h-full" />
       </div>
     </div>

@@ -10,7 +10,7 @@ const Charts = ({ deviceNumber }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/sensor/table/xy00${deviceNumber}`
+          `http://localhost:4000/sensor/table/XY00${deviceNumber}`
         );
         const data = await response.json();
         data.reverse();
@@ -26,8 +26,20 @@ const Charts = ({ deviceNumber }) => {
     return () => clearInterval(intervalId);
   }, [deviceNumber]);
 
+  // const extractDataForChart = (data) => {
+  //   const labels = data.map((entry) => entry.createdAt);
+  //   const thicknessValues = data.map((entry) => parseInt(entry.thickness, 10));
+  //   return {
+  //     labels: labels,
+  //     data: thicknessValues,
+  //   };
+  // };
+
   const extractDataForChart = (data) => {
-    const labels = data.map((entry) => entry.createdAt);
+    const labels = data.map((entry) => {
+      const date = new Date(entry.createdAt);
+      return date.toISOString().split('T')[0];
+    });
     const thicknessValues = data.map((entry) => parseInt(entry.thickness, 10));
     return {
       labels: labels,
@@ -35,6 +47,7 @@ const Charts = ({ deviceNumber }) => {
     };
   };
 
+  
   const { labels, data: thicknessData } = extractDataForChart(chartDataState);
 
   const CHART_COLORS = {
@@ -104,8 +117,8 @@ const Charts = ({ deviceNumber }) => {
 
   return (
     <div
-      className="flex items-center bg-gray-50 shadow-md rounded-lg"
-      style={{ width: "100%", height: "99%" }}
+      className="flex items-center bg-gray-100 shadow-2xl rounded-lg border-4"
+      style={{ width: "100%", height: "100%" }}
     >
       <Line {...chartConfig} className="mt-2" />
     </div>

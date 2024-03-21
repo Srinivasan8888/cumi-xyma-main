@@ -5,6 +5,7 @@ import limit from "../model/limit.js";
 import User from "../model/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import RawData from "../model/rawdata.js";
 //register
 export const userRegister = async (req, res) => {
   try {
@@ -12,7 +13,7 @@ export const userRegister = async (req, res) => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: 'Email already exists' });
+      return res.status(400).json({ error: "Email already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -28,13 +29,13 @@ export const userRegister = async (req, res) => {
       {
         email: newUser.email,
       },
-      'secret123'
+      "secret123"
     );
 
-    return res.json({ status: 'ok', user: token });
+    return res.json({ status: "ok", user: token });
   } catch (error) {
-    console.error('Error registering user:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error("Error registering user:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 //login
@@ -63,35 +64,206 @@ export const userData = async (req, res) => {
   }
 };
 
+// export const createSensor = async (req, res) => {
+//   const { id, thickness, devicetemp, signal, batterylevel } = req.query;
+
+//   try {
+//     const sensor = new asset({
+//       id: String(id),
+//       thickness: String(thickness),
+//       devicetemp: String(devicetemp),
+//       signal: String(signal),
+//       batterylevel: String(batterylevel),
+//     });
+
+//     const savesensor = await sensor.save();
+//     res.status(200).json(savesensor);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
+
+// export const createSensor = async (req, res) => {
+//   const { id, thickness, devicetemp, signal, batterylevel } = req.query;
+
+//   let modifiedId = id;
+//   if (id === "XY00001") {
+//     modifiedId = "XY001";
+//   }
+
+//   try {
+//     const rawData = new RawData({
+//       id: String(id),
+//       thickness: String(thickness),
+//       devicetemp: String(devicetemp),
+//       signal: String(signal),
+//       batterylevel: String(batterylevel),
+//     });
+
+//     await rawData.save();
+
+//     const batteryLevels = batterylevel.split(",");
+//     let adjustedBatteryLevel = (
+//       ((parseFloat(batterylevel) - 265) * (100 - 0)) / (540 - 265) +
+//       0
+//     ).toFixed(2);
+//     let adjustedSignal = (
+//       ((parseFloat(signal) - 0) * (100 - 0)) / (32 - 0) +
+//       0
+//     ).toFixed(2);
+
+//     if (adjustedBatteryLevel >= 100) {
+//       adjustedBatteryLevel = 100;
+//     }
+//     if (adjustedSignal >= 100) {
+//       adjustedSignal = 100;
+//     }
+
+//     const sensor = new asset({
+//       id: String(id),
+//       thickness: String(thickness),
+//       devicetemp: String(devicetemp),
+//       signal: String(adjustedSignal),
+//       batterylevel: String(adjustedBatteryLevel),
+//     });
+
+//     const savesensor = await sensor.save();
+//     res.status(200).json(savesensor);
+
+//     const response = await axios.get(
+//       "http://localhost:4000/sensor/alllimitdata"
+//     );
+//     const data = response.data;
+//     const fetchedId = data.map((entry) => entry.id);
+//     const fetchedTime = data.map((entry) => entry.time);
+//     const fetchedInputThickness = data.map((entry) => entry.inputthickness);
+
+//     res.status(200).json({
+//       fetchedData: {
+//         id: fetchedId,
+//         time: fetchedTime,
+//         inputthickness: fetchedInputThickness,
+//       },
+//     });
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
 
 export const createSensor = async (req, res) => {
   const { id, thickness, devicetemp, signal, batterylevel } = req.query;
 
+
+  let modifiedId = id;
+  if (id === "XY00001") {
+    modifiedId = "XY001";
+  }
+
   try {
-    const sensor = new asset({
+    const rawData = new RawData({
       id: String(id),
       thickness: String(thickness),
       devicetemp: String(devicetemp),
       signal: String(signal),
       batterylevel: String(batterylevel),
-      
+    });
+
+    await rawData.save();
+
+    let adjustedBatteryLevel = (
+      ((parseFloat(batterylevel) - 265) * (100 - 0)) /
+      (540 - 265)
+    ).toFixed(2);
+    let adjustedSignal = (
+      ((parseFloat(signal) - 0) * (100 - 0)) /
+      (32 - 0)
+    ).toFixed(2);
+
+    if (adjustedBatteryLevel > 100) adjustedBatteryLevel = "100";
+    if (adjustedSignal > 100) adjustedSignal = "100";
+
+    const sensor = new asset({
+      id: String(modifiedId),
+      thickness: String(thickness),
+      devicetemp: String(devicetemp),
+      signal: String(adjustedSignal),
+      batterylevel: String(adjustedBatteryLevel),
     });
 
     const savesensor = await sensor.save();
-    res.status(200).json(savesensor);
+
+    // res.status(200).json(savesensor);
+    try {
+      const sensorData = await limit.aggregate([
+        { $sort: { id: 1, updatedAt: -1 } },
+        { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
+        { $replaceRoot: { newRoot: "$data" } },
+        { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
+        { $sort: { idNumber: 1 } },
+        { $limit: 40 },
+      ]);
+
+      if (!sensorData || sensorData.length === 0) {
+        return res.status(404).json({ error: "No assets found" });
+      }
+
+      const updatedSensorData = sensorData.map((obj) => [
+        `#`,
+        obj.id,
+        obj.inputthickness,
+        obj.time,
+      ]);
+
+      const flattenedArray = updatedSensorData.flat();
+
+      res.json(flattenedArray);
+    } catch (error) {
+      console.error("Error fetching sensor data:", error);
+      res.status(500).json({ error: "Error fetching sensor data" });
+    }
   } catch (error) {
-    res.status(500).json(error);
+    console.error("Error saving sensor data:", error);
+    res.status(500).json({ error: "Error saving sensor data" });
   }
 };
 
+// export const timelimit = async (req, res) => {
+//   const { id, time, inputthickness } = req.query;
+
+//   try {
+//     const tlimit = new limit({
+//       id: String(id),
+//       inputthickness: String(inputthickness),
+//       time: String(time),
+//     });
+
+//     const savelimit = await tlimit.save();
+//     res.status(200).json(savelimit);
+
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
+
 export const timelimit = async (req, res) => {
   const { id, time, inputthickness } = req.query;
-
+  let changedtime;
+  if (time == "1 Min") {
+    changedtime = "1";
+  } else if (time == "5 Min") {
+    changedtime = "5";
+  } else if (time == "1 Day") {
+    changedtime = "1440";
+  } else if (time == "7 Days") {
+    changedtime = "10080";
+  } else if (time == "15 Days") {
+    changedtime = "21600";
+  }
   try {
     const tlimit = new limit({
       id: String(id),
-      time: String(time),
       inputthickness: String(inputthickness),
+      time: changedtime, // Assign changedtime instead of time
     });
 
     const savelimit = await tlimit.save();
@@ -108,9 +280,9 @@ export const getlogdata = async (req, res) => {
       { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
       { $replaceRoot: { newRoot: "$data" } },
       { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
-      { $sort: { idNumber: 1 } }, 
+      { $sort: { idNumber: 1 } },
       { $project: { idNumber: 0 } },
-      { $limit: 40 } 
+      { $limit: 40 },
     ]);
 
     if (!logdata || logdata.length === 0) {
@@ -148,92 +320,25 @@ export const getSensorData = async (req, res) => {
   }
 };
 
-// export const exceldata = async (req, res) => {
-//   const { id, date1, date2 } = req.query;
-//   console.log("Received id:", id);
-//   console.log("Received date1:", date1);
-//   console.log("Received date2:", date2);
-
-//   try {
-//     const isValidDateRange = !isNaN(Date.parse(date1)) && !isNaN(Date.parse(date2));
-//     if (!isValidDateRange) {
-//       return res.status(400).json({ error: "Invalid date range" });
-//     }
-
-//     const sensorData = await idModel.findOne({ id: id });
-//     if (!sensorData) {
-//       return res.status(404).json({ error: "Sensor data not found" });
-//     }
-
-//     const deviceid = sensorData.id;
-
-//     const assetDocumentArray = await asset.model("asset").find({
-//       id: deviceid,
-//       $and: [
-//         { createdAt: { $gte: date1 } },
-//         { createdAt: { $lte: date1 } }
-//       ]
-//     });
-
-//     // Sorting by id first and by createdAt next
-//     assetDocumentArray.sort((a, b) => {
-//       if (a.id === b.id) {
-//         return a.createdAt - b.createdAt;
-//       }
-//       return a.id.localeCompare(b.id);
-//     });
-
-//     console.log("Found asset documents:", assetDocumentArray);
-
-//     res.json(assetDocumentArray);
-//   } catch (error) {
-//     console.error("Error:", error);
-//     res.status(500).json({ error: "Internal Server Error", details: error.message });
-//   }
-// };
-
-
-// export const exceldata = async (req, res) => {
-//   const { date1, date2 } = req.query;
-
-//   try {
-//     const assetDocumentArray = await asset.model("asset").find({
-//       $and: [
-//         { createdAt: { $gte: date1 } },
-//         { createdAt: { $lte: date2 } }
-//       ]
-//     });
-//     console.log("Found asset documents:", assetDocumentArray);
-
-//     res.json(assetDocumentArray);
-//   } catch (error) {
-//     console.error("Error:", error);
-//     res.status(500).json({ error: "Internal Server Error", details: error.message });
-//   }
-// };
-
 export const exceldata = async (req, res) => {
   const { id: deviceid, date1, date2 } = req.query;
 
   try {
     const assetDocumentArray = await asset.model("asset").find({
       id: deviceid,
-      $and: [
-        { createdAt: { $gte: date1 } },
-        { createdAt: { $lte: date2 } }
-      ]
+      $and: [{ createdAt: { $gte: date1 } }, { createdAt: { $lte: date2 } }],
     });
-    
+
     console.log("Found asset documents:", assetDocumentArray);
 
     res.json(assetDocumentArray);
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ error: "Internal Server Error", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
   }
 };
-
-
 
 export const iddata = async (req, res) => {
   const { id } = req.params;
@@ -288,6 +393,52 @@ export const iddata = async (req, res) => {
   }
 };
 
+// export const tabledatas = async (req, res) => {
+//   const { id } = req.params;
+//   console.log("Received id:", id);
+
+//   try {
+//     const sensorData = await idModel({
+//       id: String(id),
+//     });
+
+//     const dataid = await sensorData.save();
+//     const deviceid = dataid.id;
+
+//     const assetDocumentArray = await mongoose
+//       .model("asset")
+//       .find({
+//         id: deviceid,
+//       })
+//       .sort({ createdAt: -1 })
+//       .limit(30);
+
+//     if (!assetDocumentArray || assetDocumentArray.length === 0) {
+//       res.status(404).json({ error: "Asset not found" });
+//       return;
+//     }
+
+//     const response = assetDocumentArray.map((assetDocument) => {
+//       const responseData = {
+//         id: assetDocument.id,
+//         createdAt: assetDocument.createdAt,
+//         thickness: assetDocument.thickness,
+//         batterylevel: assetDocument.batterylevel,
+//         devicetemp: assetDocument.devicetemp,
+//         signal: assetDocument.signal,
+//         updatedAt: assetDocument.updatedAt,
+//         __v: assetDocument.__v,
+//         _id: assetDocument._id,
+//       };
+//       return responseData;
+//     });
+
+//     res.json(response);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
+
 export const tabledatas = async (req, res) => {
   const { id } = req.params;
   console.log("Received id:", id);
@@ -302,14 +453,22 @@ export const tabledatas = async (req, res) => {
 
     const assetDocumentArray = await mongoose
       .model("asset")
-      .find({
-        id: deviceid,
-      })
+      .find({ id: deviceid })
       .sort({ createdAt: -1 })
+      .limit(30);
+
+    const limitsdatas = await limit
+      .find({ id: id })
+      .sort({ updatedAt: -1 })
       .limit(30);
 
     if (!assetDocumentArray || assetDocumentArray.length === 0) {
       res.status(404).json({ error: "Asset not found" });
+      return;
+    }
+
+    if (!limitsdatas || limitsdatas.length === 0) {
+      res.status(404).json({ error: "Limits data not found" });
       return;
     }
 
@@ -321,6 +480,7 @@ export const tabledatas = async (req, res) => {
         batterylevel: assetDocument.batterylevel,
         devicetemp: assetDocument.devicetemp,
         signal: assetDocument.signal,
+        inputthickness: limitsdatas[0].inputthickness, // Assuming you want to use inputthickness from the first document in limitsdatas
         updatedAt: assetDocument.updatedAt,
         __v: assetDocument.__v,
         _id: assetDocument._id,
@@ -383,7 +543,6 @@ export const getsetlimits = async (req, res) => {
   }
 };
 
-
 export const idallsetlimit = async (req, res) => {
   const { id } = req.params;
   console.log("Received id for limit:", id);
@@ -401,8 +560,6 @@ export const idallsetlimit = async (req, res) => {
   }
 };
 
-
-
 export const allsetlimit = async (req, res) => {
   try {
     const sensorData = await limit.aggregate([
@@ -410,9 +567,9 @@ export const allsetlimit = async (req, res) => {
       { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
       { $replaceRoot: { newRoot: "$data" } },
       { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
-      { $sort: { idNumber: 1 } }, 
+      { $sort: { idNumber: 1 } },
       { $project: { idNumber: 0 } },
-      { $limit: 40 } 
+      { $limit: 40 },
     ]);
 
     if (!sensorData || sensorData.length === 0) {
@@ -458,9 +615,6 @@ export const allsetlimit = async (req, res) => {
 //     res.status(500).json(error);
 //   }
 // };
-
-
-
 
 //   try {
 //     // Create a new document with the given id

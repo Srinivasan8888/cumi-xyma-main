@@ -30,6 +30,7 @@ const Carddrop = ({ deviceData, onSelectionChange }) => {
     }
   }, []);
 
+
   return (
     <div className="relative flex justify-center items-center mt-24 sm:mt-0 z-20">
       <div className="relative w-11/12 sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-44">

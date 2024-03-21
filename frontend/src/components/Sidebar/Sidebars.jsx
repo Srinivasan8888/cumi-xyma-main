@@ -4,7 +4,7 @@ import { TbReportAnalytics, TbLogout2 } from "react-icons/tb";
 import { SlGraph } from "react-icons/sl";
 import { RiSettings4Line } from "react-icons/ri";
 import { MenuIcon, XIcon } from "@heroicons/react/outline"; // Import MenuIcon and XIcon
-import logo from "../../img/logo.png";
+import logo from "../../img/logo4.png";
 import cumi from "../../img/cumi_final.png";
 
 const Sidebars = () => {
@@ -49,7 +49,7 @@ const Sidebars = () => {
         id="logo-sidebar"
         className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform shadow-2xl 
         ${isSidebarOpen ? "" : "-translate-x-full"}
-        sm:translate-x-0 bg-[#d2d5d9] dark:bg-gray-800 overflow-y-auto`}
+        sm:translate-x-0 bg-[#2D2D2D] dark:bg-gray-800 overflow-y-auto`}
         aria-label="Sidebar"
       >
         <div className="h-full pr-0 py-3">
@@ -58,7 +58,7 @@ const Sidebars = () => {
             <li>
               <a
                 href="/Dashboard"
-                className="flex items-center dashboard_dec  p-2 text-black rounded-lg hover:bg-gray-400 group transition-all duration-300"
+                className="flex items-center dashboard_dec  p-2 text-white rounded-lg hover:bg-gray-400 group transition-all duration-300"
               >
                 <VscDashboard className="w-7 h-7" />
                 <h6 className="ms-3 mt-1">Dashboard</h6>
@@ -67,7 +67,7 @@ const Sidebars = () => {
             <li>
               <a
                 href="/Graph"
-                className="flex items-center dashboard_dec  p-2 text-black rounded-lg hover:bg-gray-400 group transition-all duration-300"
+                className="flex items-center dashboard_dec  p-2 text-white rounded-lg hover:bg-gray-400 group transition-all duration-300"
               >
                 <SlGraph className="w-7 h-7" />
                 <span className="flex-1 ms-3 whitespace-nowrap">Graph</span>
@@ -76,7 +76,7 @@ const Sidebars = () => {
             <li>
               <a
                 href="/report"
-                className="flex items-center dashboard_dec  p-2 text-black rounded-lg hover:bg-gray-400 group transition-all duration-300"
+                className="flex items-center dashboard_dec  p-2 text-white rounded-lg hover:bg-gray-400 group transition-all duration-300"
               >
                 <TbReportAnalytics className="w-7 h-7" />
                 <span className="flex-1 ms-3 whitespace-nowrap">Report</span>
@@ -85,7 +85,7 @@ const Sidebars = () => {
             <li>
               <a
                 href="/settings"
-                className="flex items-center dashboard_dec  p-2 text-black rounded-lg hover:bg-gray-400 group transition-all duration-300"
+                className="flex items-center dashboard_dec  p-2 text-white rounded-lg hover:bg-gray-400 group transition-all duration-300"
               >
                 <RiSettings4Line className="w-7 h-7" />
                 <span className="flex-1 ms-3 whitespace-nowrap">Settings</span>
@@ -94,7 +94,7 @@ const Sidebars = () => {
           </ul>
           <a
             onClick={() => logout()}
-            className="fixed dashboard_dec items-center left-5 bottom-10 p-2 text-black rounded-lg hover:bg-gray-400 group transition-all duration-300 flex"
+            className="fixed dashboard_dec items-center left-5 bottom-10 p-2 text-white rounded-lg hover:bg-gray-400 group transition-all duration-300 flex"
           >
             <TbLogout2 className="w-7 h-7" />
             <span className="ms-3 whitespace-nowrap">Logout</span>

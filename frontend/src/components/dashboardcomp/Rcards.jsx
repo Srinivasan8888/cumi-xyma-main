@@ -21,7 +21,7 @@ const Rcards = ({ deviceData }) => {
   const [devicetemp, setDevicetemp] = useState(null);
   const [signal, setSignal] = useState(null);
   const [batterylevel, setBattery] = useState(null);
-  const [selectedValue, setSelectedValue] = useState("5 Min");
+  const [selectedValue, setSelectedValue] = useState("1 Min");
   const [userInput, setUserInput] = useState("");
   const [sensorData, setSensorData] = useState(null);
   const [limitvalue, setLimitValue] = useState(null);
@@ -29,8 +29,9 @@ const Rcards = ({ deviceData }) => {
   const [errorAlert, setErrorAlert] = useState(false);
   const [TimeData, setTimeData] = useState(null);
   const [status, setStatus] = useState("");
-  const [errorAlert1, setErrorAlert1] = useState(false); 
+  const [errorAlert1, setErrorAlert1] = useState(false);
   const [errorAlert2, setErrorAlert2] = useState(false);
+  const [errorAlert3, setErrorAlert3] = useState(false);
 
   useEffect(() => {
     if (deviceData) {
@@ -58,15 +59,23 @@ const Rcards = ({ deviceData }) => {
     }
   }, [thickness]);
 
-  const getColorBasedOnPercentage = (limitvalue) => {
+  useEffect(() => {
     if (limitvalue > 100) {
-      return "lightblue";
-    } else if (limitvalue >= 75) {
-      return "lightgreen";
-    } else if (limitvalue >= 50) {
-      return "orange";
+      setErrorAlert3(true);
     } else {
-      return "red";
+      setErrorAlert3(false);
+    }
+  }, [limitvalue]);
+
+  const getColorBasedOnPercentage = (limitvalue) => {
+    if (limitvalue > 102.25) {
+      return "#38BDF8";
+    } else if (limitvalue >= 75) {
+      return "#28a33d";
+    } else if (limitvalue >= 50) {
+      return "#ED7014";
+    } else {
+      return "#EF4444";
     }
   };
 
@@ -167,7 +176,7 @@ const Rcards = ({ deviceData }) => {
 
   const handleSelectionChange = (selectedValue) => {
     setSelectedValue(selectedValue);
-    alert(`Selected value: ${selectedValue}`);
+    // alert(`Selected value: ${selectedValue}`);
   };
 
   const handleSubmit = async () => {
@@ -182,27 +191,28 @@ const Rcards = ({ deviceData }) => {
     }
 
     let encodedSelectedValue = encodeURIComponent(selectedValue);
-    if ((encodedSelectedValue = "1 Min")) {
+    if (encodedSelectedValue == "1 Min") {
       encodedSelectedValue = "1";
-    } else if ((encodedSelectedValue = "5 Min")) {
+    } else if (encodedSelectedValue == "5 Min") {
       encodedSelectedValue = "5";
-    } else if ((encodedSelectedValue = "1 Day")) {
+    } else if (encodedSelectedValue == "1 Day") {
       encodedSelectedValue = "1440";
-    } else if ((encodedSelectedValue = "7 Days")) {
+    } else if (encodedSelectedValue == "7 Days") {
       encodedSelectedValue = "10080";
-    } else if ((encodedSelectedValue = "15 Days")) {
+    } else if (encodedSelectedValue == "15 Days") {
       encodedSelectedValue = "21600";
     }
+    
 
-    const url = `http://localhost:4000/sensor/setlimit?id=${id}&time=${encodedSelectedValue}&inputthickness=${userInput}`;
+    const url = `http://localhost:4000/sensor/setlimit?id=${id}&time=${selectedValue}&inputthickness=${userInput}`;
 
     try {
       const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify({
           id: id,
-          time: encodedSelectedValue,
           inputthickness: userInput,
+          time: selectedValue,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -228,20 +238,22 @@ const Rcards = ({ deviceData }) => {
   };
 
   return (
-    <div >
+    <div>
       <div className="flex items-end justify-end">
         {/* <p className="mr-3 font-bold text-base mb-1">
+          DeviceId:
           {id ? `${id}` : "Loading..."} */}
 
         {/* <div>Sensor Status: {status}</div> */}
-        <div className="text-xs font-bold mr-3 mb-2">
-            Last Updated Time:{" "}
-            {TimeData
-              ? new Date(TimeData).toLocaleString("en-US", {
-                  timeZone: "Asia/Kolkata",
-                })
-              : "Loading..."}
-          </div>
+        <div className="text-sm font-bold mr-1 mb-2">
+          DeviceId:
+          {id ? `${id}` : "Loading..."}&nbsp; Last Updated:{" "}
+          {TimeData
+            ? new Date(TimeData).toLocaleString("en-US", {
+                timeZone: "Asia/Kolkata",
+              })
+            : "Loading..."}
+        </div>
         {/* </p>  */}
 
         <Carddrop
@@ -287,7 +299,7 @@ const Rcards = ({ deviceData }) => {
               onChange={handleInputChange}
             />
           </div>
-        </form> 
+        </form>
         <button
           type="button"
           class="ml-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -307,16 +319,16 @@ const Rcards = ({ deviceData }) => {
                 <GoCheckCircle />
               </div>
               <div className="ms-3 text-sm font-normal">
-                <span className="mb-1 text-sm font-semibold text-green-500">
+                <span className="mb-1 text-md font-bold text-green-500">
                   Success
                 </span>
-                <div className="mb-2 text-sm font-normal">
+                <div className="mb-2 text-md text-black font-bold">
                   Your preferred thickness has been updated successfully!
                 </div>
               </div>
               <button
                 type="button"
-                className="-mx-1.5 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8"
+                className="-mx-1.5 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-i inline-flex h-8 w-8"
                 aria-label="Close"
                 onClick={() => setShowAlert(false)}
               >
@@ -345,10 +357,10 @@ const Rcards = ({ deviceData }) => {
                 <IoWarningOutline />{" "}
               </div>
               <div className="ms-3 text-sm font-normal">
-                <span className="mb-1 text-sm font-semibold text-red-500">
+                <span className="mb-1 text-md font-bold text-red-500">
                   Error
                 </span>
-                <div className="mb-2 text-sm font-normal">
+                <div className="mb-2 text-md text-black font-bold">
                   Please fill in all the fields.
                 </div>
               </div>
@@ -375,15 +387,19 @@ const Rcards = ({ deviceData }) => {
       </div>
 
       {errorAlert1 && (
-        <div className="fixed bottom-4 right-4 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow" role="alert">
+        <div
+          className="fixed bottom-4 right-4 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow"
+          role="alert"
+        >
           <div className="flex">
             <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
               <IoWarningOutline />
             </div>
             <div className="ms-3 text-sm font-normal">
-              <span className="mb-1 text-sm font-semibold text-red-500">ER01</span>
-              <div className="mb-2 text-sm font-normal">
-                Electronics modules and ceramics haven't been set properly or Check the fittings properly to get the signal.
+              <span className="mb-1 text-md font-bold text-red-500">ER01</span>
+              <div className="mb-2 text-md text-black font-bold">
+                Electronics modules and ceramics haven't been set properly or
+                Check the fittings properly to get the signal.
               </div>
             </div>
             <button
@@ -407,15 +423,18 @@ const Rcards = ({ deviceData }) => {
         </div>
       )}
 
-{errorAlert2 && (
-        <div className="fixed bottom-4 right-4 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow" role="alert">
+      {errorAlert2 && (
+        <div
+          className="fixed bottom-4 right-4 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow"
+          role="alert"
+        >
           <div className="flex">
             <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
               <IoWarningOutline />
             </div>
             <div className="ms-3 text-sm font-normal">
-              <span className="mb-1 text-sm font-semibold text-red-500">ER02</span>
-              <div className="mb-2 text-sm font-normal">
+              <span className="mb-1 text-md font-bold text-red-500">ER02</span>
+              <div className="mb-2 text-md text-black font-bold">
                 Unexpected error cause the FGA to crash!!!
               </div>
             </div>
@@ -440,46 +459,47 @@ const Rcards = ({ deviceData }) => {
         </div>
       )}
 
-      <div class="grid grid-cols-3 gap-4">
-        {/* <div className="flex flex-col lg:flex-row">
-          <img src={CUMI} className="w-44" />
-          <div className="mt-3 ml-4 lg:flex lg:flex-col">
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <div style={{ ...circle, backgroundColor: "lightGreen" }}></div>
-              <p
-                style={{ marginLeft: "5px", marginTop: "10px" }}
-                className="font-bold mt-3"
-              >
-                &gt;75%
-              </p>
+      {errorAlert3 && (
+        <div
+          className="fixed bottom-4 right-4 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow"
+          role="alert"
+        >
+          <div className="flex">
+            <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
+              <IoWarningOutline />
             </div>
-            <div
-              style={{ display: "flex", width: "100px", alignItems: "center" }}
+            <div className="ms-3 text-sm font-normal">
+              <span className="mb-1 text-md font-bold text-red-500">ER03</span>
+              <div className="mb-2 text-md text-black font-bold">
+                Overlimit Warning!!! ⚠️
+              </div>
+            </div>
+            <button
+              type="button"
+              className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8"
+              aria-label="Close"
+              onClick={() => setErrorAlert3(false)}
             >
-              <div style={{ ...circle, backgroundColor: "Orange" }}></div>
-              <p
-                style={{ marginLeft: "5px", marginTop: "10px" }}
-                className="font-bold mt-3"
-              >
-                75 - 50
-              </p>
-            </div>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <div style={{ ...circle, backgroundColor: "Red" }}></div>
-              <p
-                style={{ marginLeft: "5px", marginTop: "10px" }}
-                className="font-bold mt-3"
-              >
-                &lt;50%
-              </p>
-            </div>
+              <span className="sr-only">Close</span>
+              <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+            </button>
           </div>
-        </div> */}
+        </div>
+      )}
 
-        <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row">
+      <div className="grid grid-cols-3 gap-4">
+        {/* <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row">
           <div className="flex items-center">
             <div className="flex flex-col mr-2">
-              {/* Container for dots */}
+             
               <div className="flex items-center">
                 <div className="h-3 w-3 rounded-full bg-green-300 mr-1 "></div>
                 <span className="text-sm font-bold">&gt;75%</span>
@@ -500,24 +520,10 @@ const Rcards = ({ deviceData }) => {
             <p className="font-bold text-sm text-black mb-2">
               Device id: {id ? `${id}` : "Loading..."}
             </p>
-            {/* <p className="font-bold text-sm text-black mb-2">
-              Last updated Time:
-            </p>
-            <div className="text-sm font-bold text-black">
-              {TimeData ? (
-                <span>
-                  {new Date(TimeData).toLocaleString("en-US", {
-                    timeZone: "Asia/Kolkata",
-                  })}
-                </span>
-              ) : (
-                "Loading..."
-              )}
-            </div> */}
           </div>
-        </div>
+        </div> */}
 
-        <div className="col-span-2">
+        <div className="col-span-12 ">
           <div
             className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mt-3 mb-4 sm:flex-row lg:ml-6`}
             style={{ backgroundColor }}
@@ -555,16 +561,20 @@ const Rcards = ({ deviceData }) => {
                   : "Loading..."
                 : "Loading..."}{" "}
               mm
-
-              
             </p>
           </div>
         </div>
       </div>
 
-
-      <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-3 sm:grid-cols-1 mb-5">
-        <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row">
+      <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-3 sm:grid-cols-1 mb-5 ">
+        <div
+          className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row border-2 ${
+            devicetemp &&
+            (parseInt(devicetemp) < 0 || parseInt(devicetemp) > 70)
+              ? "border-red-700 animate-pulse border-4"
+              : ""
+          }`}
+        >
           <div className="p-3 mb-2 mr-4 text-green-500 bg-green-100 rounded-full sm:mb-0">
             <svg className="w-6 h-6" fill="currentColor" viewBox="-1 -2 18 18">
               <FaTemperatureLow />
@@ -578,7 +588,13 @@ const Rcards = ({ deviceData }) => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row">
+        <div
+          className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row border-2 ${
+            signal && (parseInt(signal) < 10 || parseInt(signal) > 100)
+              ? "border-red-700 animate-pulse border-4"
+              : ""
+          }`}
+        >
           <div className="p-3 mb-2 mr-4 text-red-500 bg-red-100 rounded-full sm:mb-0">
             <svg className="w-5 h-5" fill="currentColor" viewBox="-1 -2 18 18">
               <FaSignal />
@@ -587,12 +603,19 @@ const Rcards = ({ deviceData }) => {
           <div className="text-sm font-medium text-gray-600 text-center sm:text-left">
             <h5 className="font-bold  text-black">Signal Strength</h5>
             <p className="text-2xl font-bold text-black mt-1">
-              {signal ? `${signal}` : "Loading..."}
+              {signal ? `${signal}%` : "Loading..."}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row">
+        <div
+          className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row border-2 ${
+            batterylevel &&
+            (parseInt(batterylevel) < 20 || parseInt(batterylevel) > 100)
+              ? "border-red-700 animate-pulse border-4"
+              : ""
+          }`}
+        >
           <div className="p-3 mb-2 mr-4 text-yellow-500 bg-yellow-100 rounded-full sm:mb-0">
             <svg
               className="w-6 h-6 items-center"
@@ -605,6 +628,9 @@ const Rcards = ({ deviceData }) => {
           <div className="text-sm font-medium text-gray-600 text-center sm:text-left">
             <h5 className="font-bold  text-black">Battery Level</h5>
             <p className="text-2xl font-bold text-black mt-1">
+              {/* {batterylevel ? 
+      ((batterylevel - 265) * (100 - 0) / (540 - 265) + 0).toFixed(2)+ "%"
+      : "Loading..."} */}
               {batterylevel ? `${batterylevel}%` : "Loading..."}
             </p>
           </div>
@@ -615,4 +641,3 @@ const Rcards = ({ deviceData }) => {
 };
 
 export default Rcards;
-
