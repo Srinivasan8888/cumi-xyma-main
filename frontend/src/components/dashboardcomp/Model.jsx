@@ -86,21 +86,22 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
   };
 
   const renderSmallBoxes = () => {
-    const groups = Array.from({ length: 4 }, (_, groupIndex) =>
-      Array.from(
-        { length: 10 },
-        (_, index) => {
-          const number = groupIndex * 10 + index + 1;
-          return `XY${number <= 9 ? '00' + number : (number <= 99 ? '0' + number : number)}`;
-        }
-      )
-    );
+  const groups = Array.from({ length: 4 }, (_, groupIndex) =>
+    Array.from(
+      { length: 10 },
+      (_, index) => {
+        const number = groupIndex * 10 + index + 1;
+        return `XY${number <= 9 ? '00' + number : (number <= 99 ? '0' + number : number)}`;
+      }
+    )
+  );
 
     const handleClick = (text, limitValues) => {
      
       const id = text.slice(2); 
       console.log("Small box clicked with ID:", id);
       handleSmallBoxClick(id, limitValues);
+      
     };
 
     const groupDivs = groups.map((group, groupIndex) => (
@@ -108,6 +109,7 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
         {group.map((text, index) => {
           const value = dataArray[groupIndex * 10 + index];
           const backgroundColor = getColorBasedOnPercentage(value);
+          const showIcon = value > 102.25;
           return (
             <div key={index} style={{ display: "flex" }}>
               <div
@@ -118,7 +120,7 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
                 onClick={() => handleClick(text, groupIndex * 10 + index)}
 
               >
-                {text}
+                 {text}
               </div>
               <div
                 style={{
@@ -130,7 +132,11 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
                 onClick={() => handleClick(text, groupIndex * 10 + index)}
 
               >
-                {value}
+                {showIcon ? (
+              <span style={{ fontSize: "20px", marginBottom : "20px" }}>⚠️</span>
+            ) : (
+              value
+            )}
               </div>
             </div>
           );
