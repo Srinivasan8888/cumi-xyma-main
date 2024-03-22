@@ -132,11 +132,7 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
                 onClick={() => handleClick(text, groupIndex * 10 + index)}
 
               >
-                {showIcon ? (
-              <span style={{ fontSize: "20px", marginBottom : "20px" }}>⚠️</span>
-            ) : (
-              value
-            )}
+                {showIcon ? ( <span style={{ fontSize: "20px", alignSelf: "flex-stretch", marginBottom: "5px" }}>⚠️</span>  ) : (value)}
               </div>
             </div>
           );

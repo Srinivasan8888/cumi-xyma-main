@@ -308,7 +308,7 @@ const Rcards = ({ deviceData }) => {
           {/* <MdAdd className=" ml-2 w-5 h-auto" /> */}
         </button>
 
-        {/* {showAlert && (
+        {showAlert && (
           <div
             className="fixed top-16 right-0 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow"
             role="alert"
@@ -382,9 +382,9 @@ const Rcards = ({ deviceData }) => {
               </button>
             </div>
           </div>
-        )} */}
+        )}
       </div>
-{/* 
+
       {errorAlert1 && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
           <div className="absolute inset-0 bg-black opacity-25"></div>
@@ -498,7 +498,7 @@ const Rcards = ({ deviceData }) => {
             </div>
           </div>
         </div>
-      )} */}
+      )}
 
       <div className="grid grid-cols-3 gap-4">
         {/* <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row">
