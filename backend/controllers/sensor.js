@@ -86,6 +86,7 @@ export const userData = async (req, res) => {
 // export const createSensor = async (req, res) => {
 //   const { id, thickness, devicetemp, signal, batterylevel } = req.query;
 
+
 //   let modifiedId = id;
 //   if (id === "XY00001") {
 //     modifiedId = "XY001";
@@ -102,25 +103,20 @@ export const userData = async (req, res) => {
 
 //     await rawData.save();
 
-//     const batteryLevels = batterylevel.split(",");
 //     let adjustedBatteryLevel = (
-//       ((parseFloat(batterylevel) - 265) * (100 - 0)) / (540 - 265) +
-//       0
+//       ((parseFloat(batterylevel) - 265) * (100 - 0)) /
+//       (540 - 265)
 //     ).toFixed(2);
 //     let adjustedSignal = (
-//       ((parseFloat(signal) - 0) * (100 - 0)) / (32 - 0) +
-//       0
+//       ((parseFloat(signal) - 0) * (100 - 0)) /
+//       (32 - 0)
 //     ).toFixed(2);
 
-//     if (adjustedBatteryLevel >= 100) {
-//       adjustedBatteryLevel = 100;
-//     }
-//     if (adjustedSignal >= 100) {
-//       adjustedSignal = 100;
-//     }
+//     if (adjustedBatteryLevel > 100) adjustedBatteryLevel = "100";
+//     if (adjustedSignal > 100) adjustedSignal = "100";
 
 //     const sensor = new asset({
-//       id: String(id),
+//       id: String(modifiedId),
 //       thickness: String(thickness),
 //       devicetemp: String(devicetemp),
 //       signal: String(adjustedSignal),
@@ -128,54 +124,71 @@ export const userData = async (req, res) => {
 //     });
 
 //     const savesensor = await sensor.save();
-//     res.status(200).json(savesensor);
 
-//     const response = await axios.get(
-//       "http://localhost:4000/sensor/alllimitdata"
-//     );
-//     const data = response.data;
-//     const fetchedId = data.map((entry) => entry.id);
-//     const fetchedTime = data.map((entry) => entry.time);
-//     const fetchedInputThickness = data.map((entry) => entry.inputthickness);
+//     // res.status(200).json(savesensor);
+//     try {
+//       const sensorData = await limit.aggregate([
+//         { $sort: { id: 1, updatedAt: -1 } },
+//         { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
+//         { $replaceRoot: { newRoot: "$data" } },
+//         { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
+//         { $sort: { idNumber: 1 } },
+//         { $limit: 40 },
+//       ]);
 
-//     res.status(200).json({
-//       fetchedData: {
-//         id: fetchedId,
-//         time: fetchedTime,
-//         inputthickness: fetchedInputThickness,
-//       },
-//     });
+//       if (!sensorData || sensorData.length === 0) {
+//         return res.status(404).json({ error: "No assets found" });
+//       }
+
+//       const updatedSensorData = sensorData.map((obj) => [
+//         `#`,
+//         obj.id,
+//         obj.inputthickness,
+//         obj.time,
+//       ]);
+
+//       const flattenedArray = updatedSensorData.flat();
+
+//       res.json(flattenedArray);
+//     } catch (error) {
+//       console.error("Error fetching sensor data:", error);
+//       res.status(500).json({ error: "Error fetching sensor data" });
+//     }
 //   } catch (error) {
-//     res.status(500).json(error);
+//     console.error("Error saving sensor data:", error);
+//     res.status(500).json({ error: "Error saving sensor data" });
 //   }
 // };
 
+
+
 export const createSensor = async (req, res) => {
-  const { id, thickness, devicetemp, signal, batterylevel } = req.query;
+  // const { id, thickness, devicetemp, signal, batterylevel } = req.query;
+  const { device_name, thickness, device_status, signal_strength, battery_status } = req.query;
 
 
-  let modifiedId = id;
-  if (id === "XY00001") {
+  let modifiedId = device_name;
+  if (device_name === "XY00001") {
     modifiedId = "XY001";
-  }
+  } 
 
   try {
     const rawData = new RawData({
-      id: String(id),
+      id: String(device_name),
       thickness: String(thickness),
-      devicetemp: String(devicetemp),
-      signal: String(signal),
-      batterylevel: String(batterylevel),
+      devicetemp: String(device_status),
+      signal: String(signal_strength),
+      batterylevel: String(battery_status),
     });
 
     await rawData.save();
 
     let adjustedBatteryLevel = (
-      ((parseFloat(batterylevel) - 265) * (100 - 0)) /
+      ((parseFloat(battery_status) - 265) * (100 - 0)) /
       (540 - 265)
     ).toFixed(2);
     let adjustedSignal = (
-      ((parseFloat(signal) - 0) * (100 - 0)) /
+      ((parseFloat(signal_strength) - 0) * (100 - 0)) /
       (32 - 0)
     ).toFixed(2);
 
@@ -185,7 +198,7 @@ export const createSensor = async (req, res) => {
     const sensor = new asset({
       id: String(modifiedId),
       thickness: String(thickness),
-      devicetemp: String(devicetemp),
+      devicetemp: String(device_status),
       signal: String(adjustedSignal),
       batterylevel: String(adjustedBatteryLevel),
     });

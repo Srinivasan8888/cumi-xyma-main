@@ -12,7 +12,7 @@ while True:
         r5 = random.randint(265, 540)
         t= datetime.now()
         # print(t)
-        url_data = f"http://localhost:4000/sensor/insertdata?id=XY00{i}&thickness={r1}&devicetemp={r2}&signal={r3}&batterylevel={r4},{r5}"
+        url_data = f"http://localhost:4000/sensor/insertData?device_name=XY00{i}&thickness={r1}&device_status={r2}&signal_strength={r3}&battery_status={r4},{r5}"
         response_data = requests.get(url_data)
         print(f"Data sent for iteration {i} to insert data. Response: {response_data.text}")
     time.sleep(2)

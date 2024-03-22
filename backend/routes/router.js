@@ -3,7 +3,7 @@ import { createSensor, getlogdata, getSensorData, iddata, tabledatas, timelimit,
 
 const router = express.Router();
 
-router.get('/insertdata', createSensor);
+router.get('/insertData', createSensor);
 router.get('/data', getlogdata);
 router.get('/sensordata/:id', getSensorData);
 router.get('/getdata/:id', iddata);
