@@ -60,7 +60,7 @@ const Rcards = ({ deviceData }) => {
   }, [thickness]);
 
   useEffect(() => {
-    if (limitvalue > 100) {
+    if (limitvalue > 100 && limitvalue < 9998) {
       setErrorAlert3(true);
     } else {
       setErrorAlert3(false);
@@ -202,7 +202,6 @@ const Rcards = ({ deviceData }) => {
     } else if (encodedSelectedValue == "15 Days") {
       encodedSelectedValue = "21600";
     }
-    
 
     const url = `http://localhost:4000/sensor/setlimit?id=${id}&time=${selectedValue}&inputthickness=${userInput}`;
 
@@ -240,21 +239,21 @@ const Rcards = ({ deviceData }) => {
   return (
     <div>
       <div className="flex items-end justify-end">
-        {/* <p className="mr-3 font-bold text-base mb-1">
-          DeviceId:
-          {id ? `${id}` : "Loading..."} */}
-
-        {/* <div>Sensor Status: {status}</div> */}
-        <div className="text-sm font-bold mr-1 mb-2">
-          DeviceId:
-          {id ? `${id}` : "Loading..."}&nbsp; Last Updated:{" "}
-          {TimeData
-            ? new Date(TimeData).toLocaleString("en-US", {
-                timeZone: "Asia/Kolkata",
-              })
-            : "Loading..."}
+        <div className="text-base font-bold mr-1 mb-2">
+          {" "}
+          {id ? `${id}` : "Loading..."}&nbsp;
+          <span style={{ color: "black", fontStyle: "normal" }}>
+            Last Updated:{" "}
+          </span>
+          <span style={{ color: "red" }}>
+            {TimeData
+              ? new Date(TimeData).toLocaleString("en-US", {
+                  timeZone: "Asia/Kolkata",
+                })
+              : "Loading..."}
+            &nbsp;
+          </span>
         </div>
-        {/* </p>  */}
 
         <Carddrop
           deviceData={deviceData}
@@ -309,7 +308,7 @@ const Rcards = ({ deviceData }) => {
           {/* <MdAdd className=" ml-2 w-5 h-auto" /> */}
         </button>
 
-        {showAlert && (
+        {/* {showAlert && (
           <div
             className="fixed top-16 right-0 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow"
             role="alert"
@@ -383,117 +382,123 @@ const Rcards = ({ deviceData }) => {
               </button>
             </div>
           </div>
-        )}
+        )} */}
       </div>
-
+{/* 
       {errorAlert1 && (
-        <div
-          className="fixed bottom-4 right-4 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow"
-          role="alert"
-        >
-          <div className="flex">
-            <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
-              <IoWarningOutline />
-            </div>
-            <div className="ms-3 text-sm font-normal">
-              <span className="mb-1 text-md font-bold text-red-500">ER01</span>
-              <div className="mb-2 text-md text-black font-bold">
-                Electronics modules and ceramics haven't been set properly or
-                Check the fittings properly to get the signal.
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+          <div className="absolute inset-0 bg-black opacity-25"></div>
+          <div className="relative z-10 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow">
+            <div className="flex">
+              <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
+                <IoWarningOutline />
               </div>
+              <div className="ms-3 text-sm font-normal">
+                <span className="mb-1 text-md font-bold text-red-500">
+                  ER01
+                </span>
+                <div className="mb-2 text-md text-black font-bold">
+                  Electronics modules and ceramics haven't been set properly or
+                  Check the fittings properly to get the signal.
+                </div>
+              </div>
+              <button
+                type="button"
+                className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 z-20"
+                aria-label="Close"
+                onClick={() => setErrorAlert1(false)}
+              >
+                <span className="sr-only">Close</span>
+                <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+              </button>
             </div>
-            <button
-              type="button"
-              className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8"
-              aria-label="Close"
-              onClick={() => setErrorAlert1(false)}
-            >
-              <span className="sr-only">Close</span>
-              <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                />
-              </svg>
-            </button>
           </div>
         </div>
       )}
 
       {errorAlert2 && (
-        <div
-          className="fixed bottom-4 right-4 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow"
-          role="alert"
-        >
-          <div className="flex">
-            <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
-              <IoWarningOutline />
-            </div>
-            <div className="ms-3 text-sm font-normal">
-              <span className="mb-1 text-md font-bold text-red-500">ER02</span>
-              <div className="mb-2 text-md text-black font-bold">
-                Unexpected error cause the FGA to crash!!!
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+          <div className="absolute inset-0 bg-black opacity-25"></div>
+          <div className="relative z-10 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow">
+            <div className="flex">
+              <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
+                <IoWarningOutline />
               </div>
+              <div className="ms-3 text-sm font-normal">
+                <span className="mb-1 text-md font-bold text-red-500">
+                  ER02
+                </span>
+                <div className="mb-2 text-md text-black font-bold">
+                  Unexpected error cause the FGA to crash!!!
+                </div>
+              </div>
+              <button
+                type="button"
+                className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 z-20"
+                aria-label="Close"
+                onClick={() => setErrorAlert2(false)}
+              >
+                <span className="sr-only">Close</span>
+                <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+              </button>
             </div>
-            <button
-              type="button"
-              className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8"
-              aria-label="Close"
-              onClick={() => setErrorAlert2(false)}
-            >
-              <span className="sr-only">Close</span>
-              <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                />
-              </svg>
-            </button>
           </div>
         </div>
       )}
 
       {errorAlert3 && (
-        <div
-          className="fixed bottom-4 right-4 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow"
-          role="alert"
-        >
-          <div className="flex">
-            <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
-              <IoWarningOutline />
-            </div>
-            <div className="ms-3 text-sm font-normal">
-              <span className="mb-1 text-md font-bold text-red-500">ER03</span>
-              <div className="mb-2 text-md text-black font-bold">
-                Overlimit Warning!!! ⚠️
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+          <div className="absolute inset-0 bg-transparent opacity-25"></div>
+          <div className="relative z-10 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow">
+            <div className="flex">
+              <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
+                <IoWarningOutline />
               </div>
+              <div className="ms-3 text-sm font-normal">
+                <span className="mb-1 text-md font-bold text-red-500">
+                  ER03
+                </span>
+                <div className="mb-2 text-md text-black font-bold">
+                  Overlimit Warning!!! ⚠️
+                </div>
+              </div>
+              <button
+                type="button"
+                className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 z-20"
+                aria-label="Close"
+                onClick={() => setErrorAlert3(false)}
+              >
+                <span className="sr-only">Close</span>
+                <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+              </button>
             </div>
-            <button
-              type="button"
-              className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8"
-              aria-label="Close"
-              onClick={() => setErrorAlert3(false)}
-            >
-              <span className="sr-only">Close</span>
-              <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                />
-              </svg>
-            </button>
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="grid grid-cols-3 gap-4">
         {/* <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row">
@@ -523,47 +528,136 @@ const Rcards = ({ deviceData }) => {
           </div>
         </div> */}
 
-        <div className="col-span-12 ">
-          <div
-            className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mt-3 mb-4 sm:flex-row lg:ml-6`}
-            style={{ backgroundColor }}
-          >
-            <div className="p-3 mb-2 mr-4 text-blue-500 bg-blue-100 rounded-full sm:mb-0">
-              <svg
-                className="w-6 h-6"
-                fill="currentColor"
-                viewBox="-1 -2 18 18"
+            {/* <div className="col-span-12 ">
+              <div
+                className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mt-3 mb-4 sm:flex-row lg:ml-6`}
+                style={{ backgroundColor }}
               >
-                <FaSortAmountUpAlt />
-              </svg>
-            </div>
-            <div className="text-sm font-medium text-gray-600 text-center sm:text-left">
-              <h5 className="font-bold text-black">Thickness</h5>
-              {limitvalue !== null ? (
-                <>
-                  <p className="text-lg sm:text-2xl font-bold text-black mt-1">
-                    {limitvalue.toFixed(2)}%
-                  </p>
-                  {console.log("limit value: ", limitvalue)}
-                </>
-              ) : (
-                <p className="text-lg sm:text-2xl font-bold text-black mt-1">
-                  Loading...
+                <div className="p-3 mb-2 mr-4 text-blue-500 bg-blue-100 rounded-full sm:mb-0">
+                  <svg
+                    className="w-6 h-6"
+                    fill="currentColor"
+                    viewBox="-1 -2 18 18"
+                  >
+                    <FaSortAmountUpAlt />
+                  </svg>
+                </div>
+
+                <div className={``}>
+                {console.log("Current thickness:", thickness)}
+      {thickness > 102.25 ? (
+        <>
+          <h5 className="flex items-center justify-center">⚠️</h5>
+          <p className="text-lg sm:text-2xl font-bold text-black mt-1">Overlimit</p>
+          <p className="text-lg sm:text-2xl font-bold text-black mt-1 flex items-center justify-center">ER03</p>
+        </>
+      ) : thickness === 0 ? (
+        <>
+          <h5 className="flex items-center justify-center">⚠️</h5>
+          <p className="text-lg sm:text-2xl font-bold text-black mt-1">Fitting problem</p>
+          <p className="text-lg sm:text-2xl font-bold text-black mt-1 flex items-center justify-center">ER01</p>
+        </>
+      ) : thickness === 9999 ? (
+        <>
+          <h5 className="flex items-center justify-center">⚠️</h5>
+          <p className="text-lg sm:text-2xl font-bold text-black mt-1">FPGA Error</p>
+          <p className="text-lg sm:text-2xl font-bold text-black mt-1 flex items-center justify-center">ER02</p>
+        </>
+      ) : null}
+    </div>
+
+
+                <div className="flex-grow"></div>
+                <div className="text-center text-sm font-medium text-gray-600 ">
+                  <h3 className="font-bold text-black">Thickness</h3>
+                  {limitvalue !== null ? (
+                    <>
+                      <p className="text-xl sm:text-2xl font-bold text-black mt-1">
+                        {limitvalue.toFixed(2)}%
+                      </p>
+                      {console.log("limit value: ", limitvalue)}
+                    </>
+                  ) : (
+                    <p className="text-lg sm:text-2xl font-bold text-black mt-1">
+                      Loading...
+                    </p>
+                  )}
+                </div>
+                <div className="flex-grow"></div>
+                <p className="text-lg sm:text-2xl font-bold text-black mt-2 sm:mt-0">
+                  {thickness ? `${thickness}` : "Loading..."} /{" "}
+                  {sensorData
+                    ? sensorData.inputthickness > 0
+                      ? `${sensorData.inputthickness}`
+                      : "Loading..."
+                    : "Loading..."}{" "}
+                  mm
                 </p>
-              )}
-            </div>
-            <div className="flex-grow"></div>
-            <p className="text-lg sm:text-2xl font-bold text-black mt-2 sm:mt-0">
-              {thickness ? `${thickness}` : "Loading..."} /{" "}
-              {sensorData
-                ? sensorData.inputthickness > 0
-                  ? `${sensorData.inputthickness}`
-                  : "Loading..."
-                : "Loading..."}{" "}
-              mm
-            </p>
-          </div>
-        </div>
+              </div>
+            </div> */}
+
+<div className="col-span-12">
+  <div className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mt-3 mb-4 sm:flex-row lg:ml-6`} style={{ backgroundColor }}>
+    <div className="p-3 mb-2 mr-4 text-blue-500 bg-blue-100 rounded-full sm:mb-0">
+      <svg className="w-6 h-6" fill="currentColor" viewBox="-1 -2 18 18">
+        {/* <FaSortAmountUpAlt /> */}
+        <svg fill="currentColor" viewBox="2 2 16 16"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 21 21" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M19.875 12c.621 0 1.125 .512 1.125 1.143v5.714c0 .631 -.504 1.143 -1.125 1.143h-15.875a1 1 0 0 1 -1 -1v-5.857c0 -.631 .504 -1.143 1.125 -1.143h15.75z"></path><path d="M9 12v2"></path><path d="M6 12v3"></path><path d="M12 12v3"></path><path d="M18 12v3"></path><path d="M15 12v2"></path><path d="M3 3v4"></path><path d="M3 5h18"></path><path d="M21 3v4"></path></svg></svg>
+      </svg>
+    </div>
+
+    {/* Conditional rendering based on the value of thickness */}
+    <div className={``}>
+      {/* {console.log("Current thickness:", thickness)} */}
+      {limitvalue > 102.25 && limitvalue < 9998 ? (
+        <>
+          <h5 className="flex items-center justify-center">⚠️</h5>
+          <p className="text-lg sm:text-2xl font-bold text-white mt-1">Overlimit</p>
+          <p className="text-lg sm:text-2xl font-bold text-white  flex items-center justify-center">ER03</p>
+        </>
+      ) : thickness === "0" ? (
+        <>
+          <h5 className="flex items-center justify-center">⚠️</h5>
+          <p className="text-lg sm:text-2xl font-bold text-white mt-1">Fitting problem</p>
+          <p className="text-lg sm:text-2xl font-bold text-white  flex items-center justify-center">ER01</p>
+        </>
+      ) : thickness === "9999" ? (
+        <>
+          <h5 className="flex items-center justify-center">⚠️</h5>
+          <p className="text-lg sm:text-2xl font-bold text-white mt-1">FPGA Error</p>
+          <p className="text-lg sm:text-2xl font-bold text-white flex mb-0 items-center justify-center">ER02</p>
+        </>
+      ) : null}
+    </div>
+
+    <div className="flex-grow"></div>
+
+    {/* Displaying the thickness value */}
+    <div className="text-center text-sm font-medium text-gray-600 ">
+      <h3 className="font-bold text-white">Thickness</h3>
+      {limitvalue !== null ? (
+        <>
+          <p className="text-xl sm:text-2xl font-bold text-white mt-1">
+            {limitvalue.toFixed(2)}%
+          </p>
+          {console.log("limit value: ", limitvalue)}
+        </>
+      ) : (
+        <p className="text-lg sm:text-2xl font-bold text-white mt-1">
+          Loading...
+        </p>
+      )}
+    </div>
+
+    <div className="flex-grow"></div>
+
+    {/* Displaying the thickness and input thickness */}
+    <p className="text-lg sm:text-2xl font-bold text-white mt-2 sm:mt-0">
+      {thickness ? `${thickness}` : "Loading..."} /{" "}
+      {sensorData ? sensorData.inputthickness > 0 ? `${sensorData.inputthickness}` : "Loading..." : "Loading..."} mm
+    </p>
+  </div>
+</div>
+
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-3 sm:grid-cols-1 mb-5 ">
