@@ -13,10 +13,10 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
         const data1 = await response1.json();
         const thicknessArray = data1.map(sensor => parseInt(sensor.thickness));
 
-        const timevalue1 = data1.map(sensor=> (sensor.createdAt));
+        const timevalue1 = data1.map(sensor => sensor.createdAt);
         const formatDate = (timevalue1) => {
           const date = new Date(timevalue1);
-          return date.toLocaleString(); 
+          return date.toLocaleString();
         }
         const formattedDates = timevalue1.map(formatDate);
         console.log("json for time", formattedDates);
@@ -25,20 +25,16 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
         const data2 = await response2.json();
         const limitData = data2.map(sensor => parseInt(sensor.inputthickness));
 
-        console.log("thicknessArray:" , thicknessArray);
-        console.log("limitData:" , limitData);
-        
+        console.log("thicknessArray:", thicknessArray);
+        console.log("limitData:", limitData);
+
         const limitValues = thicknessArray.map((thickness, index) => {
           const limitValue = ((thickness - 0) * (100 - 0)) / (limitData[index] - 0) + 0;
           return limitValue.toFixed(2);
         });
         console.log("limitvalues", limitValues);
 
-
-        // setLimitValues(limitValues);
-        // setLimitData(limitData);
         setDataArray(limitValues);
-        // console.log("limitsdata", limitData);
         onLimitValuesChange(limitValues, limitData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -52,10 +48,9 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
 
 
   const getColorBasedOnPercentage = (percentage) => {
-
-    if(percentage > 100){
+    if (percentage > 100) {
       return "#38BDF8";
-    }else if (percentage >= 75) {
+    } else if (percentage >= 75) {
       return "#28a33d";
     } else if (percentage >= 50) {
       return "#ED7014";
@@ -63,8 +58,6 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
       return "#EF4444";
     }
   };
-
-   
 
   const rectangleStyle = {
     width: "320px",
@@ -79,7 +72,6 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
     overflowX: "auto",
     direction: "rtl",
   };
-  
 
   const smallBoxStyle = {
     width: "80%",
@@ -97,9 +89,19 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
     const groups = Array.from({ length: 4 }, (_, groupIndex) =>
       Array.from(
         { length: 10 },
-        (_, index) => `Device ${groupIndex * 10 + index + 1}`
+        (_, index) => {
+          const number = groupIndex * 10 + index + 1;
+          return `XY${number <= 9 ? '00' + number : (number <= 99 ? '0' + number : number)}`;
+        }
       )
     );
+
+    const handleClick = (text, limitValues) => {
+     
+      const id = text.slice(2); 
+      console.log("Small box clicked with ID:", id);
+      handleSmallBoxClick(id, limitValues);
+    };
 
     const groupDivs = groups.map((group, groupIndex) => (
       <div key={groupIndex} style={rectangleStyle}>
@@ -113,7 +115,8 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
                   ...smallBoxStyle,
                   backgroundColor: backgroundColor,
                 }}
-                onClick={() => handleSmallBoxClick(text, limitValues)}
+                onClick={() => handleClick(text, groupIndex * 10 + index)}
+
               >
                 {text}
               </div>
@@ -124,7 +127,8 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
                   backgroundColor: backgroundColor,
                   marginLeft: "5px",
                 }}
-                onClick={() => handleSmallBoxClick(text, limitValues)}
+                onClick={() => handleClick(text, groupIndex * 10 + index)}
+
               >
                 {value}
               </div>
@@ -138,12 +142,9 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
   };
 
   return (
-    // <div className="flex gap-2 items-center justify-center w-full overflow-x-auto md:overflow-x-hidden sm:gap-1">
-    //   {renderSmallBoxes()}
-    // </div>
-     <div className="flex gap-2 items-center justify-center w-full overflow-x-auto md:overflow-x-hidden scrollable-container">
-     {renderSmallBoxes()}
-   </div>
+    <div className="flex gap-2 items-center justify-center w-full overflow-x-auto md:overflow-x-hidden scrollable-container">
+      {renderSmallBoxes()}
+    </div>
   );
 };
 
