@@ -42,7 +42,7 @@ const Charttwo = ({ chartData }) => {
   };
 
   return (
-    <Line data={data} className="shadow-2xl rounded-2xl bg-gray-100 p-4" options={options} />
+    <Line data={data} className="shadow-2xl rounded-2xl bg-gray-100 p-4 w-full lg:w-3/4 xl:w-11/12 mx-auto h-full" options={options} />
   );
 };
 

@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
-import asset from "../model/asset.js";
+import asset from "../model/datas.js";
 import idModel from "../model/idModel.js";
 import limit from "../model/limit.js";
 import User from "../model/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import RawData from "../model/rawdata.js";
+// import datas from "../model/datas.js";
 //register
 export const userRegister = async (req, res) => {
   try {
@@ -337,7 +338,7 @@ export const exceldata = async (req, res) => {
   const { id: deviceid, date1, date2 } = req.query;
 
   try {
-    const assetDocumentArray = await asset.model("asset").find({
+    const assetDocumentArray = await asset.model("datas").find({
       id: deviceid,
       $and: [{ createdAt: { $gte: date1 } }, { createdAt: { $lte: date2 } }],
     });
@@ -366,7 +367,7 @@ export const iddata = async (req, res) => {
     const deviceid = dataid.id;
 
     const assetDocumentArray = await mongoose
-      .model("asset")
+      .model("datas")
       .find({
         id: deviceid,
       })
@@ -419,7 +420,7 @@ export const iddata = async (req, res) => {
 //     const deviceid = dataid.id;
 
 //     const assetDocumentArray = await mongoose
-//       .model("asset")
+//       .model("datas")
 //       .find({
 //         id: deviceid,
 //       })
@@ -465,7 +466,7 @@ export const tabledatas = async (req, res) => {
     const deviceid = dataid.id;
 
     const assetDocumentArray = await mongoose
-      .model("asset")
+      .model("datas")
       .find({ id: deviceid })
       .sort({ createdAt: -1 })
       .limit(30);
@@ -673,7 +674,7 @@ export const allsetlimit = async (req, res) => {
 //     const dataid = await sensorData.save();
 //     const deviceid = dataid.id;
 
-//     const assetDocument = await mongoose.model("asset").findOne({
+//     const assetDocument = await mongoose.model("datas").findOne({
 //       id: deviceid,
 //     });
 
@@ -700,7 +701,7 @@ export const allsetlimit = async (req, res) => {
 //     const dataid = await sensorData.save();
 //     const deviceid = dataid.id;
 
-//     const assetDocument = await mongoose.model("asset").findOne({
+//     const assetDocument = await mongoose.model("datas").findOne({
 //       id: deviceid,
 //     });
 
