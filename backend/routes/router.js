@@ -1,5 +1,5 @@
 import express from 'express';
-import { createSensor, getlogdata, getSensorData, iddata, tabledatas, timelimit, getdatalimit, getsetlimits, allsetlimit, idallsetlimit, exceldata, userData, userRegister } from '../controllers/sensor.js';
+import iddata, { createSensor, getlogdata, getSensorData, tabledatas, timelimit, getdatalimit, getsetlimits, allsetlimit, idallsetlimit, exceldata, userData, userRegister } from '../controllers/sensor.js';
 
 const router = express.Router();
 

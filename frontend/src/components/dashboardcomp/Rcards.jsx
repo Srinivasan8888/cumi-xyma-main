@@ -68,11 +68,11 @@ const Rcards = ({ deviceData }) => {
   }, [limitvalue]);
 
   const getColorBasedOnPercentage = (limitvalue) => {
-    if (limitvalue > 102.25) {
+    if (limitvalue > 108) {
       return "#38BDF8";
-    } else if (limitvalue >= 75) {
+    } else if (limitvalue >= 75 && limitvalue <= 108 ) {
       return "#28a33d";
-    } else if (limitvalue >= 50) {
+    } else if (limitvalue >= 50 && limitvalue < 75) {
       return "#ED7014";
     } else {
       return "#EF4444";

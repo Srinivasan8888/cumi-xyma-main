@@ -10,6 +10,7 @@ const fakeData = [
   { id: "1 Min" },
   { id: "5 Min" },
   { id: "1 Day" },
+  { id: "2 Day" },
   { id: "7 Days" },
   { id: "15 Days" },
 ];

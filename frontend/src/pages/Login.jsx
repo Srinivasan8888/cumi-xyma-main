@@ -98,19 +98,19 @@ function Login() {
         {/* <p className="flex justify-center mt-3">Don't have an account?&nbsp; {" "}<a href={Signup} className="font-medium text-indigo-600 hover:text-indigo-500">Sign Up</a>
         </p> */}
 
-        <p className="flex justify-center mt-3">
-          Don't have an account?&nbsp;{" "}
+        {/* <p className="flex justify-center mt-3">
+          Forget password?&nbsp;{" "}
           <button
             className="font-medium text-indigo-600 hover:text-indigo-500"
             onClick={singuppage}
           >
             Sign up
           </button>
-        </p>
-        <button className="w-full flex items-center justify-center gap-x-3 py-2.5 mt-5 border rounded-lg text-sm font-medium hover:bg-gray-50 duration-150 active:bg-gray-100">
+        </p> */}
+        {/* <button className="w-full flex items-center justify-center gap-x-3 py-2.5 mt-5 border rounded-lg text-sm font-medium hover:bg-gray-50 duration-150 active:bg-gray-100">
           <img src={G} alt="Google Icon" className="w-5 h-5 justify-end" />
           Continue with Google
-        </button>
+        </button> */}
       </div>
     </div>
   );

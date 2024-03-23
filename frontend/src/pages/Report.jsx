@@ -84,10 +84,10 @@ const Report = () => {
         if (selectedId !== null) {
           try {
             const response = await fetch(
-              `http://localhost:4000/sensor/dataexcel?id=${selectedId}&date1=${startDate}T00:00:00Z&date2=${endDate}T23:59:59Z`
+              `http://localhost:4000/sensor/dataexcel?id=${selectedId}&date1=${startDate}T00:00:01Z&date2=${endDate}T23:59:59Z`
             );
             const data = await response.json();
-            
+            console.log(response);
             const modifiedData = data.map(obj => {
               const { _id, __v, updatedAt, ...rest } = obj;
               return rest;
@@ -105,8 +105,8 @@ const Report = () => {
       };
   
       apidate();
-      // console.log("Start Date:", startDate);
-      // console.log("End Date:", endDate);
+      console.log("Start Date:", startDate);
+      console.log("End Date:", endDate);
     }
   };
 

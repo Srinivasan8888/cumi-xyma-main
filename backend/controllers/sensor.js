@@ -268,6 +268,8 @@ export const timelimit = async (req, res) => {
     changedtime = "5";
   } else if (time == "1 Day") {
     changedtime = "1440";
+  }else if (time == "2 Day") {
+    changedtime = "2880";
   } else if (time == "7 Days") {
     changedtime = "10080";
   } else if (time == "15 Days") {
@@ -338,10 +340,17 @@ export const exceldata = async (req, res) => {
   const { id: deviceid, date1, date2 } = req.query;
 
   try {
+    const startDate = new Date(date1);
+    const endDate = new Date(date2);
+
     const assetDocumentArray = await asset.model("datas").find({
       id: deviceid,
-      $and: [{ createdAt: { $gte: date1 } }, { createdAt: { $lte: date2 } }],
+      $and: [{ createdAt: { $gte: startDate } }, { createdAt: { $lte: endDate } }],
     });
+    console.log("Device ID:", deviceid);
+console.log("Start Date:", startDate);
+console.log("End Date:", endDate);
+
 
     console.log("Found asset documents:", assetDocumentArray);
 
@@ -354,7 +363,28 @@ export const exceldata = async (req, res) => {
   }
 };
 
-export const iddata = async (req, res) => {
+
+// export const exceldata = async (req, res) => {
+//   const { id: deviceid, date1, date2 } = req.query;
+
+//   try {
+//     const assetDocumentArray = await asset.model("datas").find({
+//       id: deviceid,
+//       $and: [{ createdAt: { $gte: date1 } }, { createdAt: { $lte: date2 } }],
+//     });
+
+//     console.log("Found asset documents:", assetDocumentArray);
+
+//     res.json(assetDocumentArray);
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res
+//       .status(500)
+//       .json({ error: "Internal Server Error", details: error.message });
+//   }
+// };
+
+export default async (req, res) => {
   const { id } = req.params;
   console.log("Received id:", id);
 

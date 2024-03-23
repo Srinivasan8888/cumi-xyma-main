@@ -36,7 +36,7 @@ function Signup() {
   const navigate = useNavigate();
 
   function signinpage() {
-    navigate("/signin");
+    navigate("/");
   }
 
   const containerStyle = {
@@ -91,10 +91,6 @@ function Signup() {
             Create account
           </button>
         </form>
-        <button className="w-full flex items-center justify-center gap-x-3 py-2.5 mt-5 border rounded-lg text-sm font-medium hover:bg-gray-50 duration-150 active:bg-gray-100">
-            <img src={G} alt="Google Icon" className="w-5 h-5 justify-end" />
-            Continue with Google
-        </button>
       </div>
     </div>
   );

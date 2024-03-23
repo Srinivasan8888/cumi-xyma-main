@@ -48,11 +48,11 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
 
 
   const getColorBasedOnPercentage = (percentage) => {
-    if (percentage > 100) {
+    if (percentage > 108) {
       return "#38BDF8";
-    } else if (percentage >= 75) {
+    } else if (percentage >= 75 && percentage <= 108) {
       return "#28a33d";
-    } else if (percentage >= 50) {
+    } else if (percentage >= 50 && percentage < 75) {
       return "#ED7014";
     } else {
       return "#EF4444";
@@ -91,7 +91,7 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
       { length: 10 },
       (_, index) => {
         const number = groupIndex * 10 + index + 1;
-        return `XY${number <= 9 ? '00' + number : (number <= 99 ? '0' + number : number)}`;
+        return `XY${number <= 9 ? '0000' + number : (number <= 99 ? '000' + number : number)}`;
       }
     )
   );
@@ -109,7 +109,7 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
         {group.map((text, index) => {
           const value = dataArray[groupIndex * 10 + index];
           const backgroundColor = getColorBasedOnPercentage(value);
-          const showIcon = value > 102.25;
+          const showIcon = value > 108;
           return (
             <div key={index} style={{ display: "flex" }}>
               <div
