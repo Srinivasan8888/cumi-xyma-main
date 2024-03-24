@@ -9,7 +9,7 @@ export default function Combobox({ onChartData }) {
   const [selectedCylinder, setSelectedCylinder] = useState(null);
   const [batteryEnabled, setBatteryEnabled] = useState(false);
   const [thicknessEnabled, setThicknessEnabled] = useState(false);
-  const [selectedId, setSelectedId] = useState("XY001"); // Initialize with default value
+  const [selectedId, setSelectedId] = useState("XY00001"); // Initialize with default value
   const [valuebat, setValueBat] = useState("true");
   const [valuethick, setValueThick] = useState("true");
 

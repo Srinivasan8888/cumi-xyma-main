@@ -10,7 +10,7 @@ const Charts = ({ deviceNumber }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/sensor/table/XY00${deviceNumber}`
+          `http://localhost:4000/sensor/table/${deviceNumber}`
         );
         const data = await response.json();
         data.reverse();

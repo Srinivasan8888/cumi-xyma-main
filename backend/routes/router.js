@@ -1,5 +1,5 @@
 import express from 'express';
-import iddata, { createSensor, getlogdata, getSensorData, tabledatas, timelimit, getdatalimit, getsetlimits, allsetlimit, idallsetlimit, exceldata, userData, userRegister } from '../controllers/sensor.js';
+import { createSensor, iddata, getlogdata, getSensorData, tabledatas, timelimit, getdatalimit, getsetlimits, allsetlimit, idallsetlimit, exceldata, userData, userRegister, rawdataapi } from '../controllers/sensor.js';
 
 const router = express.Router();
 
@@ -14,11 +14,11 @@ router.get('/alllimitdata', allsetlimit);
 router.get('/idlimit/:id', idallsetlimit);
 router.get('/setlimit', timelimit);
 router.get('/dataexcel', exceldata);
-router.post('/setlimit', timelimit);
+router.get('/rawdata',rawdataapi );
 
+router.post('/setlimit', timelimit);
 //register
 router.post("/register", userRegister);
-
 //login
 router.post("/login", userData);
 

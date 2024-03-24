@@ -6,6 +6,7 @@ import User from "../model/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import RawData from "../model/rawdata.js";
+import rawdata from "../model/rawdata.js";
 // import datas from "../model/datas.js";
 //register
 export const userRegister = async (req, res) => {
@@ -167,12 +168,6 @@ export const createSensor = async (req, res) => {
   // const { id, thickness, devicetemp, signal, batterylevel } = req.query;
   const { device_name, thickness, device_status, signal_strength, battery_status } = req.query;
 
-
-  let modifiedId = device_name;
-  if (device_name === "XY00001") {
-    modifiedId = "XY001";
-  } 
-
   try {
     const rawData = new RawData({
       id: String(device_name),
@@ -197,7 +192,7 @@ export const createSensor = async (req, res) => {
     if (adjustedSignal > 100) adjustedSignal = "100";
 
     const sensor = new asset({
-      id: String(modifiedId),
+      id: String(device_name),
       thickness: String(thickness),
       devicetemp: String(device_status),
       signal: String(adjustedSignal),
@@ -363,6 +358,15 @@ console.log("End Date:", endDate);
   }
 };
 
+export const rawdataapi = async(req,res) =>{
+  try {
+    const rawData = await rawdata.find();
+    res.json(rawData);
+  } catch (error) {
+    console.error("Error fetching raw data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
 
 // export const exceldata = async (req, res) => {
 //   const { id: deviceid, date1, date2 } = req.query;
@@ -384,7 +388,7 @@ console.log("End Date:", endDate);
 //   }
 // };
 
-export default async (req, res) => {
+export const iddata = async (req, res) => {
   const { id } = req.params;
   console.log("Received id:", id);
 
@@ -524,7 +528,7 @@ export const tabledatas = async (req, res) => {
         batterylevel: assetDocument.batterylevel,
         devicetemp: assetDocument.devicetemp,
         signal: assetDocument.signal,
-        inputthickness: limitsdatas[0].inputthickness, // Assuming you want to use inputthickness from the first document in limitsdatas
+        inputthickness: limitsdatas[0].inputthickness, 
         updatedAt: assetDocument.updatedAt,
         __v: assetDocument.__v,
         _id: assetDocument._id,

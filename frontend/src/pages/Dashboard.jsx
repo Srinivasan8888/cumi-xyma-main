@@ -5,14 +5,12 @@ import "../components/css/card.css";
 import RTables from "../components/dashboardcomp/RTables.jsx";
 import Model from "../components/dashboardcomp/Model.jsx";
 import Navbar from "../components/Navbar.jsx";
-// import Card from "../components/Card.jsx";
 import "./css/dashboard.css";
 import Sidebars from "../components/Sidebar/Sidebars.jsx";
-// import Sidebars from "../Sidebar/Sidebars.jsx";
 
 function Dashboard() {
   const [deviceData, setDeviceData] = useState(null);
-  const [deviceNumberForEffect, setDeviceNumberForEffect] = useState(1);
+  const [deviceNumberForEffect, setDeviceNumberForEffect] = useState('XY00001');
   const [limitValues, setLimitValues] = useState([]);
   const [limitData, setLimitData] = useState([]);
 
@@ -20,14 +18,21 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/sensor/getdata/XY00${deviceNumberForEffect}?battery=true&thickness=true`
+          `http://localhost:4000/sensor/getdata/${deviceNumberForEffect}?battery=true&thickness=true`
         );
         const data = await response.json();
-        console.log(data);
+        console.log("fetchdata for devicenumberforeffect", data);
 
         if (data && data.length > 0) {
           setDeviceData(data[0]);
         }
+       
+
+        // if (data && data.length > 0) {
+        //   const { createdAt, devicetemp, id, signal, updatedAt } = data[0];
+        //   setDeviceData({ createdAt, devicetemp, id, signal, updatedAt });
+        //   console.log("Updated deviceData:", { createdAt, devicetemp, id, signal, updatedAt });
+        // }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -38,11 +43,12 @@ function Dashboard() {
     return () => clearInterval(intervalId);
   }, [deviceNumberForEffect]);
 
-  const handleSmallBoxClick = async (text) => {
-    const deviceNumber = parseInt(text.replace("Device ", ""), 10);
+  const handleSmallBoxClick = (text) => {
+    // Call the function passed from props directly
+    console.log("Small box clicked dash:", text);
+    const deviceNumber = text;
     setDeviceNumberForEffect(deviceNumber);
-
-    // setLimitValues(limitValues);
+    
   };
 
   const handleLimitValuesChange = (newLimitValues, newLimitData) => {
@@ -50,44 +56,41 @@ function Dashboard() {
     setLimitData(newLimitData);
   };
 
-  console.log("devicedata", deviceData);
+  console.log("deviceData", deviceData);
+  // useEffect(() => {
+  //   console.log("deviceData", deviceData);
+  // }, [deviceData]);
+  
 
   return (
     <div className="flex flex-col h-screen">
-  <Sidebars />
-  <div className="flex-grow p-4 sm:ml-64">
-    <Navbar />
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 cont1">
-
-      {/* Work on this modal its causing the issue with the responsive */}
-
-      <div className="md:col-span-1 modelview">
-        <Model
-          handleSmallBoxClick={handleSmallBoxClick}
-          onLimitValuesChange={handleLimitValuesChange}
-         
-        />
-      </div>
-      <div className="md:col-span-1 sm:col-span">
-        <Rcards
-          deviceData={deviceData}
-          limitValues={limitValues}
-          limitData={limitData}
-          className="h-full"
-        />
-      </div>
-      <div className="md:col-span-1 sm:col-span-4">
-        <RTables deviceNumber={deviceNumberForEffect} className="h-full" />
-      </div>
-      <div className="md:col-span-1 sm:col-span-4">
-        <Charts deviceNumber={deviceNumberForEffect} className="h-full" />
+      <Sidebars />
+      <div className="flex-grow p-4 sm:ml-64">
+        <Navbar />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 cont1">
+          <div className="md:col-span-1 modelview">
+            <Model
+              handleSmallBoxClick={handleSmallBoxClick}
+              onLimitValuesChange={handleLimitValuesChange}
+            />
+          </div>
+          <div className="md:col-span-1 sm:col-span">
+            <Rcards
+              deviceData={deviceData}
+              limitValues={limitValues}
+              limitData={limitData}
+              className="h-full"
+            />
+          </div>
+          <div className="md:col-span-1 sm:col-span-4">
+            <RTables deviceNumber={deviceNumberForEffect} className="h-full" />
+          </div>
+          <div className="md:col-span-1 sm:col-span-4">
+            <Charts deviceNumber={deviceNumberForEffect} className="h-full" />
+          </div>
+        </div>
       </div>
     </div>
-    
-  </div>
-</div>
-
-  
   );
 }
 

@@ -1,49 +1,27 @@
-import React from "react";
-import { IoWarningOutline } from "react-icons/io5";
-import { GoCheckCircle } from "react-icons/go";
-import Rcards from "../components/dashboardcomp/Rcards";
+import React from 'react'
+import Model from '../components/dashboardcomp/Model'
 
 const Test = () => {
+
+  const handleSmallBoxClick = (id) => {
+    alert(`Small box clicked with ID: ${id}`);
+  };
+
   return (
     <div>
-
-<div
-          className="fixed bottom-4 right-4 z-50 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow"
-          role="alert"
-        >
-          <div className="flex">
-            <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
-              <IoWarningOutline />
-            </div>
-            <div className="ms-3 text-sm font-normal">
-              <span className="mb-1 text-md font-bold text-red-500">
-                ER03
-              </span>
-              <div className="mb-2 text-md text-black font-bold">
-                Overlimit Warning!!! ⚠️ 
-              </div>
-            </div>
-            <button
-              type="button"
-              className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8"
-              aria-label="Close"
-              // onClick={() => setErrorAlert2(false)}
-            >
-              <span className="sr-only">Close</span>
-              <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
+      <Model  handleSmallBoxClick={handleSmallBoxClick}/>
     </div>
-  );
-};
+  )
+}
 
-export default Test;
+export default Test
+
+// import React from 'react'
+
+// const Test = () => {
+//   return (
+//     <div>Test</div>
+//   )
+// }
+
+// export default Test

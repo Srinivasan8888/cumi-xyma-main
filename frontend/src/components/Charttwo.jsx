@@ -2,6 +2,11 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 
 const Charttwo = ({ chartData }) => {
+  // Check if chartData is null or undefined
+  if (!chartData || !Array.isArray(chartData)) {
+    return <div>No data available</div>;
+  }
+
   const reversedChartData = [...chartData].reverse();
   const maxBatteryLevel = Math.max(...reversedChartData.map(dataItem => parseFloat(dataItem.batterylevel)));
   const maxThickness = Math.max(...reversedChartData.map(dataItem => parseFloat(dataItem.thickness)));

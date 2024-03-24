@@ -85,22 +85,25 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
     marginTop: "0",
   };
 
-  const renderSmallBoxes = () => {
+ const renderSmallBoxes = () => {
   const groups = Array.from({ length: 4 }, (_, groupIndex) =>
-    Array.from(
-      { length: 10 },
-      (_, index) => {
-        const number = groupIndex * 10 + index + 1;
-        return `XY${number <= 9 ? '0000' + number : (number <= 99 ? '000' + number : number)}`;
-      }
-    )
-  );
+  Array.from(
+    { length: 10 },
+    (_, index) => {
+      const number = groupIndex * 10 + index + 1;
+      return `XY${number <= 9 ? '0000' + number : (number <= 99 ? '000' + number : number)}`;
+    }
+  )
+);
+
 
     const handleClick = (text, limitValues) => {
      
-      const id = text.slice(2); 
-      console.log("Small box clicked with ID:", id);
-      handleSmallBoxClick(id, limitValues);
+      console.log("Clicked text:", text);
+  console.log("Clicked limit values:", limitValues);
+  const id = text.slice(2); 
+  console.log("Small box clicked with ID: " + id);
+  handleSmallBoxClick(text);
       
     };
 
@@ -151,3 +154,105 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
 };
 
 export default Model;
+
+
+// import React from "react";
+// import "../css/model.css";
+
+// const Model = ({ handleSmallBoxClick }) => {
+//   
+// 
+
+//     const rectangleStyle = {
+//     width: "320px",
+//     height: "430px",
+//     backgroundColor: "white",
+//     border: "2px solid gray",
+//     borderRadius: "10px",
+//     display: "flex",
+//     flexDirection: "column",
+//     justifyContent: "space-between",
+//     padding: "10px",
+//     overflowX: "auto",
+//     direction: "rtl",
+//   };
+
+//   const smallBoxStyle = {
+//     width: "80%",
+//     height: "30px",
+//     border: "1px solid gray",
+//     borderRadius: "5px",
+//     textAlign: "center",
+//     lineHeight: "30px",
+//     margin: "5px",
+//     cursor: "pointer",
+//     marginTop: "0",
+//   };
+
+//  const renderSmallBoxes = () => {
+//   const groups = Array.from({ length: 4 }, (_, groupIndex) =>
+//   Array.from(
+//     { length: 10 },
+//     (_, index) => {
+//       const number = groupIndex * 10 + index + 1;
+//       return `XY${number <= 9 ? '0000' + number : (number <= 99 ? '000' + number : number)}`;
+//     }
+//   )
+// );
+
+
+//     const handleClick = (text, limitValues) => {
+     
+//       const id = text.slice(2); 
+//       console.log("Small box clicked with ID:", id);
+//       handleSmallBoxClick(id, limitValues);
+      
+//     };
+
+//     const groupDivs = groups.map((group, groupIndex) => (
+//       <div key={groupIndex} style={rectangleStyle}>
+//         {group.map((text, index) => {
+//           const value = dataArray[groupIndex * 10 + index];
+//           const backgroundColor = getColorBasedOnPercentage(value);
+//           const showIcon = value > 108;
+//           return (
+//             <div key={index} style={{ display: "flex" }}>
+//               <div
+//                 style={{
+//                   ...smallBoxStyle,
+//                   backgroundColor: backgroundColor,
+//                 }}
+//                 onClick={() => handleClick(text, groupIndex * 10 + index)}
+
+//               >
+//                  {text}
+//               </div>
+//               <div
+//                 style={{
+//                   ...smallBoxStyle,
+//                   width: "60px",
+//                   backgroundColor: backgroundColor,
+//                   marginLeft: "5px",
+//                 }}
+//                 onClick={() => handleClick(text, groupIndex * 10 + index)}
+
+//               >
+//                 {showIcon ? ( <span style={{ fontSize: "20px", alignSelf: "flex-stretch", marginBottom: "5px" }}>⚠️</span>  ) : (value)}
+//               </div>
+//             </div>
+//           );
+//         })}
+//       </div>
+//     ));
+
+//     return groupDivs;
+//   };
+
+//   return (
+//     <div className="flex gap-2 items-center justify-center w-full overflow-x-auto md:overflow-x-hidden scrollable-container">
+//       {renderSmallBoxes()}
+//     </div>
+//   );
+// };
+
+// export default Model;

@@ -42,6 +42,7 @@ const Rcards = ({ deviceData }) => {
       setBattery(deviceData.batterylevel);
       setTimeData(new Date(deviceData.createdAt));
     }
+    console.log("Rcard data", deviceData);
   }, [deviceData]);
 
   useEffect(() => {
@@ -70,7 +71,7 @@ const Rcards = ({ deviceData }) => {
   const getColorBasedOnPercentage = (limitvalue) => {
     if (limitvalue > 108) {
       return "#38BDF8";
-    } else if (limitvalue >= 75 && limitvalue <= 108 ) {
+    } else if (limitvalue >= 75 && limitvalue <= 108) {
       return "#28a33d";
     } else if (limitvalue >= 50 && limitvalue < 75) {
       return "#ED7014";
@@ -528,7 +529,7 @@ const Rcards = ({ deviceData }) => {
           </div>
         </div> */}
 
-            {/* <div className="col-span-12 ">
+        {/* <div className="col-span-12 ">
               <div
                 className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mt-3 mb-4 sm:flex-row lg:ml-6`}
                 style={{ backgroundColor }}
@@ -596,68 +597,114 @@ const Rcards = ({ deviceData }) => {
               </div>
             </div> */}
 
-<div className="col-span-12">
-  <div className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mt-3 mb-4 sm:flex-row lg:ml-6`} style={{ backgroundColor }}>
-    <div className="p-3 mb-2 mr-4 text-blue-500 bg-blue-100 rounded-full sm:mb-0">
-      <svg className="w-6 h-6" fill="currentColor" viewBox="-1 -2 18 18">
-        {/* <FaSortAmountUpAlt /> */}
-        <svg fill="currentColor" viewBox="2 2 16 16"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 21 21" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M19.875 12c.621 0 1.125 .512 1.125 1.143v5.714c0 .631 -.504 1.143 -1.125 1.143h-15.875a1 1 0 0 1 -1 -1v-5.857c0 -.631 .504 -1.143 1.125 -1.143h15.75z"></path><path d="M9 12v2"></path><path d="M6 12v3"></path><path d="M12 12v3"></path><path d="M18 12v3"></path><path d="M15 12v2"></path><path d="M3 3v4"></path><path d="M3 5h18"></path><path d="M21 3v4"></path></svg></svg>
-      </svg>
-    </div>
+        <div className="col-span-12">
+          <div
+            className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mt-3 mb-4 sm:flex-row lg:ml-6`}
+            style={{ backgroundColor }}
+          >
+            <div className="p-3 mb-2 mr-4 text-blue-500 bg-blue-100 rounded-full sm:mb-0">
+              <svg
+                className="w-6 h-6"
+                fill="currentColor"
+                viewBox="-1 -2 18 18"
+              >
+                {/* <FaSortAmountUpAlt /> */}
+                <svg fill="currentColor" viewBox="2 2 16 16">
+                  <svg
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="2"
+                    viewBox="0 0 21 21"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M19.875 12c.621 0 1.125 .512 1.125 1.143v5.714c0 .631 -.504 1.143 -1.125 1.143h-15.875a1 1 0 0 1 -1 -1v-5.857c0 -.631 .504 -1.143 1.125 -1.143h15.75z"></path>
+                    <path d="M9 12v2"></path>
+                    <path d="M6 12v3"></path>
+                    <path d="M12 12v3"></path>
+                    <path d="M18 12v3"></path>
+                    <path d="M15 12v2"></path>
+                    <path d="M3 3v4"></path>
+                    <path d="M3 5h18"></path>
+                    <path d="M21 3v4"></path>
+                  </svg>
+                </svg>
+              </svg>
+            </div>
 
-    {/* Conditional rendering based on the value of thickness */}
-    <div className={``}>
-      {/* {console.log("Current thickness:", thickness)} */}
-      {limitvalue > 102.25 && limitvalue < 9998 ? (
-        <>
-          <h5 className="flex items-center justify-center">⚠️</h5>
-          <p className="text-lg sm:text-2xl font-bold text-white mt-1">Overlimit</p>
-          <p className="text-lg sm:text-2xl font-bold text-white  flex items-center justify-center">ER03</p>
-        </>
-      ) : thickness === "0" ? (
-        <>
-          <h5 className="flex items-center justify-center">⚠️</h5>
-          <p className="text-lg sm:text-2xl font-bold text-white mt-1">Fitting problem</p>
-          <p className="text-lg sm:text-2xl font-bold text-white  flex items-center justify-center">ER01</p>
-        </>
-      ) : thickness === "9999" ? (
-        <>
-          <h5 className="flex items-center justify-center">⚠️</h5>
-          <p className="text-lg sm:text-2xl font-bold text-white mt-1">FPGA Error</p>
-          <p className="text-lg sm:text-2xl font-bold text-white flex mb-0 items-center justify-center">ER02</p>
-        </>
-      ) : null}
-    </div>
+            {/* Conditional rendering based on the value of thickness */}
+            <div className={``}>
+              {/* {console.log("Current thickness:", thickness)} */}
+              {limitvalue > 102.25 && limitvalue < 9998 ? (
+                <>
+                  <h5 className="flex items-center justify-center">⚠️</h5>
+                  <p className="text-lg sm:text-2xl font-bold text-white mt-1">
+                    Overlimit <br />{" "}
+                    <span className="text-lg sm:text-2xl font-bold text-white  flex items-center justify-center">
+                      ER03
+                    </span>{" "}
+                  </p>
+                </>
+              ) : thickness === "0" ? (
+                <>
+                  <h5 className="flex items-center justify-center">⚠️</h5>
+                  <p className="text-lg sm:text-2xl font-bold text-white mt-1">
+                    Fitting problem <br />{" "}
+                    <span className="text-lg sm:text-2xl font-bold text-white  flex items-center justify-center">
+                      ER01
+                    </span>{" "}
+                  </p>
+                </>
+              ) : thickness === "9999" ? (
+                <>
+                  <h5 className="flex items-center justify-center">⚠️</h5>
+                  <p className="text-lg sm:text-2xl font-bold text-white mt-1">
+                    FPGA Error <br />{" "}
+                    <span className="text-lg sm:text-2xl font-bold text-white  flex items-center justify-center">
+                      ER02
+                    </span>{" "}
+                  </p>
+                </>
+              ) : null}
+            </div>
 
-    <div className="flex-grow"></div>
+            <div className="flex-grow"></div>
 
-    {/* Displaying the thickness value */}
-    <div className="text-center text-sm font-medium text-gray-600 ">
-      <h3 className="font-bold text-white">Thickness</h3>
-      {limitvalue !== null ? (
-        <>
-          <p className="text-xl sm:text-2xl font-bold text-white mt-1">
-            {limitvalue.toFixed(2)}%
-          </p>
-          {console.log("limit value: ", limitvalue)}
-        </>
-      ) : (
-        <p className="text-lg sm:text-2xl font-bold text-white mt-1">
-          Loading...
-        </p>
-      )}
-    </div>
+            {/* Displaying the thickness value */}
+            <div className="text-center text-sm font-medium text-gray-600 ">
+              <h3 className="font-bold text-white">Thickness</h3>
+              {limitvalue !== null ? (
+                <>
+                  <p className="text-xl sm:text-2xl font-bold text-white mt-1">
+                    {limitvalue.toFixed(2)}%
+                  </p>
+                  {console.log("limit value: ", limitvalue)}
+                </>
+              ) : (
+                <p className="text-lg sm:text-2xl font-bold text-white mt-1">
+                  Loading...
+                </p>
+              )}
+            </div>
 
-    <div className="flex-grow"></div>
+            <div className="flex-grow"></div>
 
-    {/* Displaying the thickness and input thickness */}
-    <p className="text-lg sm:text-2xl font-bold text-white mt-2 sm:mt-0">
-      {thickness ? `${thickness}` : "Loading..."} /{" "}
-      {sensorData ? sensorData.inputthickness > 0 ? `${sensorData.inputthickness}` : "Loading..." : "Loading..."} mm
-    </p>
-  </div>
-</div>
-
+            {/* Displaying the thickness and input thickness */}
+            <p className="text-lg sm:text-2xl font-bold text-white mt-2 sm:mt-0">
+              {thickness ? `${thickness}` : "Loading..."} /{" "}
+              {sensorData
+                ? sensorData.inputthickness > 0
+                  ? `${sensorData.inputthickness}`
+                  : "Loading..."
+                : "Loading..."}{" "}
+              mm
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-3 sm:grid-cols-1 mb-5 ">
