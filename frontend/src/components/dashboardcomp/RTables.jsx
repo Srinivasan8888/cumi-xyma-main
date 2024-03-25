@@ -38,7 +38,7 @@ const RTables = ({ deviceNumber }) => {
             <tbody>
               {tableData.map((data, index) => {
                 const updatedAt = new Date(data.updatedAt);
-                const date = updatedAt.toISOString().split('T')[0];
+                // const date = updatedAt.toISOString().split('T')[0];
 
                 return (
                   <tr
@@ -49,7 +49,7 @@ const RTables = ({ deviceNumber }) => {
                     <td className="font-md text-black py-4 px-6">{data.batterylevel}%</td>
                     <td className="font-md text-black py-4 px-6">{data.devicetemp}°C</td>
                     <td className="font-md text-black py-4 px-6">{data.signal}%</td>
-                    <td className="font-md text-black py-4 px-6">{date}</td>
+                    <td className="font-md text-black py-4 px-6">{data.updatedAt}</td>
                   </tr>
                 );
               })}{" "}

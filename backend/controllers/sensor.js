@@ -171,6 +171,20 @@ export const createSensor = async (req, res) => {
     battery_status,
   } = req.query;
 
+  const date = new Date();
+ 
+  const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'Asia/Kolkata',
+  };
+  const formattedTimestamp = date.toLocaleString('en-US', options);
+  console.log('date', formattedTimestamp);
+
   try {
     const rawData = new RawData({
       id: String(device_name),
@@ -200,6 +214,7 @@ export const createSensor = async (req, res) => {
       devicetemp: String(device_status),
       signal: String(adjustedSignal),
       batterylevel: String(adjustedBatteryLevel),
+      // timestamp: formattedTimestamp,
     });
 
     const savesensor = await sensor.save();

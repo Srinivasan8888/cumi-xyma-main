@@ -7,6 +7,7 @@ import "../css/rcard.css";
 import { GoCheckCircle } from "react-icons/go";
 import { MdAdd } from "react-icons/md";
 import { IoWarningOutline } from "react-icons/io5";
+import { IoAlertCircleSharp,} from "react-icons/io5";
 
 const circle = {
   height: "25px",
@@ -113,7 +114,6 @@ const Rcards = ({ deviceData }) => {
         }
         setDeviceTime(time);
 
-
         if (sensorData) {
           function getCurrentIST(date) {
             const options = {
@@ -144,12 +144,13 @@ const Rcards = ({ deviceData }) => {
           const formattedTime = getCurrentIST(updatedTime);
 
           // console.log("Current Time in IST:", currentTime);
+          console.log("Current Time in IST seconds:", currentTime / 1000);
           // console.log("dbCreated Time in UTC:", sensorData.createdAt);
           // console.log("Userinput Time:", sensorData.time);
-          // console.log(
-          //   "12hrs of dbtime in UTC:",
-          //   dbcreatedtime.toLocaleString()
-          // );
+          console.log(
+            "12hrs of dbtime in UTC:",
+            dbcreatedtime.toLocaleString()
+          );
           // console.log(
           //   "Updated Time after adding sensorData.time in UTC:",
           //   updatedTime.toLocaleString()
@@ -256,22 +257,34 @@ const Rcards = ({ deviceData }) => {
     }
   };
 
+  const epochTime = new Date(TimeData).getTime() / 1000;
+  const currentTimeInSeconds = Math.floor(new Date().getTime() / 1000);
+  const sensorseconds = sensorData ? sensorData.time : "N/A";
+  let finialtime = epochTime + sensorseconds * 60 + 300;
+  let isActive = currentTimeInSeconds <= finialtime;
+
+  console.log("status,", isActive);
+
   return (
     <div>
       <div className="flex items-end justify-end">
         <div className="text-base font-bold mr-1 mb-2">
-          {" "}
-          {id ? `${id}` : "Loading..."}&nbsp;
-          <span style={{ color: "black", fontStyle: "normal" }}>
-            Last Updated:{" "}
+          <span className={`blink-${isActive ? "green" : "red"}`}>
+          <IoAlertCircleSharp className={`text-lg ${isActive ? 'text-green-500' : 'text-red-500'}`} />
+            {id ? `${id}` : "Loading..."}&nbsp;
           </span>
-          <span style={{ color: "red" }}>
-            {TimeData
-              ? new Date(TimeData).toLocaleString("en-US", {
-                  timeZone: "Asia/Kolkata",
-                })
-              : "Loading..."}
-            &nbsp;
+          <span>
+            <span style={{ color: "black", fontStyle: "normal" }}>
+              Last Updated:{" "}
+            </span>
+            <span style={{ color: isActive ? "green" : "red" }}>
+              {TimeData
+                ? new Date(TimeData).toLocaleString("en-US", {
+                    timeZone: "Asia/Kolkata",
+                  })
+                : "Loading..."}
+              &nbsp;
+            </span>
           </span>
         </div>
 
