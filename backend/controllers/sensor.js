@@ -88,7 +88,6 @@ export const userData = async (req, res) => {
 // export const createSensor = async (req, res) => {
 //   const { id, thickness, devicetemp, signal, batterylevel } = req.query;
 
-
 //   let modifiedId = id;
 //   if (id === "XY00001") {
 //     modifiedId = "XY001";
@@ -162,11 +161,15 @@ export const userData = async (req, res) => {
 //   }
 // };
 
-
-
 export const createSensor = async (req, res) => {
   // const { id, thickness, devicetemp, signal, batterylevel } = req.query;
-  const { device_name, thickness, device_status, signal_strength, battery_status } = req.query;
+  const {
+    device_name,
+    thickness,
+    device_status,
+    signal_strength,
+    battery_status,
+  } = req.query;
 
   try {
     const rawData = new RawData({
@@ -263,7 +266,7 @@ export const timelimit = async (req, res) => {
     changedtime = "5";
   } else if (time == "1 Day") {
     changedtime = "1440";
-  }else if (time == "2 Day") {
+  } else if (time == "2 Days") {
     changedtime = "2880";
   } else if (time == "7 Days") {
     changedtime = "10080";
@@ -340,12 +343,14 @@ export const exceldata = async (req, res) => {
 
     const assetDocumentArray = await asset.model("datas").find({
       id: deviceid,
-      $and: [{ createdAt: { $gte: startDate } }, { createdAt: { $lte: endDate } }],
+      $and: [
+        { createdAt: { $gte: startDate } },
+        { createdAt: { $lte: endDate } },
+      ],
     });
     console.log("Device ID:", deviceid);
-console.log("Start Date:", startDate);
-console.log("End Date:", endDate);
-
+    console.log("Start Date:", startDate);
+    console.log("End Date:", endDate);
 
     console.log("Found asset documents:", assetDocumentArray);
 
@@ -358,7 +363,7 @@ console.log("End Date:", endDate);
   }
 };
 
-export const rawdataapi = async(req,res) =>{
+export const rawdataapi = async (req, res) => {
   try {
     const rawData = await rawdata.find();
     res.json(rawData);
@@ -366,7 +371,7 @@ export const rawdataapi = async(req,res) =>{
     console.error("Error fetching raw data:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-}
+};
 
 // export const exceldata = async (req, res) => {
 //   const { id: deviceid, date1, date2 } = req.query;
@@ -528,7 +533,7 @@ export const tabledatas = async (req, res) => {
         batterylevel: assetDocument.batterylevel,
         devicetemp: assetDocument.devicetemp,
         signal: assetDocument.signal,
-        inputthickness: limitsdatas[0].inputthickness, 
+        inputthickness: limitsdatas[0].inputthickness,
         updatedAt: assetDocument.updatedAt,
         __v: assetDocument.__v,
         _id: assetDocument._id,

@@ -32,6 +32,7 @@ const Rcards = ({ deviceData }) => {
   const [errorAlert1, setErrorAlert1] = useState(false);
   const [errorAlert2, setErrorAlert2] = useState(false);
   const [errorAlert3, setErrorAlert3] = useState(false);
+  const [deviceTime, setDeviceTime] = useState(null);
 
   useEffect(() => {
     if (deviceData) {
@@ -42,7 +43,7 @@ const Rcards = ({ deviceData }) => {
       setBattery(deviceData.batterylevel);
       setTimeData(new Date(deviceData.createdAt));
     }
-    console.log("Rcard data", deviceData);
+    // console.log("Rcard data", deviceData);
   }, [deviceData]);
 
   useEffect(() => {
@@ -61,7 +62,7 @@ const Rcards = ({ deviceData }) => {
   }, [thickness]);
 
   useEffect(() => {
-    if (limitvalue > 100 && limitvalue < 9998) {
+    if (limitvalue > 108 && limitvalue < 9998) {
       setErrorAlert3(true);
     } else {
       setErrorAlert3(false);
@@ -94,6 +95,24 @@ const Rcards = ({ deviceData }) => {
         const data = await response.json();
         const sensorData = data.find((sensor) => sensor.id === id);
         setSensorData(sensorData);
+        const time = sensorData ? sensorData.time : null;
+        console.log("rcard time", time);
+        let encodedtime = deviceTime;
+        if (deviceTime == "1") {
+          encodedtime = "1 Min";
+        } else if (deviceTime == "5") {
+          encodedtime = "5 Min";
+        } else if (deviceTime == "1440") {
+          encodedtime = "1 Day";
+        } else if (deviceTime == "2880") {
+          encodedtime = "2 Days";
+        } else if (deviceTime == "10080") {
+          encodedtime = "7 Days";
+        } else if (deviceTime == "5") {
+          encodedtime = "15 Days";
+        }
+        setDeviceTime(time);
+
 
         if (sensorData) {
           function getCurrentIST(date) {
@@ -124,21 +143,21 @@ const Rcards = ({ deviceData }) => {
 
           const formattedTime = getCurrentIST(updatedTime);
 
-          console.log("Current Time in IST:", currentTime);
-          console.log("dbCreated Time in UTC:", sensorData.createdAt);
-          console.log("Userinput Time:", sensorData.time);
-          console.log(
-            "12hrs of dbtime in UTC:",
-            dbcreatedtime.toLocaleString()
-          );
-          console.log(
-            "Updated Time after adding sensorData.time in UTC:",
-            updatedTime.toLocaleString()
-          );
+          // console.log("Current Time in IST:", currentTime);
+          // console.log("dbCreated Time in UTC:", sensorData.createdAt);
+          // console.log("Userinput Time:", sensorData.time);
+          // console.log(
+          //   "12hrs of dbtime in UTC:",
+          //   dbcreatedtime.toLocaleString()
+          // );
+          // console.log(
+          //   "Updated Time after adding sensorData.time in UTC:",
+          //   updatedTime.toLocaleString()
+          // );
 
           // Convert updatedTime directly to IST using getCurrentIST function
           const updatedTimeIST = getCurrentIST(updatedTime);
-          console.log("Updated Time after converting to IST:", updatedTimeIST);
+          // console.log("Updated Time after converting to IST:", updatedTimeIST);
 
           if (formattedTime <= currentTime) {
             console.log("Active");
@@ -172,7 +191,7 @@ const Rcards = ({ deviceData }) => {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setUserInput(value);
-    console.log(value);
+    // console.log(value);
   };
 
   const handleSelectionChange = (selectedValue) => {
@@ -191,18 +210,18 @@ const Rcards = ({ deviceData }) => {
       return; // Exit early
     }
 
-    let encodedSelectedValue = encodeURIComponent(selectedValue);
-    if (encodedSelectedValue == "1 Min") {
-      encodedSelectedValue = "1";
-    } else if (encodedSelectedValue == "5 Min") {
-      encodedSelectedValue = "5";
-    } else if (encodedSelectedValue == "1 Day") {
-      encodedSelectedValue = "1440";
-    } else if (encodedSelectedValue == "7 Days") {
-      encodedSelectedValue = "10080";
-    } else if (encodedSelectedValue == "15 Days") {
-      encodedSelectedValue = "21600";
-    }
+    // let encodedSelectedValue = encodeURIComponent(selectedValue);
+    // if (encodedSelectedValue == "1 Min") {
+    //   encodedSelectedValue = "1";
+    // } else if (encodedSelectedValue == "5 Min") {
+    //   encodedSelectedValue = "5";
+    // } else if (encodedSelectedValue == "1 Day") {
+    //   encodedSelectedValue = "1440";
+    // } else if (encodedSelectedValue == "7 Days") {
+    //   encodedSelectedValue = "10080";
+    // } else if (encodedSelectedValue == "15 Days") {
+    //   encodedSelectedValue = "21600";
+    // }
 
     const url = `http://localhost:4000/sensor/setlimit?id=${id}&time=${selectedValue}&inputthickness=${userInput}`;
 
@@ -224,7 +243,7 @@ const Rcards = ({ deviceData }) => {
       }
 
       const result = await response.json();
-      console.log(result);
+      // console.log(result);
 
       // Show the success alert after successful API call
       setShowAlert(true);
@@ -257,6 +276,7 @@ const Rcards = ({ deviceData }) => {
         </div>
 
         <Carddrop
+          deviceTime={deviceTime}
           deviceData={deviceData}
           onSelectionChange={handleSelectionChange}
         />
@@ -502,101 +522,6 @@ const Rcards = ({ deviceData }) => {
       )}
 
       <div className="grid grid-cols-3 gap-4">
-        {/* <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row">
-          <div className="flex items-center">
-            <div className="flex flex-col mr-2">
-             
-              <div className="flex items-center">
-                <div className="h-3 w-3 rounded-full bg-green-300 mr-1 "></div>
-                <span className="text-sm font-bold">&gt;75%</span>
-              </div>
-              <div className="flex items-center">
-                <div className="h-3 w-3 rounded-full bg-[#ED7014] mr-1"></div>
-                <span className="text-sm font-bold sm:text-base lg:text-sm xl:text-xs">
-                  75 - 50
-                </span>
-              </div>
-              <div className="flex items-center">
-                <div className="h-3 w-3 rounded-full bg-red-600 mr-1"></div>
-                <span className="text-sm font-bold">&lt;50%</span>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col ml-auto text-right">
-            <p className="font-bold text-sm text-black mb-2">
-              Device id: {id ? `${id}` : "Loading..."}
-            </p>
-          </div>
-        </div> */}
-
-        {/* <div className="col-span-12 ">
-              <div
-                className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mt-3 mb-4 sm:flex-row lg:ml-6`}
-                style={{ backgroundColor }}
-              >
-                <div className="p-3 mb-2 mr-4 text-blue-500 bg-blue-100 rounded-full sm:mb-0">
-                  <svg
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="-1 -2 18 18"
-                  >
-                    <FaSortAmountUpAlt />
-                  </svg>
-                </div>
-
-                <div className={``}>
-                {console.log("Current thickness:", thickness)}
-      {thickness > 102.25 ? (
-        <>
-          <h5 className="flex items-center justify-center">⚠️</h5>
-          <p className="text-lg sm:text-2xl font-bold text-black mt-1">Overlimit</p>
-          <p className="text-lg sm:text-2xl font-bold text-black mt-1 flex items-center justify-center">ER03</p>
-        </>
-      ) : thickness === 0 ? (
-        <>
-          <h5 className="flex items-center justify-center">⚠️</h5>
-          <p className="text-lg sm:text-2xl font-bold text-black mt-1">Fitting problem</p>
-          <p className="text-lg sm:text-2xl font-bold text-black mt-1 flex items-center justify-center">ER01</p>
-        </>
-      ) : thickness === 9999 ? (
-        <>
-          <h5 className="flex items-center justify-center">⚠️</h5>
-          <p className="text-lg sm:text-2xl font-bold text-black mt-1">FPGA Error</p>
-          <p className="text-lg sm:text-2xl font-bold text-black mt-1 flex items-center justify-center">ER02</p>
-        </>
-      ) : null}
-    </div>
-
-
-                <div className="flex-grow"></div>
-                <div className="text-center text-sm font-medium text-gray-600 ">
-                  <h3 className="font-bold text-black">Thickness</h3>
-                  {limitvalue !== null ? (
-                    <>
-                      <p className="text-xl sm:text-2xl font-bold text-black mt-1">
-                        {limitvalue.toFixed(2)}%
-                      </p>
-                      {console.log("limit value: ", limitvalue)}
-                    </>
-                  ) : (
-                    <p className="text-lg sm:text-2xl font-bold text-black mt-1">
-                      Loading...
-                    </p>
-                  )}
-                </div>
-                <div className="flex-grow"></div>
-                <p className="text-lg sm:text-2xl font-bold text-black mt-2 sm:mt-0">
-                  {thickness ? `${thickness}` : "Loading..."} /{" "}
-                  {sensorData
-                    ? sensorData.inputthickness > 0
-                      ? `${sensorData.inputthickness}`
-                      : "Loading..."
-                    : "Loading..."}{" "}
-                  mm
-                </p>
-              </div>
-            </div> */}
-
         <div className="col-span-12">
           <div
             className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mt-3 mb-4 sm:flex-row lg:ml-6`}
@@ -639,7 +564,7 @@ const Rcards = ({ deviceData }) => {
             {/* Conditional rendering based on the value of thickness */}
             <div className={``}>
               {/* {console.log("Current thickness:", thickness)} */}
-              {limitvalue > 102.25 && limitvalue < 9998 ? (
+              {limitvalue > 108 && limitvalue < 9998 ? (
                 <>
                   <h5 className="flex items-center justify-center">⚠️</h5>
                   <p className="text-lg sm:text-2xl font-bold text-white mt-1">
@@ -682,7 +607,7 @@ const Rcards = ({ deviceData }) => {
                   <p className="text-xl sm:text-2xl font-bold text-white mt-1">
                     {limitvalue.toFixed(2)}%
                   </p>
-                  {console.log("limit value: ", limitvalue)}
+                  {/* {console.log("limit value: ", limitvalue)} */}
                 </>
               ) : (
                 <p className="text-lg sm:text-2xl font-bold text-white mt-1">

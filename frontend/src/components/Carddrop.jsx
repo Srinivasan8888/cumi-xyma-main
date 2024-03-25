@@ -1,36 +1,39 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
-import {
-  CheckIcon,
-  ChevronUpIcon,
-  ChevronDownIcon,
-} from "@heroicons/react/solid";
+import { CheckIcon, ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/solid";
 
 const fakeData = [
   { id: "1 Min" },
   { id: "5 Min" },
   { id: "1 Day" },
-  { id: "2 Day" },
+  { id: "2 Days" },
   { id: "7 Days" },
   { id: "15 Days" },
 ];
 
-const Carddrop = ({ deviceData, onSelectionChange }) => {
+const Carddrop = ({ deviceData, onSelectionChange, deviceTime }) => {
   const [selectedCylinder, setSelectedCylinder] = useState(null);
-  const [id, setId] = useState(null);
 
   useEffect(() => {
-    if (deviceData) {
-      setId(deviceData.id);
+    if (deviceTime) {
+      // Encode the device time
+      let encodedTime = "";
+      if (deviceTime === "1") {
+        encodedTime = "1 Min";
+      } else if (deviceTime === "5") {
+        encodedTime = "5 Min";
+      } else if (deviceTime === "1440") {
+        encodedTime = "1 Day";
+      } else if (deviceTime === "2880") {
+        encodedTime = "2 Days";
+      } else if (deviceTime === "10080") {
+        encodedTime = "7 Days";
+      } else if (deviceTime === "21600") {
+        encodedTime = "15 Days";
+      }
+      setSelectedCylinder(encodedTime);
     }
-  }, [deviceData]);
-
-  useEffect(() => {
-    if (fakeData.length > 0) {
-      setSelectedCylinder(fakeData[0].id);
-    }
-  }, []);
-
+  }, [deviceTime]);
 
   return (
     <div className="relative flex justify-center items-center mt-24 sm:mt-0 z-20">
