@@ -35,10 +35,10 @@ const Navbar = () => {
           sx={{ height: "40px" }}
         >
           <div className="flex items-center">
-            <IoAlertCircleSharp className="text-lg text-green-500 align-items-start" />
+            {/* <IoAlertCircleSharp className="text-lg text-green-500 align-items-start" />
             <p className="ml-1 flex text-green-500 font-bold text-sm h-1">
               Active
-            </p>
+            </p> */}
           </div>
 
           <Typography

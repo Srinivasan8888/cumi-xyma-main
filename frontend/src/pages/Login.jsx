@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import bg from "../img/bg.jpg";
-import G from "../img/G.svg";
+import logo from "../img/logo.png";
+// import G from "../img/G.svg";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -57,7 +57,7 @@ function Login() {
     >
       <div className="max-w-sm w-full text-gray-600 bg-white bg-opacity-90 rounded-lg p-6">
         <div className="text-center">
-          {/* <img src="https://floatui.com/logo.svg" width={150} className="mx-auto" /> */}
+          <img src={logo} width={190} className="mx-auto" />
           <div className="mt-5 space-y-2">
             <h3 className="text-gray-800 text-2xl font-bold sm:text-3xl">
               Sign-in
