@@ -8,7 +8,7 @@ import Graph from "./pages/Graph";
 import Test from "./pages/Test";
 import Report from "./pages/Report";
 import Settings from "./pages/Settings";
-
+import Admin from "./pages/Admin";
 function App() {
   return (
     <div>
@@ -21,7 +21,9 @@ function App() {
             <Route path="/graph" element={<Graph />} />
             <Route path="/report" element={<Report />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="/test" element={<Test />} />
+            
         </Routes>
       </BrowserRouter>
     </div>

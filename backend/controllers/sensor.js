@@ -6,7 +6,6 @@ import User from "../model/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import RawData from "../model/rawdata.js";
-import rawdata from "../model/rawdata.js";
 // import datas from "../model/datas.js";
 //register
 export const userRegister = async (req, res) => {
@@ -380,7 +379,7 @@ export const exceldata = async (req, res) => {
 
 export const rawdataapi = async (req, res) => {
   try {
-    const rawData = await rawdata.find();
+    const rawData = await RawData.find().limit(500).sort({ updatedAt: -1 });
     res.json(rawData);
   } catch (error) {
     console.error("Error fetching raw data:", error);
