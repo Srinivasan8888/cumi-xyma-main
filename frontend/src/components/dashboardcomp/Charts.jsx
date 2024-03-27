@@ -26,14 +26,6 @@ const Charts = ({ deviceNumber }) => {
     return () => clearInterval(intervalId);
   }, [deviceNumber]);
 
-  // const extractDataForChart = (data) => {
-  //   const labels = data.map((entry) => entry.createdAt);
-  //   const thicknessValues = data.map((entry) => parseInt(entry.thickness, 10));
-  //   return {
-  //     labels: labels,
-  //     data: thicknessValues,
-  //   };
-  // };
 
   const extractDataForChart = (data) => {
     const labels = data.map((entry) => {
@@ -50,79 +42,80 @@ const Charts = ({ deviceNumber }) => {
   
   const { labels, data: thicknessData } = extractDataForChart(chartDataState);
 
-  const CHART_COLORS = {
-    red: "#f26c6d",
-  };
+const CHART_COLORS = {
+  red: "#f26c6d",
+};
+const chartData = {
+  labels: labels,
+  datasets: [
+    {
+      label: "",
+      data: thicknessData,
+      borderColor: CHART_COLORS.red,
+      cubicInterpolationMode: "monotone",
+      tension: 2,
+    },
+  ],
+};
 
-  const chartData = {
-    labels: labels,
-    datasets: [
-      {
-        data: thicknessData,
-        borderColor: CHART_COLORS.red,
-        fill: false,
-        cubicInterpolationMode: "monotone",
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const chartConfig = {
-    type: "line",
-    data: chartData,
-    options: {
-      responsive: true,
-      plugins: {
-        title: {
-          display: true,
-          text: "Chart.js Line Chart - Cubic interpolation mode",
-        },
-        tooltip: {
-          mode: 'index',
-          intersect: false,
-          callbacks: {
-            label: function(context) {
-              var label = context.dataset.label || '';
-              if (label) {
-                label += ': ';
-              }
-              if (context.parsed.y !== null) {
-                label += context.parsed.y;
-              }
-              return label;
+const chartConfig = {
+  type: "line",
+  data: chartData,
+  options: {
+    responsive: true,
+    plugins: {
+      tooltip: {
+        mode: 'index',
+        intersect: false,
+        callbacks: {
+          label: function(context) {
+            var label = context.dataset.label || '';
+            if (label) {
+              label += ': ';
             }
+            if (context.parsed.y !== null) {
+              label += context.parsed.y;
+            }
+            return label;
           }
         }
+      }
+    },
+    scales: {
+      x: {
+        display: true,
+        title: {
+          display: true,
+          text: "Timestamp",
+        },
       },
-      scales: {
-        x: {
+      y: {
+        display: true,
+        title: {
           display: true,
-          title: {
-            display: true,
-          },
+          text: "Thickness",
         },
-        y: {
-          display: true,
-          title: {
-            display: true,
-            text: "Thickness",
-          },
-          suggestedMin: Math.min(...thicknessData),
-          suggestedMax: Math.max(...thicknessData),
-        },
+        suggestedMin: Math.min(...thicknessData),
+        suggestedMax: Math.max(...thicknessData),
       },
     },
-  };
-  
+    plugins: {
+      legend: {
+        display: false
+      }
+    }
+  },
+};
 
-  return (
-    <div
-      className="flex items-center bg-gray-100 shadow-2xl rounded-lg border-4"
-      style={{ width: "100%", height: "100%" }}
-    >
-      <Line {...chartConfig} className="mt-2" />
-    </div>
-  );
+
+return (
+  <div
+    className="flex items-center bg-gray-100 shadow-2xl rounded-lg border-4"
+    style={{ width: "100%", height: "100%" }}
+  >
+    <Line {...chartConfig} className="mt-2" />
+  </div>
+);
 };
 
 export default Charts;

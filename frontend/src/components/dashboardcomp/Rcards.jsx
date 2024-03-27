@@ -115,58 +115,58 @@ const Rcards = ({ deviceData }) => {
         setDeviceTime(time);
 
         if (sensorData) {
-          function getCurrentIST(date) {
-            const options = {
-              timeZone: "Asia/Kolkata",
-              hour12: true,
-              hour: "numeric",
-              minute: "numeric",
-              second: "numeric",
-              year: "numeric",
-              month: "numeric",
-              day: "numeric",
-            };
-            return date.toLocaleString("en-IN", options);
-          }
+          // function getCurrentIST(date) {
+          //   const options = {
+          //     timeZone: "Asia/Kolkata",
+          //     hour12: true,
+          //     hour: "numeric",
+          //     minute: "numeric",
+          //     second: "numeric",
+          //     year: "numeric",
+          //     month: "numeric",
+          //     day: "numeric",
+          //   };
+          //   return date.toLocaleString("en-IN", options);
+          // }
 
-          const currentTime = getCurrentIST(new Date());
-          const dbcreatedtime = new Date(sensorData.createdAt); // Convert UTC string to Date object
-          dbcreatedtime.setHours(dbcreatedtime.getHours() + 5); // Convert to IST
-          dbcreatedtime.setMinutes(dbcreatedtime.getMinutes() + 30); // Add 30 minutes for IST
+          // const currentTime = getCurrentIST(new Date());
+          // const dbcreatedtime = new Date(sensorData.createdAt); // Convert UTC string to Date object
+          // dbcreatedtime.setHours(dbcreatedtime.getHours() + 5); // Convert to IST
+          // dbcreatedtime.setMinutes(dbcreatedtime.getMinutes() + 30); // Add 30 minutes for IST
 
-          const userInputMinutes = parseInt(sensorData.time);
-          const totalMinutes =
-            dbcreatedtime.getTime() / (1000 * 60) + userInputMinutes; // Convert milliseconds to minutes and add user input
+          // const userInputMinutes = parseInt(sensorData.time);
+          // const totalMinutes =
+          //   dbcreatedtime.getTime() / (1000 * 60) + userInputMinutes; // Convert milliseconds to minutes and add user input
 
-          const updatedTime = new Date(dbcreatedtime); // Create a new Date object with the same date
-          updatedTime.setMinutes(totalMinutes); // Set the total minutes
+          // const updatedTime = new Date(dbcreatedtime); // Create a new Date object with the same date
+          // updatedTime.setMinutes(totalMinutes); // Set the total minutes
 
-          const formattedTime = getCurrentIST(updatedTime);
+          // const formattedTime = getCurrentIST(updatedTime);
 
-          // console.log("Current Time in IST:", currentTime);
-          console.log("Current Time in IST seconds:", currentTime / 1000);
-          // console.log("dbCreated Time in UTC:", sensorData.createdAt);
-          // console.log("Userinput Time:", sensorData.time);
-          console.log(
-            "12hrs of dbtime in UTC:",
-            dbcreatedtime.toLocaleString()
-          );
+          // // console.log("Current Time in IST:", currentTime);
+          // console.log("Current Time in IST seconds:", currentTime / 1000);
+          // // console.log("dbCreated Time in UTC:", sensorData.createdAt);
+          // // console.log("Userinput Time:", sensorData.time);
           // console.log(
-          //   "Updated Time after adding sensorData.time in UTC:",
-          //   updatedTime.toLocaleString()
+          //   "12hrs of dbtime in UTC:",
+          //   dbcreatedtime.toLocaleString()
           // );
+          // // console.log(
+          // //   "Updated Time after adding sensorData.time in UTC:",
+          // //   updatedTime.toLocaleString()
+          // // );
 
-          // Convert updatedTime directly to IST using getCurrentIST function
-          const updatedTimeIST = getCurrentIST(updatedTime);
-          // console.log("Updated Time after converting to IST:", updatedTimeIST);
+          // // Convert updatedTime directly to IST using getCurrentIST function
+          // const updatedTimeIST = getCurrentIST(updatedTime);
+          // // console.log("Updated Time after converting to IST:", updatedTimeIST);
 
-          if (formattedTime <= currentTime) {
-            console.log("Active");
-            setStatus("Active");
-          } else {
-            console.log("In-Active");
-            setStatus("In-Active");
-          }
+          // if (formattedTime <= currentTime) {
+          //   console.log("Active");
+          //   setStatus("Active");
+          // } else {
+          //   console.log("In-Active");
+          //   setStatus("In-Active");
+          // }
 
           if (!isNaN(sensorData.inputthickness)) {
             const limitvalue =
@@ -270,7 +270,7 @@ const Rcards = ({ deviceData }) => {
       <div className="flex items-end justify-end">
         <div className="text-base font-bold mr-1 mb-2">
           <span className={`blink-${isActive ? "green" : "red"}`}>
-          <IoAlertCircleSharp className={`text-lg ${isActive ? 'text-green-500' : 'text-red-500'}`} />
+          <IoAlertCircleSharp className={`text-lg justify-center items-center ${isActive ? 'text-green-500' : 'text-red-500'}`} />
             {id ? `${id}` : "Loading..."}&nbsp;
           </span>
           <span>
