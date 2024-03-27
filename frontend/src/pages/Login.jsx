@@ -27,7 +27,7 @@ function Login() {
   const loginUser = async (event) => {
     event.preventDefault();
 
-    const response = await fetch("https://cumi.xyma.live/sensor/login", {
+    const response = await fetch("https://cumi.xyma.live/backend/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

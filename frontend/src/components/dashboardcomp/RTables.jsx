@@ -10,6 +10,7 @@ const RTables = ({ deviceNumber }) => {
           `https://cumi.xyma.live/backend/table/${deviceNumber}`
         );
         const data = await response.json();
+
         setTableData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -38,21 +39,37 @@ const RTables = ({ deviceNumber }) => {
             <tbody>
               {tableData.map((data, index) => {
                 const updatedAt = new Date(data.updatedAt);
-                // const date = updatedAt.toISOString().split('T')[0];
+                const formattedUpdatedAt = updatedAt
+                  .toISOString()
+                  .slice(0, 19)
+                  .replace("T", " ");
 
                 return (
                   <tr
                     key={index}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                   >
-                    <td className="font-md text-black py-4 px-6 hidden sm:table-cell">{(((data.thickness - 0) * (100 - 0)) / (data.inputthickness - 0)).toFixed(2)}</td>
-                    <td className="font-md text-black py-4 px-6">{data.batterylevel}%</td>
-                    <td className="font-md text-black py-4 px-6">{data.devicetemp}°C</td>
-                    <td className="font-md text-black py-4 px-6">{data.signal}%</td>
-                    <td className="font-md text-black py-4 px-6">{data.updatedAt}</td>
+                    <td className="font-md text-black py-4 px-6 hidden sm:table-cell">
+                      {(
+                        ((data.thickness - 0) * (100 - 0)) /
+                        (data.inputthickness - 0)
+                      ).toFixed(2)}
+                    </td>
+                    <td className="font-md text-black py-4 px-6">
+                      {data.batterylevel}%
+                    </td>
+                    <td className="font-md text-black py-4 px-6">
+                      {data.devicetemp}°C
+                    </td>
+                    <td className="font-md text-black py-4 px-6">
+                      {data.signal}%
+                    </td>
+                    <td className="font-md text-black py-4 px-6">
+                      {formattedUpdatedAt}
+                    </td>
                   </tr>
                 );
-              })}{" "}
+              })}
             </tbody>
           </table>
         </div>
