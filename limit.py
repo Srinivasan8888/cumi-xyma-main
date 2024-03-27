@@ -24,6 +24,6 @@ for i in range(1, 41):
     # elif  data["id"] == "30 Days":
     #     time = "43200"
     input_thickness = random.randint(40, 80)
-    url = f"http://localhost:4000/sensor/setlimit?id=XY000{i:02}&time={time}&inputthickness={input_thickness}"
+    url = f"http://15.206.193.179:4000/backend/setlimit?id=XY000{i:02}&time={time}&inputthickness={input_thickness}"
     response = requests.get(url)
     print(f"Data sent for iteration {i}. Response: {response.text}")
