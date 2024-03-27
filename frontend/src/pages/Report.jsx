@@ -24,7 +24,7 @@ const Report = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:4000/sensor/data");
+      const response = await fetch("https://cumi.xyma.live/backend/data");
       let infoVal = await response.json();
       infoVal = infoVal;
       setInfoGraph(infoVal);
@@ -105,7 +105,7 @@ const Report = () => {
             if (selectedId !== null) {
                 try {
                     const response = await fetch(
-                        `http://localhost:4000/sensor/dataexcel?id=${selectedId}&date1=${startDate}T00:00:01Z&date2=${endDate}T23:59:59Z`
+                        `https://cumi.xyma.live/backend/dataexcel?id=${selectedId}&date1=${startDate}T00:00:01Z&date2=${endDate}T23:59:59Z`
                     );
                     console.log(response);
                     const data = await response.json();

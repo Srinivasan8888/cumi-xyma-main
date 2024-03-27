@@ -29,7 +29,7 @@ app.use(express.json()); // Use `express.json()` instead of `Express.json()`
 // Enable CORS for all routes
 app.use(cors());
 
-app.use("/sensor", router);
+app.use("/backend", router);
 
 app.listen(4000, () => {
   connect();

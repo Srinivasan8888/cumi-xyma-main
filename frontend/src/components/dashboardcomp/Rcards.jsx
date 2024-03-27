@@ -88,7 +88,7 @@ const Rcards = ({ deviceData }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:4000/sensor/alllimitdata"
+          "https://cumi.xyma.live/backend/alllimitdata"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -224,7 +224,7 @@ const Rcards = ({ deviceData }) => {
     //   encodedSelectedValue = "21600";
     // }
 
-    const url = `http://localhost:4000/sensor/setlimit?id=${id}&time=${selectedValue}&inputthickness=${userInput}`;
+    const url = `https://cumi.xyma.live/backend/setlimit?id=${id}&time=${selectedValue}&inputthickness=${userInput}`;
 
     try {
       const response = await fetch(url, {

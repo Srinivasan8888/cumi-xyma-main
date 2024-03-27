@@ -9,7 +9,7 @@ const Admin = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/sensor/rawdata`
+          `https://cumi.xyma.live/backend/rawdata`
         );
         const data = await response.json();
         console.log("rawdata:", data);

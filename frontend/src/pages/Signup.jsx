@@ -10,7 +10,7 @@ function Signup() {
   const registerUser = async (event) => {
     event.preventDefault();
 
-    const response = await fetch("http://localhost:4000/sensor/register", {
+    const response = await fetch("https://cumi.xyma.live/backend/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

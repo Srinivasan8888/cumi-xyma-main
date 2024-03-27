@@ -15,7 +15,7 @@ export default function Combobox({ onChartData }) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:4000/sensor/data");
+      const response = await fetch("https://cumi.xyma.live/backend/data");
       let infoVal = await response.json();
       infoVal = infoVal;
       setInfoGraph(infoVal);
@@ -42,7 +42,7 @@ export default function Combobox({ onChartData }) {
       if (selectedId !== null) {
         try {
           const response = await fetch(
-            `http://localhost:4000/sensor/getdata/${selectedId}?battery=${valuebat}&thickness=${valuethick}`
+            `https://cumi.xyma.live/backend/getdata/${selectedId}?battery=${valuebat}&thickness=${valuethick}`
           );
           const data = await response.json();
           console.log("Data:", data);

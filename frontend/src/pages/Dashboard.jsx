@@ -18,7 +18,7 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:4000/sensor/getdata/${deviceNumberForEffect}?battery=true&thickness=true`
+          `https://cumi.xyma.live/backend/getdata/${deviceNumberForEffect}?battery=true&thickness=true`
         );
         const data = await response.json();
         console.log("fetchdata for devicenumberforeffect", data);
