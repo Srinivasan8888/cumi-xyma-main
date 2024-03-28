@@ -10,9 +10,9 @@ function Login() {
 
   const navigate = useNavigate();
 
-  function singuppage() {
-    navigate("/signup");
-  }
+  // function singuppage() {
+  //   navigate("/signup");
+  // }
 
   // function gotodashboard() {
   //   navigate("/dashboard");
@@ -28,7 +28,7 @@ function Login() {
   const loginUser = async (event) => {
     event.preventDefault();
 
-    const response = await fetch(`${baseUrl}/backend/login`, {
+    const response = await fetch(`${baseUrl}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,12 +40,13 @@ function Login() {
     });
 
     const data = await response.json();
+    console.log("response",data);
 
     if (data.user) {
       let a = localStorage.setItem("token", data.user);
       console.log("somedate", a);
       alert("Login Successful");
-      window.location.href = "/dashboard";
+      window.location.href = "/Dashboard";
     } else {
       alert("Error : Incorrect Email and Password ");
     }

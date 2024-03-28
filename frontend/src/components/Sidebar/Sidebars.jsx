@@ -25,7 +25,7 @@ const Sidebars = () => {
 
   const logout = () => {
     localStorage.removeItem('token');
-    window.location.href = '/';
+    window.location.href = '/Dashboard';
     alert('Logout Successful');
   };
 

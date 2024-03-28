@@ -11,7 +11,7 @@ const User = new mongoose.Schema(
             type: String,
             required: true},
     },
-    {collection: 'user-data'}
+    {collection: 'logins'}
 )
 
-export default mongoose.model('UserData', User);
+export default mongoose.model('logins', User);

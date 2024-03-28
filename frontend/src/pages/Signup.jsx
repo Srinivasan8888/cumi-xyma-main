@@ -28,7 +28,7 @@ function Signup() {
       let a = localStorage.setItem("token", data.user);
       console.log("somedate", a);
       alert("Login Successful");
-      window.location.href = "/signin";
+      window.location.href = "/login";
     } else {
       alert("Error : Incorrect Email and Password ");
     }
