@@ -43,7 +43,7 @@ export default function Combobox({ onChartData }) {
       if (selectedId !== null) {
         try {
           const response = await fetch(
-            `${baseUrl}/getdata/${selectedId}?battery=${valuebat}&thickness=${valuethick}`
+            `${baseUrl}getdata/${selectedId}?battery=${valuebat}&thickness=${valuethick}`
           );
           const data = await response.json();
           console.log("Data:", data);

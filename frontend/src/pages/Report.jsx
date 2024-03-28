@@ -55,14 +55,6 @@ const Report = () => {
     }
   };
 
-  
-  
-  
-  
-  
-  
-
-
   const pdfSubmit = (filteredData) => {
     if (!startDate || !endDate) {
       alert("Please select both start and end dates.");
@@ -106,7 +98,7 @@ const Report = () => {
             if (selectedId !== null) {
                 try {
                     const response = await fetch(
-                        `${baseUrl}/dataexcel?id=${selectedId}&date1=${startDate}T00:00:01Z&date2=${endDate}T23:59:59Z`
+                        `${baseUrl}dataexcel?id=${selectedId}&date1=${startDate}T00:00:01Z&date2=${endDate}T23:59:59Z`
                     );
                     console.log(response);
                     const data = await response.json();

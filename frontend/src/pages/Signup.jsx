@@ -11,7 +11,7 @@ function Signup() {
   const registerUser = async (event) => {
     event.preventDefault();
 
-    const response = await fetch(`${baseUrl}/register`, {
+    const response = await fetch(`${baseUrl}register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -19,7 +19,7 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${baseUrl}/getdata/${deviceNumberForEffect}?battery=true&thickness=true`
+          `${baseUrl}getdata/${deviceNumberForEffect}?battery=true&thickness=true`
         );
         const data = await response.json();
         console.log("fetchdata for devicenumberforeffect", data);

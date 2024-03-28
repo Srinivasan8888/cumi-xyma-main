@@ -12,7 +12,7 @@ const Charts = ({ deviceNumber }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${baseUrl}/table/${deviceNumber}`
+          `${baseUrl}table/${deviceNumber}`
         );
         const data = await response.json();
         data.reverse();
