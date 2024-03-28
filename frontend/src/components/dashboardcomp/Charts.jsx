@@ -112,7 +112,7 @@ const chartConfig = {
 
 return (
   <div
-    className="flex items-center bg-gray-100 shadow-2xl rounded-lg border-4"
+    className="flex items-center bg-gray-100 shadow-2xl rounded-lg border-4 "
     style={{ width: "100%", height: "100%" }}
   >
     <Line {...chartConfig} className="mt-2" />
