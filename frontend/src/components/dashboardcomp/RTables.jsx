@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { baseUrl } from "../config";
 
 const RTables = ({ deviceNumber }) => {
   const [tableData, setTableData] = useState([]);
@@ -7,7 +8,7 @@ const RTables = ({ deviceNumber }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://cumi.xyma.live/backend/table/${deviceNumber}`
+          `${baseUrl}/table/${deviceNumber}`
         );
         const data = await response.json();
 

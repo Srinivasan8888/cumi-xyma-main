@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
+import { baseUrl } from "../config";
 import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement, Tooltip } from "chart.js";
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip);
+
 
 const Charts = ({ deviceNumber }) => {
   const [chartDataState, setChartData] = useState([]);
@@ -10,7 +12,7 @@ const Charts = ({ deviceNumber }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://cumi.xyma.live/backend/table/${deviceNumber}`
+          `${baseUrl}/table/${deviceNumber}`
         );
         const data = await response.json();
         data.reverse();

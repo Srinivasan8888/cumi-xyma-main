@@ -13,11 +13,10 @@ const Graph = () => {
 
   return (
     <div className="h-full w-full flex flex-col">
-      <Sidebars />
-      <div className="p-4 sm:ml-64">
+      
         <Combobox onChartData={handleChartData} />
         {chartData && <Charttwo chartData={chartData} />} {/* Render Charttwo only if chartData is not null */}
-      </div>
+      
     </div>
   );
 };

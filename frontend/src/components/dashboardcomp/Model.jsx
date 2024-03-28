@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../css/model.css";
+import { baseUrl } from "../config";
 
 const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
   const [limitValues, setLimitValues] = useState([]);
@@ -9,7 +10,7 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response1 = await fetch("https://cumi.xyma.live/backend/data");
+        const response1 = await fetch(`${baseUrl}/data`);
         const data1 = await response1.json();
         const thicknessArray = data1.map(sensor => parseInt(sensor.thickness));
 
@@ -21,7 +22,7 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
         const formattedDates = timevalue1.map(formatDate);
         console.log("json for time", formattedDates);
 
-        const response2 = await fetch("https://cumi.xyma.live/backend/alllimitdata");
+        const response2 = await fetch(`${baseUrl}/alllimitdata`);
         const data2 = await response2.json();
         const limitData = data2.map(sensor => parseInt(sensor.inputthickness));
 

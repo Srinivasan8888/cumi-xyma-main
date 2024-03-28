@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../img/logo.png";
 // import G from "../img/G.svg";
+import { baseUrl } from "../components/config";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ function Login() {
   const loginUser = async (event) => {
     event.preventDefault();
 
-    const response = await fetch("https://cumi.xyma.live/backend/login", {
+    const response = await fetch(`${baseUrl}/backend/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

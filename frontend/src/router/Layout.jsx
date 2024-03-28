@@ -1,17 +1,16 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 import Sidebars from "../components/Sidebar/Sidebars";
+import { Outlet } from "react-router-dom";
 
-const Layout = ({ children }) => {
- 
-  const location = useLocation();
-  const showSidebar = !["/login", "/signup"].includes(location.pathname);
+const Layout =  () => {
 
   return (
-    <div>
-      {showSidebar && <Sidebars />}
-      <div className="flex-grow p-4 sm:ml-64">{children}</div>
-    </div>
+    <>
+      <Sidebars/>
+      <div className="p-4 sm:ml-64">
+        <Outlet/>
+      </div>
+    </>
   );
 };
 

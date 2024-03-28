@@ -12,6 +12,7 @@ import xymaimg from '../img/logo.png'
 import coverImg from '../img/pdfcover.jpg'
 import disclaimerPage from '../img/disclaimerPage.jpg'
 import Chart from 'chart.js/auto';
+import { baseUrl } from "../components/config";
 
 const Report = () => {
   const [selectedId, setSelectedId] = useState("XY00001");
@@ -24,7 +25,7 @@ const Report = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("https://cumi.xyma.live/backend/data");
+      const response = await fetch(`${baseUrl}/data`);
       let infoVal = await response.json();
       infoVal = infoVal;
       setInfoGraph(infoVal);
@@ -105,7 +106,7 @@ const Report = () => {
             if (selectedId !== null) {
                 try {
                     const response = await fetch(
-                        `https://cumi.xyma.live/backend/dataexcel?id=${selectedId}&date1=${startDate}T00:00:01Z&date2=${endDate}T23:59:59Z`
+                        `${baseUrl}/dataexcel?id=${selectedId}&date1=${startDate}T00:00:01Z&date2=${endDate}T23:59:59Z`
                     );
                     console.log(response);
                     const data = await response.json();
@@ -142,8 +143,7 @@ const Report = () => {
 
   return (
     <div className="h-full w-full flex flex-col">
-      <Sidebars />
-      <div className="p-4  bg-[#F2F2F2] sm:ml-64 h-full w-full">
+      <div className="  bg-[#F2F2F2] h-full w-full">
         <section className="">
           <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
             <aside className="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">

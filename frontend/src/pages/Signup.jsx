@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import G from "../img/G.svg"
+import { baseUrl } from "../components/config";
 
 function Signup() {
 
@@ -10,7 +11,7 @@ function Signup() {
   const registerUser = async (event) => {
     event.preventDefault();
 
-    const response = await fetch("https://cumi.xyma.live/backend/register", {
+    const response = await fetch(`${baseUrl}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

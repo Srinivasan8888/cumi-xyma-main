@@ -7,10 +7,11 @@ import Model from "../components/dashboardcomp/Model.jsx";
 import Navbar from "../components/Navbar.jsx";
 import "./css/dashboard.css";
 import Sidebars from "../components/Sidebar/Sidebars.jsx";
+import { baseUrl } from "../components/config.js";
 
 function Dashboard() {
   const [deviceData, setDeviceData] = useState(null);
-  const [deviceNumberForEffect, setDeviceNumberForEffect] = useState('XY00001');
+  const [deviceNumberForEffect, setDeviceNumberForEffect] = useState("XY00001");
   const [limitValues, setLimitValues] = useState([]);
   const [limitData, setLimitData] = useState([]);
 
@@ -18,7 +19,7 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://cumi.xyma.live/backend/getdata/${deviceNumberForEffect}?battery=true&thickness=true`
+          `${baseUrl}/getdata/${deviceNumberForEffect}?battery=true&thickness=true`
         );
         const data = await response.json();
         console.log("fetchdata for devicenumberforeffect", data);
@@ -26,7 +27,6 @@ function Dashboard() {
         if (data && data.length > 0) {
           setDeviceData(data[0]);
         }
-       
 
         // if (data && data.length > 0) {
         //   const { createdAt, devicetemp, id, signal, updatedAt } = data[0];
@@ -48,7 +48,6 @@ function Dashboard() {
     console.log("Small box clicked dash:", text);
     const deviceNumber = text;
     setDeviceNumberForEffect(deviceNumber);
-    
   };
 
   const handleLimitValuesChange = (newLimitValues, newLimitData) => {
@@ -60,34 +59,30 @@ function Dashboard() {
   // useEffect(() => {
   //   console.log("deviceData", deviceData);
   // }, [deviceData]);
-  
 
   return (
     <div className="flex flex-col h-screen">
-      <Sidebars />
-      <div className="flex-grow p-4 sm:ml-64">
-        <Navbar />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 cont1">
-          <div className="md:col-span-1 modelview">
-            <Model
-              handleSmallBoxClick={handleSmallBoxClick}
-              onLimitValuesChange={handleLimitValuesChange}
-            />
-          </div>
-          <div className="md:col-span-1 sm:col-span">
-            <Rcards
-              deviceData={deviceData}
-              limitValues={limitValues}
-              limitData={limitData}
-              className="h-full"
-            />
-          </div>
-          <div className="md:col-span-1 sm:col-span-4">
-            <RTables deviceNumber={deviceNumberForEffect} className="h-full" />
-          </div>
-          <div className="md:col-span-1 sm:col-span-4">
-            <Charts deviceNumber={deviceNumberForEffect} className="h-full" />
-          </div>
+      <Navbar />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 cont1">
+        <div className="md:col-span-1 modelview">
+          <Model
+            handleSmallBoxClick={handleSmallBoxClick}
+            onLimitValuesChange={handleLimitValuesChange}
+          />
+        </div>
+        <div className="md:col-span-1 sm:col-span">
+          <Rcards
+            deviceData={deviceData}
+            limitValues={limitValues}
+            limitData={limitData}
+            className="h-full"
+          />
+        </div>
+        <div className="md:col-span-1 sm:col-span-4">
+          <RTables deviceNumber={deviceNumberForEffect} className="h-full" />
+        </div>
+        <div className="md:col-span-1 sm:col-span-4">
+          <Charts deviceNumber={deviceNumberForEffect} className="h-full" />
         </div>
       </div>
     </div>

@@ -1,65 +1,41 @@
 /* dashboard.css */
 
-.dashboard-container {
-  display: flex;
-  height: 100vh;
-  text-decoration: none;
-  /* Optionally, you can add more styling here, e.g., background-color, height, etc. */
-}
-
-.dashboard_dec{
-  text-decoration: none;
-}
-
-.main-content {
-  flex-grow: 1;
-  overflow: auto; /* Add this if you want the content to be scrollable */
-  padding: 20px; /* Adjust the padding as needed */
-  box-sizing: border-box;
-  text-decoration: none;
-  /* Optionally, you can add padding, margins, or other styling here */
-}
-
-/* dashboard.css */
-
+/* General styling */
 body,
 html {
   height: 100%;
   margin: 0;
+}
+
+/* Dashboard container */
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Remove text decoration for dashboard elements */
+.dashboard-container a {
   text-decoration: none;
 }
 
-@media (max-width: 1660px) {
-  .cont1 {
-    display: grid;
-    grid-template-columns: 1fr;
-    overflow-y: auto; 
-    max-height: 90vh; 
-  }
-
-
-  .rcards-container {
-    max-width: 90%; 
-    overflow: hidden;
-  }
-  
-  .rcards-container .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px; 
-  }
-  
-  .rcards-container .grid > div {
-    min-width: 0; 
-    flex-grow: 1; 
-  }
-  
-  .rcards-container .grid > div > div {
-    width: 100%; 
-  }
-
+/* Main content styling */
+.main-content {
+  flex-grow: 1;
+  overflow: auto; /* Enable content scrolling */
+  padding: 20px; /* Adjust padding as needed */
+  box-sizing: border-box;
 }
 
+/* Responsive layout for small screens */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr; /* Single column layout */
+  }
+
+  /* Add specific responsive styles for smaller screens */
+}
+
+/* Responsive layout for medium-sized screens */
 @media (max-width: 1550px) {
   .cont1 {
     display: grid;
@@ -67,7 +43,6 @@ html {
     overflow-y: auto; 
     max-height: 90vh; 
   }
-
 
   .rcards-container {
     max-width: 60%; 
@@ -88,9 +63,34 @@ html {
   .rcards-container .grid > div > div {
     width: 50%; 
   }
-
 }
 
+/* Responsive layout for large screens */
+@media (max-width: 1660px) {
+  .cont1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow-y: auto; 
+    max-height: 90vh; 
+  }
 
-
-
+  .rcards-container {
+    max-width: 90%; 
+    overflow: hidden;
+  }
+  
+  .rcards-container .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px; 
+  }
+  
+  .rcards-container .grid > div {
+    min-width: 0; 
+    flex-grow: 1; 
+  }
+  
+  .rcards-container .grid > div > div {
+    width: 100%; 
+  }
+}

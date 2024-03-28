@@ -7,7 +7,8 @@ import "../css/rcard.css";
 import { GoCheckCircle } from "react-icons/go";
 import { MdAdd } from "react-icons/md";
 import { IoWarningOutline } from "react-icons/io5";
-import { IoAlertCircleSharp,} from "react-icons/io5";
+import { IoAlertCircleSharp } from "react-icons/io5";
+import { baseUrl } from "../config";
 
 const circle = {
   height: "25px",
@@ -87,9 +88,7 @@ const Rcards = ({ deviceData }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://cumi.xyma.live/backend/alllimitdata"
-        );
+        const response = await fetch(`${baseUrl}/alllimitdata`);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -115,59 +114,6 @@ const Rcards = ({ deviceData }) => {
         setDeviceTime(time);
 
         if (sensorData) {
-          // function getCurrentIST(date) {
-          //   const options = {
-          //     timeZone: "Asia/Kolkata",
-          //     hour12: true,
-          //     hour: "numeric",
-          //     minute: "numeric",
-          //     second: "numeric",
-          //     year: "numeric",
-          //     month: "numeric",
-          //     day: "numeric",
-          //   };
-          //   return date.toLocaleString("en-IN", options);
-          // }
-
-          // const currentTime = getCurrentIST(new Date());
-          // const dbcreatedtime = new Date(sensorData.createdAt); // Convert UTC string to Date object
-          // dbcreatedtime.setHours(dbcreatedtime.getHours() + 5); // Convert to IST
-          // dbcreatedtime.setMinutes(dbcreatedtime.getMinutes() + 30); // Add 30 minutes for IST
-
-          // const userInputMinutes = parseInt(sensorData.time);
-          // const totalMinutes =
-          //   dbcreatedtime.getTime() / (1000 * 60) + userInputMinutes; // Convert milliseconds to minutes and add user input
-
-          // const updatedTime = new Date(dbcreatedtime); // Create a new Date object with the same date
-          // updatedTime.setMinutes(totalMinutes); // Set the total minutes
-
-          // const formattedTime = getCurrentIST(updatedTime);
-
-          // // console.log("Current Time in IST:", currentTime);
-          // console.log("Current Time in IST seconds:", currentTime / 1000);
-          // // console.log("dbCreated Time in UTC:", sensorData.createdAt);
-          // // console.log("Userinput Time:", sensorData.time);
-          // console.log(
-          //   "12hrs of dbtime in UTC:",
-          //   dbcreatedtime.toLocaleString()
-          // );
-          // // console.log(
-          // //   "Updated Time after adding sensorData.time in UTC:",
-          // //   updatedTime.toLocaleString()
-          // // );
-
-          // // Convert updatedTime directly to IST using getCurrentIST function
-          // const updatedTimeIST = getCurrentIST(updatedTime);
-          // // console.log("Updated Time after converting to IST:", updatedTimeIST);
-
-          // if (formattedTime <= currentTime) {
-          //   console.log("Active");
-          //   setStatus("Active");
-          // } else {
-          //   console.log("In-Active");
-          //   setStatus("In-Active");
-          // }
-
           if (!isNaN(sensorData.inputthickness)) {
             const limitvalue =
               ((thickness - 0) * (100 - 0)) / (sensorData.inputthickness - 0) +
@@ -211,20 +157,7 @@ const Rcards = ({ deviceData }) => {
       return; // Exit early
     }
 
-    // let encodedSelectedValue = encodeURIComponent(selectedValue);
-    // if (encodedSelectedValue == "1 Min") {
-    //   encodedSelectedValue = "1";
-    // } else if (encodedSelectedValue == "5 Min") {
-    //   encodedSelectedValue = "5";
-    // } else if (encodedSelectedValue == "1 Day") {
-    //   encodedSelectedValue = "1440";
-    // } else if (encodedSelectedValue == "7 Days") {
-    //   encodedSelectedValue = "10080";
-    // } else if (encodedSelectedValue == "15 Days") {
-    //   encodedSelectedValue = "21600";
-    // }
-
-    const url = `https://cumi.xyma.live/backend/setlimit?id=${id}&time=${selectedValue}&inputthickness=${userInput}`;
+    const url = `${baseUrl}/setlimit?id=${id}&time=${selectedValue}&inputthickness=${userInput}`;
 
     try {
       const response = await fetch(url, {
@@ -267,40 +200,44 @@ const Rcards = ({ deviceData }) => {
 
   return (
     <div>
-      <div className="flex items-end justify-end">
-        <div className="text-base font-bold mr-1 mb-2">
-          <span className={`blink-${isActive ? "green" : "red"}`}>
-          <IoAlertCircleSharp className={`text-lg justify-center items-center ${isActive ? 'text-green-500' : 'text-red-500'}`} />
-            {id ? `${id}` : "Loading..."}&nbsp;
-          </span>
-          <span>
-            <span style={{ color: "black", fontStyle: "normal" }}>
-              Last Updated:{" "}
-            </span>
-            <span style={{ color: isActive ? "green" : "red" }}>
-              {TimeData
-                ? new Date(TimeData).toLocaleString("en-US", {
-                    timeZone: "Asia/Kolkata",
-                  })
-                : "Loading..."}
-              &nbsp;
-            </span>
-          </span>
-        </div>
+      <div className="flex items-end justify-end mb-1">
+      <div className="text-base font-bold mr-1" style={{ display: 'flex', alignItems: 'center' }}>
+  <div className={`blink-${isActive ? "green" : "red"}`} style={{ marginBottom: "2px" }}>
+    {id ? (
+      <>
+        <IoAlertCircleSharp
+          className={`text-lg inline-block align-middle ${
+            isActive ? "text-green-500" : "text-red-500"
+          }`}
+        />
+        <span className="align-middle">&nbsp;{`${id}`}</span>
+      </>
+    ) : (
+      "Loading..."
+    )}
+    &nbsp;
+  </div>
+  <div style={{ marginLeft: 'auto' }}>
+    <span style={{ color: "black", fontStyle: "normal" }}>
+      Last Updated:{" "}
+    </span>
+    <span style={{ color: isActive ? "green" : "red" }}>
+      {TimeData
+        ? new Date(TimeData).toLocaleString("en-US", {
+            timeZone: "Asia/Kolkata",
+          })
+        : "Loading..."}
+      &nbsp;
+    </span>
+  </div>
+</div>
+
 
         <Carddrop
           deviceTime={deviceTime}
           deviceData={deviceData}
           onSelectionChange={handleSelectionChange}
         />
-
-        {/* <input
-          type="number"
-          className="mt-4 ml-3 rounded-lg w-[20%] h-9  bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="Thickness"
-          value={userInput}
-          onChange={handleInputChange}
-        /> */}
 
         <form class="items-center ml-4">
           <label for="simple-search" class="sr-only">
@@ -339,7 +276,6 @@ const Rcards = ({ deviceData }) => {
           onClick={handleSubmit}
         >
           Submit
-          {/* <MdAdd className=" ml-2 w-5 h-auto" /> */}
         </button>
 
         {showAlert && (

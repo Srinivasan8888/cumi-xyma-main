@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/solid";
 import Toggle from "../components/Toggle";
+import {baseUrl} from "../components/config.js"
 
 
 export default function Combobox({ onChartData }) {
@@ -15,7 +16,7 @@ export default function Combobox({ onChartData }) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("https://cumi.xyma.live/backend/data");
+      const response = await fetch(`${baseUrl}/data`);
       let infoVal = await response.json();
       infoVal = infoVal;
       setInfoGraph(infoVal);
@@ -42,7 +43,7 @@ export default function Combobox({ onChartData }) {
       if (selectedId !== null) {
         try {
           const response = await fetch(
-            `https://cumi.xyma.live/backend/getdata/${selectedId}?battery=${valuebat}&thickness=${valuethick}`
+            `${baseUrl}/getdata/${selectedId}?battery=${valuebat}&thickness=${valuethick}`
           );
           const data = await response.json();
           console.log("Data:", data);
