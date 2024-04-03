@@ -21,7 +21,7 @@ export default function Combobox({ onChartData }) {
       infoVal = infoVal;
       setInfoGraph(infoVal);
       if (infoVal.length > 0) {
-        setSelectedCylinder(infoVal[0].id);
+        setSelectedCylinder(infoVal[0].device_name);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -104,8 +104,8 @@ export default function Combobox({ onChartData }) {
                   <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 pl-0 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                     {infoGraph.map((cylinderItem) => (
                       <Listbox.Option
-                        key={cylinderItem.id}
-                        value={cylinderItem.id}
+                        key={cylinderItem.device_name}
+                        value={cylinderItem.device_name}
                       >
                         {({ selected, active }) => (
                           <div
@@ -132,7 +132,7 @@ export default function Combobox({ onChartData }) {
                                 active ? "font-semibold" : "font-normal"
                               } pl-8`}
                             >
-                              {cylinderItem.id}
+                              {cylinderItem.device_name}
                             </span>
                           </div>
                         )}

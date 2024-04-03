@@ -13,6 +13,7 @@ const RTables = ({ deviceNumber }) => {
         const data = await response.json();
 
         setTableData(data);
+        console.log("rtable", data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -39,34 +40,31 @@ const RTables = ({ deviceNumber }) => {
             </thead>
             <tbody>
               {tableData.map((data, index) => {
-                const updatedAt = new Date(data.updatedAt);
-                const formattedUpdatedAt = updatedAt
-                  .toISOString()
-                  .slice(0, 19)
-                  .replace("T", " ");
-
+                const timestamp = (data.timestamp);
+                
                 return (
                   <tr
                     key={index}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                   >
                     <td className="font-md text-black py-4 px-6 hidden sm:table-cell">
-                      {(
+                      {/* {(
                         ((data.thickness - 0) * (100 - 0)) /
                         (data.inputthickness - 0)
-                      ).toFixed(2)}
+                      ).toFixed(2)} */}
+                       {data.thickness}
                     </td>
                     <td className="font-md text-black py-4 px-6">
-                      {data.batterylevel}%
+                      {data.battery_status}%
                     </td>
                     <td className="font-md text-black py-4 px-6">
-                      {data.devicetemp}°C
+                      {data.device_status}°C
                     </td>
                     <td className="font-md text-black py-4 px-6">
-                      {data.signal}%
+                      {data.signal_strength}%
                     </td>
                     <td className="font-md text-black py-4 px-6">
-                      {formattedUpdatedAt}
+                      {data.timestamp}
                     </td>
                   </tr>
                 );

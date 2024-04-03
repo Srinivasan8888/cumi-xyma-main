@@ -8,15 +8,15 @@ const Charttwo = ({ chartData }) => {
   }
 
   const reversedChartData = [...chartData].reverse();
-  const maxBatteryLevel = Math.max(...reversedChartData.map(dataItem => parseFloat(dataItem.batterylevel)));
+  const maxBatteryLevel = Math.max(...reversedChartData.map(dataItem => parseFloat(dataItem.battery_status)));
   const maxThickness = Math.max(...reversedChartData.map(dataItem => parseFloat(dataItem.thickness)));
 
   const data = {
-    labels: reversedChartData.map(dataItem => dataItem.createdAt),
+    labels: reversedChartData.map(dataItem => dataItem.timestamp),
     datasets: [
       {
         label: "Battery",
-        data: reversedChartData.map(dataItem => parseFloat(dataItem.batterylevel)),
+        data: reversedChartData.map(dataItem => parseFloat(dataItem.battery_status)),
         borderColor: "rgba(255, 99, 132, 1)",
         backgroundColor: "rgba(255, 99, 132, 0.2)",
         fill: false,

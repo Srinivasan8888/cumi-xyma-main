@@ -16,7 +16,7 @@ const Charts = ({ deviceNumber }) => {
         );
         const data = await response.json();
         data.reverse();
-        console.log(data);
+        console.log("charts", data);
         setChartData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -31,8 +31,9 @@ const Charts = ({ deviceNumber }) => {
 
   const extractDataForChart = (data) => {
     const labels = data.map((entry) => {
-      const date = new Date(entry.createdAt);
-      return date.toISOString().split('T')[0];
+      const date = (entry.timestamp);
+      return date.split(',')[0];
+      // return date;
     });
     const thicknessValues = data.map((entry) => parseInt(entry.thickness, 10));
     return {

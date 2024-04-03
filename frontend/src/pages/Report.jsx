@@ -1,17 +1,21 @@
 import React, { useState, useRef, useEffect, Fragment } from "react";
 import Sidebars from "../components/Sidebar/Sidebars";
 import { Listbox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/solid";
+import {
+  CheckIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/solid";
 import { MdOutlineDateRange } from "react-icons/md";
 import "./css/Report.css";
-import * as XLSX from "xlsx"; 
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import productimg from "../img/cumi_product.png"
-import xymaimg from '../img/logo.png'
-import coverImg from '../img/pdfcover.jpg'
-import disclaimerPage from '../img/disclaimerPage.jpg'
-import Chart from 'chart.js/auto';
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import productimg from "../img/cumi_product.png";
+import xymaimg from "../img/logo.png";
+import coverImg from "../img/pdfcover.jpg";
+import disclaimerPage from "../img/disclaimerPage.jpg";
+import Chart from "chart.js/auto";
 import { baseUrl } from "../components/config";
 
 const Report = () => {
@@ -25,12 +29,12 @@ const Report = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${baseUrl}/data`);
+      const response = await fetch(`${baseUrl}data`);
       let infoVal = await response.json();
       infoVal = infoVal;
       setInfoGraph(infoVal);
       if (infoVal.length > 0) {
-        setSelectedCylinder(infoVal[0].id);
+        setSelectedCylinder(infoVal[0].device_name);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -55,81 +59,133 @@ const Report = () => {
     }
   };
 
-  const pdfSubmit = (filteredData) => {
+  const pdfSubmit = async () => {
     if (!startDate || !endDate) {
       alert("Please select both start and end dates.");
     } else {
       try {
-        const doc = new jsPDF();
-        const logo = xymaimg;
-        const cover = coverImg;
-        const disclaimer = disclaimerPage;
-  
-        doc.addImage(cover, 'JPG', 0, 0, 210, 297);
-        doc.addPage();
-        doc.addImage(logo, 'PNG', 10, 10, 40, 20);
-  
-        doc.autoTable({
-          head: [['s.no','id', 'thickness', 'devicetemp', 'signal', 'batterylevel', 'createdAt']],
-          body: filteredData.map(({ id, thickness, devicetemp, signal, batterylevel, createdAt }, index) => {
-            return [index + 1, id, thickness, devicetemp, signal, batterylevel, createdAt];
-          }),
-          startY: 40,
-          headerStyles: {
-            fillColor: [222, 121, 13]
-          }
-        });
-        doc.addPage();
-        doc.addImage(logo, 'PNG', 10, 10, 40, 20);
-        doc.addImage(disclaimer, 'PNG', 0, 50, 210, 250);
-        doc.save('sensor_reports.pdf');
+        const response = await fetch(
+          // `${baseUrl}dataexcel?device_name=${selectedId}&date1=${startDate}&date2=${endDate}`
+          `${baseUrl}dataexcel?device_name=${selectedId}&date1=${startDate}&date2=${endDate}`
+        );
+        console.log(response);
+        const data = await response.json();
+        console.log(response);
+
+        if (data === null || data.length === 0) {
+          alert("No data found.");
+          return;
+        }
+
+        // Check if data is an array
+        if (Array.isArray(data)) {
+          const doc = new jsPDF();
+          const logo = xymaimg;
+          const cover = coverImg;
+          const disclaimer = disclaimerPage;
+
+          doc.addImage(cover, "JPG", 0, 0, 210, 297);
+          doc.addPage();
+          doc.addImage(logo, "PNG", 10, 10, 40, 20);
+
+          doc.autoTable({
+            head: [
+              [
+                "s.no",
+                "device_name",
+                "thickness",
+                "device_status",
+                "signal_strength",
+                "battery_status",
+                "timestamp",
+              ],
+            ],
+            body: data.map(
+              (
+                {
+                  device_name,
+                  thickness,
+                  device_status,
+                  signal_strength,
+                  battery_status,
+                  timestamp,
+                },
+                index
+              ) => {
+                return [
+                  index + 1,
+                  device_name,
+                  thickness,
+                  device_status,
+                  signal_strength,
+                  battery_status,
+                  timestamp,
+                ];
+              }
+            ),
+            startY: 40,
+            headerStyles: {
+              fillColor: [222, 121, 13],
+            },
+          });
+          doc.addPage();
+          doc.addImage(logo, "PNG", 10, 10, 40, 20);
+          doc.addImage(disclaimer, "PNG", 0, 50, 210, 250);
+          doc.save("sensor_reports.pdf");
+        } else {
+          console.error("Data received is not an array:", data);
+        }
       } catch (error) {
-        console.error("Error generating PDF:", error);
+        console.error("Error fetching data:", error);
+        alert("Error fetching data. Please try again later.");
       }
     }
   };
-  
 
   const handleSubmit = () => {
     if (!startDate || !endDate) {
-        alert("Please select both start and end dates.");
+      alert("Please select both start and end dates.");
     } else {
-        const apidate = async () => {
-            if (selectedId !== null) {
-                try {
-                    const response = await fetch(
-                        `${baseUrl}dataexcel?id=${selectedId}&date1=${startDate}T00:00:01Z&date2=${endDate}T23:59:59Z`
-                    );
-                    console.log(response);
-                    const data = await response.json();
-                    console.log(response);
-                    
-                    // Check if data is an array
-                    if (Array.isArray(data)) {
-                        const modifiedData = data.map(obj => {
-                            const { _id, __v, updatedAt, ...rest } = obj;
-                            return rest;
-                        });
+      const apidate = async () => {
+        if (selectedId !== null) {
+          try {
+            const response = await fetch(
+              // `${baseUrl}dataexcel?id=${selectedId}&date1=${startDate}T00:00:01Z&date2=${endDate}T23:59:59Z`
+              `${baseUrl}dataexcel?device_name=${selectedId}&date1=${startDate}&date2=${endDate}`
+            );
+            console.log(response);
+            const data = await response.json();
+            console.log(response);
 
-                        pdfSubmit(modifiedData);
-
-                        const wb = XLSX.utils.book_new();
-                        const ws = XLSX.utils.json_to_sheet(modifiedData);
-                        XLSX.utils.book_append_sheet(wb, ws, "Data");
-                        XLSX.writeFile(wb, `${selectedId} report.xlsx`);
-                        console.log("Data:", modifiedData);
-                    } else {
-                        console.error("Data received is not an array:", data);
-                    }
-                } catch (error) {
-                    console.error("Error fetching data:", error);
-                }
+            if (data == null || data.length === 0 ) {
+              alert("No data found.");
+              return;
             }
-        };
 
-        apidate();
-        console.log("Start Date:", startDate);
-        console.log("End Date:", endDate);
+            // Check if data is an array
+            if (Array.isArray(data)) {
+              const modifiedData = data.map((obj) => {
+                const { _id, __v, updatedAt, ...rest } = obj;
+                return rest;
+              });
+
+              const wb = XLSX.utils.book_new();
+              const ws = XLSX.utils.json_to_sheet(modifiedData);
+              XLSX.utils.book_append_sheet(wb, ws, "Data");
+              XLSX.writeFile(wb, `${selectedId} report.xlsx`);
+              console.log("Data:", modifiedData);
+            } else {
+              console.error("Data received is not an array:", data);
+            }
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        }
+      };
+
+      apidate();
+      console.log("Start Date:", startDate);
+      console.log("End Date:", endDate);
     }
   };
 
@@ -195,8 +251,8 @@ const Report = () => {
                               <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 pl-0 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                 {infoGraph.map((cylinderItem) => (
                                   <Listbox.Option
-                                    key={cylinderItem.id}
-                                    value={cylinderItem.id}
+                                    key={cylinderItem.device_name}
+                                    value={cylinderItem.device_name}
                                   >
                                     {({ selected, active }) => (
                                       <div
@@ -227,7 +283,7 @@ const Report = () => {
                                               : "font-normal"
                                           } pl-8`}
                                         >
-                                          {cylinderItem.id}
+                                          {cylinderItem.device_name}
                                         </span>
                                       </div>
                                     )}
@@ -293,8 +349,6 @@ const Report = () => {
                     >
                       Download The PDF
                     </button>
-
-                    
                   </div>
                 </div>
               </div>

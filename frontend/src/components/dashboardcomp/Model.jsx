@@ -12,25 +12,31 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
       try {
         const response1 = await fetch(`${baseUrl}data`);
         const data1 = await response1.json();
-        const thicknessArray = data1.map(sensor => parseInt(sensor.thickness));
+        console.log("model data", data1);
+        const thicknessArray = data1.map((sensor) =>
+          parseInt(sensor.thickness)
+        );
 
-        const timevalue1 = data1.map(sensor => sensor.createdAt);
+        const timevalue1 = data1.map((sensor) => sensor.createdAt);
         const formatDate = (timevalue1) => {
           const date = new Date(timevalue1);
           return date.toLocaleString();
-        }
+        };
         const formattedDates = timevalue1.map(formatDate);
         console.log("json for time", formattedDates);
 
         const response2 = await fetch(`${baseUrl}alllimitdata`);
         const data2 = await response2.json();
-        const limitData = data2.map(sensor => parseInt(sensor.inputthickness));
+        const limitData = data2.map((sensor) =>
+          parseInt(sensor.inputthickness)
+        );
 
         console.log("thicknessArray:", thicknessArray);
         console.log("limitData:", limitData);
 
         const limitValues = thicknessArray.map((thickness, index) => {
-          const limitValue = ((thickness - 0) * (100 - 0)) / (limitData[index] - 0) + 0;
+          const limitValue =
+            ((thickness - 0) * (100 - 0)) / (limitData[index] - 0) + 0;
           return limitValue.toFixed(2);
         });
         console.log("limitvalues", limitValues);
@@ -47,7 +53,6 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
     return () => clearInterval(intervalId);
   }, []);
 
-
   const getColorBasedOnPercentage = (percentage) => {
     if (percentage > 108) {
       return "#38BDF8";
@@ -55,6 +60,9 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
       return "#28a33d";
     } else if (percentage >= 50 && percentage < 75) {
       return "#ED7014";
+    } 
+    else if (percentage == null) {
+      return "white";
     } else {
       return "#EF4444";
     }
@@ -63,7 +71,7 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
   const rectangleStyle = {
     width: "320px",
     height: "430px",
-    backgroundColor: "white",
+    backgroundColor: "pink",
     border: "2px solid gray",
     borderRadius: "10px",
     display: "flex",
@@ -86,34 +94,32 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
     marginTop: "0",
   };
 
- const renderSmallBoxes = () => {
-  const groups = Array.from({ length: 4 }, (_, groupIndex) =>
-  Array.from(
-    { length: 10 },
-    (_, index) => {
-      const number = groupIndex * 10 + index + 1;
-      return `XY${number <= 9 ? '0000' + number : (number <= 99 ? '000' + number : number)}`;
-    }
-  )
-);
-
-
-    const handleClick = (text, limitValues) => {
-     
+  const renderSmallBoxes = () => {
+    const groups = Array.from({ length: 4 }, (_, groupIndex) =>
+      Array.from({ length: 10 }, (_, index) => {
+        const number = groupIndex * 10 + index + 1;
+        return `XY${
+          number <= 9 ? "0000" + number : number <= 99 ? "000" + number : number
+        }`;
+      })
+    );
+  
+    const handleClick = (text, value) => {
       console.log("Clicked text:", text);
-  console.log("Clicked limit values:", limitValues);
-  const id = text.slice(2); 
-  console.log("Small box clicked with ID: " + id);
-  handleSmallBoxClick(text);
-      
+      console.log("Clicked limit values:", value);
+      const id = text.slice(2);
+      console.log("Small box clicked with ID: " + id);
+      handleSmallBoxClick(text);
     };
-
+  
     const groupDivs = groups.map((group, groupIndex) => (
       <div key={groupIndex} style={rectangleStyle}>
         {group.map((text, index) => {
-          const value = dataArray[groupIndex * 10 + index];
+          const dataIndex = groupIndex * 10 + index;
+          const value = dataArray[dataIndex];
           const backgroundColor = getColorBasedOnPercentage(value);
           const showIcon = value > 108;
+          const isDisabled = value == null;
           return (
             <div key={index} style={{ display: "flex" }}>
               <div
@@ -121,11 +127,15 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
                   ...smallBoxStyle,
                   backgroundColor: backgroundColor,
                 }}
-                onClick={() => handleClick(text, groupIndex * 10 + index)}
-
+                onClick={() => {
+                  if (!isDisabled) {
+                    handleClick(text, value);
+                  }
+                }}
               >
-                 {text}
+                {text}
               </div>
+  
               <div
                 style={{
                   ...smallBoxStyle,
@@ -133,19 +143,35 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
                   backgroundColor: backgroundColor,
                   marginLeft: "5px",
                 }}
-                onClick={() => handleClick(text, groupIndex * 10 + index)}
-
+                onClick={() => {
+                  if (!isDisabled) {
+                    handleClick(text, value);
+                  }
+                }}
               >
-                {showIcon ? ( <span style={{ fontSize: "20px", alignSelf: "flex-stretch", marginBottom: "5px" }}>⚠️</span>  ) : (value)}
+                {showIcon ? (
+                  <span
+                    style={{
+                      fontSize: "20px",
+                      alignSelf: "flex-stretch",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    ⚠️
+                  </span>
+                ) : (
+                  value
+                )}
               </div>
             </div>
           );
         })}
       </div>
     ));
-
+  
     return groupDivs;
   };
+  
 
   return (
     <div className="flex gap-2 items-center justify-center w-full overflow-x-auto md:overflow-x-hidden scrollable-container">
@@ -155,105 +181,3 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
 };
 
 export default Model;
-
-
-// import React from "react";
-// import "../css/model.css";
-
-// const Model = ({ handleSmallBoxClick }) => {
-//   
-// 
-
-//     const rectangleStyle = {
-//     width: "320px",
-//     height: "430px",
-//     backgroundColor: "white",
-//     border: "2px solid gray",
-//     borderRadius: "10px",
-//     display: "flex",
-//     flexDirection: "column",
-//     justifyContent: "space-between",
-//     padding: "10px",
-//     overflowX: "auto",
-//     direction: "rtl",
-//   };
-
-//   const smallBoxStyle = {
-//     width: "80%",
-//     height: "30px",
-//     border: "1px solid gray",
-//     borderRadius: "5px",
-//     textAlign: "center",
-//     lineHeight: "30px",
-//     margin: "5px",
-//     cursor: "pointer",
-//     marginTop: "0",
-//   };
-
-//  const renderSmallBoxes = () => {
-//   const groups = Array.from({ length: 4 }, (_, groupIndex) =>
-//   Array.from(
-//     { length: 10 },
-//     (_, index) => {
-//       const number = groupIndex * 10 + index + 1;
-//       return `XY${number <= 9 ? '0000' + number : (number <= 99 ? '000' + number : number)}`;
-//     }
-//   )
-// );
-
-
-//     const handleClick = (text, limitValues) => {
-     
-//       const id = text.slice(2); 
-//       console.log("Small box clicked with ID:", id);
-//       handleSmallBoxClick(id, limitValues);
-      
-//     };
-
-//     const groupDivs = groups.map((group, groupIndex) => (
-//       <div key={groupIndex} style={rectangleStyle}>
-//         {group.map((text, index) => {
-//           const value = dataArray[groupIndex * 10 + index];
-//           const backgroundColor = getColorBasedOnPercentage(value);
-//           const showIcon = value > 108;
-//           return (
-//             <div key={index} style={{ display: "flex" }}>
-//               <div
-//                 style={{
-//                   ...smallBoxStyle,
-//                   backgroundColor: backgroundColor,
-//                 }}
-//                 onClick={() => handleClick(text, groupIndex * 10 + index)}
-
-//               >
-//                  {text}
-//               </div>
-//               <div
-//                 style={{
-//                   ...smallBoxStyle,
-//                   width: "60px",
-//                   backgroundColor: backgroundColor,
-//                   marginLeft: "5px",
-//                 }}
-//                 onClick={() => handleClick(text, groupIndex * 10 + index)}
-
-//               >
-//                 {showIcon ? ( <span style={{ fontSize: "20px", alignSelf: "flex-stretch", marginBottom: "5px" }}>⚠️</span>  ) : (value)}
-//               </div>
-//             </div>
-//           );
-//         })}
-//       </div>
-//     ));
-
-//     return groupDivs;
-//   };
-
-//   return (
-//     <div className="flex gap-2 items-center justify-center w-full overflow-x-auto md:overflow-x-hidden scrollable-container">
-//       {renderSmallBoxes()}
-//     </div>
-//   );
-// };
-
-// export default Model;

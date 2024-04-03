@@ -57,7 +57,7 @@ const Sidebars = () => {
           <ul className="space-y-4 font-medium">
             <li>
               <a
-                href="/Dashboard"
+                href="/"
                 className="flex items-center dashboard_dec  p-2 text-white rounded-lg hover:bg-gray-400 group transition-all duration-300"
               >
                 <VscDashboard className="w-7 h-7" />
@@ -66,7 +66,7 @@ const Sidebars = () => {
             </li>
             <li>
               <a
-                href="/Graph"
+                href="/graph"
                 className="flex items-center dashboard_dec  p-2 text-white rounded-lg hover:bg-gray-400 group transition-all duration-300"
               >
                 <SlGraph className="w-7 h-7" />

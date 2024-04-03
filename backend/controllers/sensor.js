@@ -167,11 +167,11 @@ export const createSensor = async (req, res) => {
     thickness,
     device_status,
     signal_strength,
-    battery_status,
+    battery,
   } = req.query;
 
   const date = new Date();
- 
+
   const options = {
     year: 'numeric',
     month: '2-digit',
@@ -190,13 +190,13 @@ export const createSensor = async (req, res) => {
       thickness: String(thickness),
       devicetemp: String(device_status),
       signal: String(signal_strength),
-      batterylevel: String(battery_status),
+      batterylevel: String(battery),
     });
 
     await rawData.save();
 
     let adjustedBatteryLevel = (
-      ((parseFloat(battery_status) - 265) * (100 - 0)) /
+      ((parseFloat(battery) - 265) * (100 - 0)) /
       (540 - 265)
     ).toFixed(2);
     let adjustedSignal = (
@@ -303,25 +303,48 @@ export const timelimit = async (req, res) => {
 
 export const getlogdata = async (req, res) => {
   try {
-    const logdata = await asset.aggregate([
-      { $sort: { id: 1, updatedAt: -1 } },
-      { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
-      { $replaceRoot: { newRoot: "$data" } },
-      { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
-      { $sort: { idNumber: 1 } },
-      { $project: { idNumber: 0 } },
-      { $limit: 40 },
-    ]);
+    // Fetch all documents from the asset collection
+    const allData = await asset.find().limit(40).sort({ id: -1 });
 
-    if (!logdata || logdata.length === 0) {
-      return res.status(404).json({ error: "No assets found" });
-    }
+    // Define the IDs you're interested in
+    const idsOfInterest = [
+      'XY00001', 'XY00002', 'XY00003', 'XY00004', 'XY00005', 'XY00006', 'XY00007', 'XY00008', 'XY00009', 'XY00010',
+      'XY00011', 'XY00012', 'XY00013', 'XY00014', 'XY00015', 'XY00016', 'XY00017', 'XY00018', 'XY00019', 'XY00020',
+      'XY00021', 'XY00022', 'XY00023', 'XY00024', 'XY00025', 'XY00026', 'XY00027', 'XY00028', 'XY00029', 'XY00030',
+      'XY00031', 'XY00032', 'XY00033', 'XY00034', 'XY00035', 'XY00036', 'XY00037', 'XY00038', 'XY00039', 'XY00040'
+    ];
 
-    res.json(logdata);
+    const filteredData = allData.filter(data => idsOfInterest.includes(data.id));
+    filteredData.sort((a, b) => {
+      return idsOfInterest.indexOf(a.id) - idsOfInterest.indexOf(b.id);
+    });
+
+    res.json(filteredData);
   } catch (error) {
     res.status(500).json(error);
   }
 };
+
+// export const getlogdata = async (req, res) => {
+//   try {
+//     const logdata = await asset.aggregate([
+//       { $sort: { id: 1, updatedAt: -1 } },
+//       { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
+//       { $replaceRoot: { newRoot: "$data" } },
+//       { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
+//       { $sort: { idNumber: 1 } },
+//       { $project: { idNumber: 0 } },
+//       { $limit: 40 },
+//     ]);
+
+//     if (!logdata || logdata.length === 0) {
+//       return res.status(404).json({ error: "No assets found" });
+//     }
+//     res.json(logdata);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// };
 
 export const getSensorData = async (req, res) => {
   const sensorId = req.params.id;

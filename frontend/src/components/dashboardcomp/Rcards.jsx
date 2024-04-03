@@ -38,14 +38,14 @@ const Rcards = ({ deviceData }) => {
 
   useEffect(() => {
     if (deviceData) {
-      setId(deviceData.id);
+      setId(deviceData.device_name);
       setThickness(deviceData.thickness);
-      setDevicetemp(deviceData.devicetemp);
-      setSignal(deviceData.signal);
-      setBattery(deviceData.batterylevel);
-      setTimeData(new Date(deviceData.createdAt));
+      setDevicetemp(deviceData.device_status);
+      setSignal(deviceData.signal_strength);
+      setBattery(deviceData.battery_status);
+      setTimeData(deviceData.timestamp);
     }
-    // console.log("Rcard data", deviceData);
+    console.log("Rcard data", deviceData);
   }, [deviceData]);
 
   useEffect(() => {
@@ -93,7 +93,7 @@ const Rcards = ({ deviceData }) => {
           throw new Error("Failed to fetch data");
         }
         const data = await response.json();
-        const sensorData = data.find((sensor) => sensor.id === id);
+        const sensorData = data.find((sensor) => sensor.device_name === id);
         setSensorData(sensorData);
         const time = sensorData ? sensorData.time : null;
         console.log("rcard time", time);
@@ -201,37 +201,38 @@ const Rcards = ({ deviceData }) => {
   return (
     <div>
       <div className="flex items-end justify-end mb-1">
-      <div className="text-base font-bold mr-1" style={{ display: 'flex', alignItems: 'center' }}>
-  <div className={`blink-${isActive ? "green" : "red"}`} style={{ marginBottom: "2px" }}>
-    {id ? (
-      <>
-        <IoAlertCircleSharp
-          className={`text-lg inline-block align-middle ${
-            isActive ? "text-green-500" : "text-red-500"
-          }`}
-        />
-        <span className="align-middle">&nbsp;{`${id}`}</span>
-      </>
-    ) : (
-      "Loading..."
-    )}
-    &nbsp;
-  </div>
-  <div style={{ marginLeft: 'auto' }}>
-    <span style={{ color: "black", fontStyle: "normal" }}>
-      Last Updated:{" "}
-    </span>
-    <span style={{ color: isActive ? "green" : "red" }}>
-      {TimeData
-        ? new Date(TimeData).toLocaleString("en-US", {
-            timeZone: "Asia/Kolkata",
-          })
-        : "Loading..."}
-      &nbsp;
-    </span>
-  </div>
-</div>
-
+        <div
+          className="text-base font-bold mr-1"
+          style={{ display: "flex", alignItems: "center" }}
+        >
+          <div
+            className={`blink-${isActive ? "green" : "red"}`}
+            style={{ marginBottom: "2px" }}
+          >
+            {id ? (
+              <>
+                <IoAlertCircleSharp
+                  className={`text-lg inline-block align-middle ${
+                    isActive ? "text-green-500" : "text-red-500"
+                  }`}
+                />
+                <span className="align-middle">&nbsp;{`${id}`}</span>
+              </>
+            ) : (
+              "Loading..."
+            )}
+            &nbsp;
+          </div>
+          <div style={{ marginLeft: "auto" }}>
+            <span style={{ color: "black", fontStyle: "normal" }}>
+              Last Updated:{" "}
+            </span>
+            <span style={{ color: isActive ? "green" : "red" }}>
+              {TimeData ? `${TimeData}` : "Loading..."}
+              &nbsp;
+            </span>
+          </div>
+        </div>
 
         <Carddrop
           deviceTime={deviceTime}
