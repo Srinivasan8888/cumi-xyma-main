@@ -24,6 +24,10 @@ const RTables = ({ deviceNumber }) => {
     return () => clearInterval(intervalId);
   }, [deviceNumber]);
 
+  // const calculatePercentage = signal ? Math.min(Math.max(((data.signal_strength - 0) * (100 - 0)) / (32 - 0), 0), 100).toFixed(2) : "Loading...";
+  // const batteryPercentage = batterylevel ? `${Math.min(Math.max(((data.battery_status - 265) * (100 - 0)) / (540 - 265), 0), 100).toFixed(2)}%`: "Loading...";
+
+
   return (
     <div className="overflow-x-auto shadow-2xl rounded-lg">
       <div className="max-h-[445px] overflow-y-auto ">
@@ -56,6 +60,7 @@ const RTables = ({ deviceNumber }) => {
                     </td>
                     <td className="font-md text-black py-4 px-6">
                       {data.battery_status}%
+                      
                     </td>
                     <td className="font-md text-black py-4 px-6">
                       {data.device_status}°C

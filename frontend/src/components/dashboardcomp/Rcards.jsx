@@ -30,11 +30,11 @@ const Rcards = ({ deviceData }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [errorAlert, setErrorAlert] = useState(false);
   const [TimeData, setTimeData] = useState(null);
-  const [status, setStatus] = useState("");
   const [errorAlert1, setErrorAlert1] = useState(false);
   const [errorAlert2, setErrorAlert2] = useState(false);
   const [errorAlert3, setErrorAlert3] = useState(false);
   const [deviceTime, setDeviceTime] = useState(null);
+  const [calcthickness, setCalcthickness] = useState(false);
 
   useEffect(() => {
     if (deviceData) {
@@ -64,6 +64,16 @@ const Rcards = ({ deviceData }) => {
   }, [thickness]);
 
   useEffect(() => {
+    if (sensorData) {
+      const valuess = sensorData.inputthickness;
+      const userthickness = parseFloat(valuess) + parseFloat(2);
+      const calculatedThickness  = thickness > userthickness;;
+      setCalcthickness(calculatedThickness);
+      console.log("setCalthinkess", calculatedThickness)
+    }
+  }, [sensorData]); 
+
+  useEffect(() => {
     if (limitvalue > 108 && limitvalue < 9998) {
       setErrorAlert3(true);
     } else {
@@ -72,14 +82,14 @@ const Rcards = ({ deviceData }) => {
   }, [limitvalue]);
 
   const getColorBasedOnPercentage = (limitvalue) => {
-    if (limitvalue > 108) {
-      return "#38BDF8";
-    } else if (limitvalue >= 75 && limitvalue <= 108) {
-      return "#28a33d";
+    if (calcthickness == true) {
+      return "#38BDF8"; // blue
+    } else if (limitvalue >= 75 && calcthickness == false) {
+      return "#28a33d"; // orange
     } else if (limitvalue >= 50 && limitvalue < 75) {
-      return "#ED7014";
+      return "#ED7014"; // green 
     } else {
-      return "#EF4444";
+      return "#EF4444"; // red
     }
   };
 
@@ -94,7 +104,9 @@ const Rcards = ({ deviceData }) => {
         }
         const data = await response.json();
         const sensorData = data.find((sensor) => sensor.device_name === id);
+        console.log("sensorData", sensorData);
         setSensorData(sensorData);
+        
         const time = sensorData ? sensorData.time : null;
         console.log("rcard time", time);
         let encodedtime = deviceTime;
@@ -157,13 +169,13 @@ const Rcards = ({ deviceData }) => {
       return; // Exit early
     }
 
-    const url = `${baseUrl}/setlimit?id=${id}&time=${selectedValue}&inputthickness=${userInput}`;
+    const url = `${baseUrl}/setlimit?device_name=${id}&time=${selectedValue}&inputthickness=${userInput}`;
 
     try {
       const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify({
-          id: id,
+          device_name: id,
           inputthickness: userInput,
           time: selectedValue,
         }),
@@ -197,6 +209,9 @@ const Rcards = ({ deviceData }) => {
   let isActive = currentTimeInSeconds <= finialtime;
 
   console.log("status,", isActive);
+
+  const calculatePercentage = signal ? Math.min(Math.max(((signal - 0) * (100 - 0)) / (32 - 0), 0), 100).toFixed(2) : "Loading...";
+  const batteryPercentage = batterylevel ? `${Math.min(Math.max(((batterylevel - 265) * (100 - 0)) / (540 - 265), 0), 100).toFixed(2)}%`: "Loading...";
 
   return (
     <div>
@@ -616,10 +631,13 @@ const Rcards = ({ deviceData }) => {
               <FaSignal />
             </svg>
           </div>
+
           <div className="text-sm font-medium text-gray-600 text-center sm:text-left">
             <h5 className="font-bold  text-black">Signal Strength</h5>
             <p className="text-2xl font-bold text-black mt-1">
-              {signal ? `${signal}%` : "Loading..."}
+              {/* {calculatePercentage ? `${calculatePercentage}` : "Loading..."} */}
+              {calculatePercentage}
+              {/* {signal ? ( (((signal) - 0) * (100 - 0)) / (32 - 0) ).toFixed(2) + "%" : "Loading..."} */}
             </p>
           </div>
         </div>
@@ -644,10 +662,14 @@ const Rcards = ({ deviceData }) => {
           <div className="text-sm font-medium text-gray-600 text-center sm:text-left">
             <h5 className="font-bold  text-black">Battery Level</h5>
             <p className="text-2xl font-bold text-black mt-1">
-              {/* {batterylevel ? 
-      ((batterylevel - 265) * (100 - 0) / (540 - 265) + 0).toFixed(2)+ "%"
-      : "Loading..."} */}
-              {batterylevel ? `${batterylevel}%` : "Loading..."}
+              {/* {batterylevel
+                ? (
+                    ((batterylevel - 265) * (100 - 0)) / (540 - 265) +
+                    0
+                  ).toFixed(2) + "%"
+                : "Loading..."} */}
+              {/* {batterylevel ? `${batterylevel}%` : "Loading..."} */}
+              {batteryPercentage}
             </p>
           </div>
         </div>

@@ -11,22 +11,28 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
     const fetchData = async () => {
       try {
         const response1 = await fetch(`${baseUrl}data`);
+
         const data1 = await response1.json();
+
         console.log("model data", data1);
+
         const thicknessArray = data1.map((sensor) =>
           parseInt(sensor.thickness)
         );
 
-        const timevalue1 = data1.map((sensor) => sensor.createdAt);
-        const formatDate = (timevalue1) => {
-          const date = new Date(timevalue1);
-          return date.toLocaleString();
-        };
-        const formattedDates = timevalue1.map(formatDate);
-        console.log("json for time", formattedDates);
+        // const timevalue1 = data1.map((sensor) => sensor.createdAt);
+        // const formatDate = (timevalue1) => {
+        //   const date = new Date(timevalue1);
+        //   return date.toLocaleString();
+        // };
+
+        // const formattedDates = timevalue1.map(formatDate);
+        // console.log("json for time", formattedDates);
 
         const response2 = await fetch(`${baseUrl}alllimitdata`);
+
         const data2 = await response2.json();
+
         const limitData = data2.map((sensor) =>
           parseInt(sensor.inputthickness)
         );
@@ -35,10 +41,13 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
         console.log("limitData:", limitData);
 
         const limitValues = thicknessArray.map((thickness, index) => {
-          const limitValue =
-            ((thickness - 0) * (100 - 0)) / (limitData[index] - 0) + 0;
+
+
+          const limitValue = ((thickness - 0) * (100 - 0)) / (limitData[index] - 0) + 0;
+          // console.log("limitvalue", limitValue);
           return limitValue.toFixed(2);
         });
+       
         console.log("limitvalues", limitValues);
 
         setDataArray(limitValues);
