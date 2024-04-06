@@ -7,6 +7,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import RawData from "../model/rawdata.js";
 import moment from 'moment';
+import { json } from "express";
+import axios from "axios";
 
 // import datas from "../model/datas.js";
 //register
@@ -77,88 +79,58 @@ export const createSensor = async (req, res) => {
   } = req.query;
 
   const date = new Date();
+
   const options = {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-    second: '2-digit',
     hour12: true,
     timeZone: 'Asia/Kolkata',
   };
+  const formattedTimestamp = date.toLocaleString('en-US', options);
+  console.log('date', formattedTimestamp);
+
   try {
-    const formattedTimestamp = date.toLocaleString('en-US', options);
-
     const rawData = new RawData({
-      device_name: String(device_name),
+      id: String(device_name),
       thickness: String(thickness),
-      device_status: String(device_status),
-      signal_strength: String(signal_strength),
-      battery_status: String(battery),
-      timestamp: formattedTimestamp,
-
+      devicetemp: String(device_status),
+      signal: String(signal_strength),
+      batterylevel: String(battery),
     });
 
     await rawData.save();
 
-    let adjustedBatteryLevel = (
-      ((parseFloat(battery) - 265) * (100 - 0)) /
-      (540 - 265)
-    ).toFixed(2);
-    let adjustedSignal = (
-      ((parseFloat(signal_strength) - 0) * (100 - 0)) /
-      (32 - 0)
-    ).toFixed(2);
-
-    if (adjustedBatteryLevel > 100) adjustedBatteryLevel = "100";
-    if (adjustedSignal > 100) adjustedSignal = "100";
-
     const sensor = new asset({
-      device_name: String(device_name),
+      id: String(device_name),
       thickness: String(thickness),
-      device_status: String(device_status),
-      signal_strength: String(adjustedSignal),
-      battery_status: String(adjustedBatteryLevel),
-      timestamp: formattedTimestamp,
+      devicetemp: String(device_status),
+      signal: String(signal_strength),
+      batterylevel: String(battery),
+      // timestamp: formattedTimestamp,
     });
 
+    
     const savesensor = await sensor.save();
-
-    // res.status(200).json(savesensor);
-    try {
-      const sensorData = await limit.aggregate([
-        { $sort: { device_name: 1, _id: -1 } },
-        { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
-        { $replaceRoot: { newRoot: "$data" } },
-        { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
-        { $sort: { idNumber: 1 } },
-        { $limit: 40 },
-      ]);
-
-      if (!sensorData || sensorData.length === 0) {
-        return res.status(404).json({ error: "No assets found" });
-      }
-
-      const updatedSensorData = sensorData.map((obj) => [
-        `#`,
-        obj.device_name,
-        obj.inputthickness,
-        obj.time,
-      ]);
-
-      const flattenedArray = updatedSensorData.flat();
-
-      res.json(flattenedArray);
-    } catch (error) {
-      console.error("Error fetching sensor data:", error);
-      res.status(500).json({ error: "Error fetching sensor data" });
+    const limitResponse = await axios.get('http://15.206.193.179:5000/backend/limitsinsert');
+    
+    if (limitResponse.status === 200) {
+      const responseData = limitResponse.data.map(device => `#,${device.device_name},${device.inputthickness},${device.time}`).join(',');
+      res.status(200).send(responseData);
+    } else {
+      res.status(500).json({ error: 'Failed to retrieve limit data' });
     }
+    
+    // res.status(200).json(savesensor);
+
   } catch (error) {
     console.error("Error saving sensor data:", error);
     res.status(500).json({ error: "Error saving sensor data" });
   }
 };
+
 
 export const timelimit = async (req, res) => {
   const { device_name, time, inputthickness } = req.query;
