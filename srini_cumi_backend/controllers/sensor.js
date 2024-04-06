@@ -223,17 +223,7 @@ export const getlogdata = async (req, res) => {
       { $sort: { device_name: 1, _id: -1 } },
       { $group: { _id: "$device_name", data: { $first: "$$ROOT" } } },
       { $replaceRoot: { newRoot: "$data" } },
-      {
-        $addFields: {
-          idNumber: {
-            $cond: [
-              { $regexMatch: { input: "$device_name", regex: /\d+$/ } }, // Check if device_name ends with digits
-              { $toInt: { $substrBytes: ["$device_name", { $subtract: [{ $strLenBytes: "$device_name" }, 1] }, -1] } }, // Extract digits and convert to integer
-              0 // Set idNumber to 0 if device_name doesn't end with digits
-            ]
-          }
-        }
-      },
+      
       { $match: { idNumber: { $ne: 0 } } }, // Filter out documents where idNumber is 0
       { $sort: { idNumber: 1 } },
       { $project: { idNumber: 0 } },
@@ -524,17 +514,7 @@ export const apilimit = async (req, res) => {
       { $sort: { device_name: 1, _id: -1 } },
       { $group: { _id: "$device_name", latestData: { $first: "$$ROOT" } } },
       { $replaceRoot: { newRoot: "$latestData" } },
-      {
-        $addFields: {
-          idNumber: {
-            $cond: [
-              { $regexMatch: { input: "$device_name", regex: /\d+$/ } },
-              { $toInt: { $substrBytes: ["$device_name", { $subtract: [{ $strLenBytes: "$device_name" }, 1] }, -1] } }, // Extract digits and convert to integer
-              0
-            ]
-          }
-        }
-      },
+      
       { $match: { idNumber: { $ne: 0 } } },
       { $sort: { idNumber: 1 } },
       {
