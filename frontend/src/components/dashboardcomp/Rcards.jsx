@@ -33,6 +33,9 @@ const Rcards = ({ deviceData }) => {
   const [errorAlert1, setErrorAlert1] = useState(false);
   const [errorAlert2, setErrorAlert2] = useState(false);
   const [errorAlert3, setErrorAlert3] = useState(false);
+  const [errorAlert4, setErrorAlert4] = useState(false);
+  const [errorAlert5, setErrorAlert5] = useState(false);
+  const [errorAlert6, setErrorAlert6] = useState(false);
   const [deviceTime, setDeviceTime] = useState(null);
   const [calcthickness, setCalcthickness] = useState(false);
 
@@ -63,15 +66,22 @@ const Rcards = ({ deviceData }) => {
     }
   }, [thickness]);
 
+  console.log("batteryvalue", batterylevel);
+
+  //calculation for the color metric in the rcards
   useEffect(() => {
     if (sensorData) {
       const valuess = sensorData.inputthickness;
+
       const userthickness = parseFloat(valuess) + parseFloat(2);
-      const calculatedThickness  = thickness > userthickness;;
+
+      const calculatedThickness = thickness > userthickness;
+
       setCalcthickness(calculatedThickness);
-      console.log("setCalthinkess", calculatedThickness)
+
+      console.log("setCalthinkess", calculatedThickness);
     }
-  }, [sensorData]); 
+  }, [sensorData]);
 
   useEffect(() => {
     if (limitvalue > 108 && limitvalue < 9998) {
@@ -87,7 +97,7 @@ const Rcards = ({ deviceData }) => {
     } else if (limitvalue >= 75 && calcthickness == false) {
       return "#28a33d"; // orange
     } else if (limitvalue >= 50 && limitvalue < 75) {
-      return "#ED7014"; // green 
+      return "#ED7014"; // green
     } else {
       return "#EF4444"; // red
     }
@@ -106,7 +116,7 @@ const Rcards = ({ deviceData }) => {
         const sensorData = data.find((sensor) => sensor.device_name === id);
         console.log("sensorData", sensorData);
         setSensorData(sensorData);
-        
+
         const time = sensorData ? sensorData.time : null;
         console.log("rcard time", time);
         let encodedtime = deviceTime;
@@ -208,10 +218,50 @@ const Rcards = ({ deviceData }) => {
   let finialtime = epochTime + sensorseconds * 60 + 300;
   let isActive = currentTimeInSeconds <= finialtime;
 
-  console.log("status,", isActive);
+  const calculatePercentage = signal
+    ? Math.min(Math.max(((signal - 0) * (100 - 0)) / (32 - 0), 0), 100).toFixed(
+        2
+      )
+    : "Loading...";
 
-  const calculatePercentage = signal ? Math.min(Math.max(((signal - 0) * (100 - 0)) / (32 - 0), 0), 100).toFixed(2) : "Loading...";
-  const batteryPercentage = batterylevel ? `${Math.min(Math.max(((batterylevel - 265) * (100 - 0)) / (540 - 265), 0), 100).toFixed(2)}%`: "Loading...";
+  const batteryPercentage = batterylevel
+    ? `${Math.min(
+        Math.max(((batterylevel - 265) * (100 - 0)) / (540 - 265), 0),
+        100
+      ).toFixed(2)}`
+    : "Loading...";
+  console.log("batteryPercentage", batteryPercentage);
+
+
+  useEffect(() => {
+    let showErrAlert4 = false;
+    let showErrAlert5 = false;
+    let showErrAlert6 = false;
+
+    if (
+      batteryPercentage < parseFloat(20) ||
+      batteryPercentage > parseFloat(100)
+    ) {
+      showErrAlert4 = true;
+    }
+
+    if (
+      calculatePercentage < parseFloat(10) ||
+      calculatePercentage > parseFloat(100)
+    ) {
+      showErrAlert5 = true;
+    }
+
+    if (devicetemp > parseFloat(70) || devicetemp < parseFloat(0)) {
+      showErrAlert6 = true;
+    }
+
+    setErrorAlert4(showErrAlert4);
+    setErrorAlert5(showErrAlert5);
+    setErrorAlert6(showErrAlert6);
+  }, [batteryPercentage, calculatePercentage]);
+
+  console.log("status,", isActive);
 
   return (
     <div>
@@ -486,6 +536,120 @@ const Rcards = ({ deviceData }) => {
         </div>
       )}
 
+      {errorAlert4 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+          <div className="absolute inset-0 bg-transparent opacity-25"></div>
+          <div className="relative z-10 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow">
+            <div className="flex">
+              <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
+                <IoWarningOutline />
+              </div>
+              <div className="ms-3 text-sm font-normal">
+                <span className="mb-1 text-md font-bold text-red-500">
+                  ER04
+                </span>
+                <div className="mb-2 text-md text-black font-bold">
+                  Low Battery!!! ⚠️
+                </div>
+              </div>
+              <button
+                type="button"
+                className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 z-20"
+                aria-label="Close"
+                onClick={() => setErrorAlert4(false)}
+              >
+                <span className="sr-only">Close</span>
+                <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {errorAlert5 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+          <div className="absolute inset-0 bg-transparent opacity-25"></div>
+          <div className="relative z-10 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow">
+            <div className="flex">
+              <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
+                <IoWarningOutline />
+              </div>
+              <div className="ms-3 text-sm font-normal">
+                <span className="mb-1 text-md font-bold text-red-500">
+                  ER05
+                </span>
+                <div className="mb-2 text-md text-black font-bold">
+                  Low Signal!!! ⚠️
+                </div>
+              </div>
+              <button
+                type="button"
+                className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 z-20"
+                aria-label="Close"
+                onClick={() => setErrorAlert5(false)}
+              >
+                <span className="sr-only">Close</span>
+                <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {errorAlert6 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+          <div className="absolute inset-0 bg-transparent opacity-25"></div>
+          <div className="relative z-10 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow">
+            <div className="flex">
+              <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
+                <IoWarningOutline />
+              </div>
+              <div className="ms-3 text-sm font-normal">
+                <span className="mb-1 text-md font-bold text-red-500">
+                  ER06
+                </span>
+                <div className="mb-2 text-md text-black font-bold">
+                  Device is too Hot!!! ⚠️
+                </div>
+              </div>
+              <button
+                type="button"
+                className="ml-3 -my-1.5 bg-white items-center justify-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 z-20"
+                aria-label="Close"
+                onClick={() => setErrorAlert6(false)}
+              >
+                <span className="sr-only">Close</span>
+                <svg className="w-3 h-3" aria-hidden="true" viewBox="0 0 14 14">
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-12">
           <div
@@ -618,10 +782,12 @@ const Rcards = ({ deviceData }) => {
             </p>
           </div>
         </div>
-
         <div
           className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row border-2 ${
-            signal && (parseInt(signal) < 10 || parseInt(signal) > 100)
+            calculatePercentage &&
+            (parseInt(calculatePercentage) < 10 ||
+              parseFloat(calculatePercentage) > 100 ||
+              isNaN(parseFloat(calculatePercentage)))
               ? "border-red-700 animate-pulse border-4"
               : ""
           }`}
@@ -644,8 +810,9 @@ const Rcards = ({ deviceData }) => {
 
         <div
           className={`flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-md mb-4 sm:flex-row border-2 ${
-            batterylevel &&
-            (parseInt(batterylevel) < 20 || parseInt(batterylevel) > 100)
+            batteryPercentage &&
+            (parseFloat(batteryPercentage) < parseFloat(20) ||
+              parseFloat(batteryPercentage) > parseFloat(100))
               ? "border-red-700 animate-pulse border-4"
               : ""
           }`}
@@ -662,14 +829,7 @@ const Rcards = ({ deviceData }) => {
           <div className="text-sm font-medium text-gray-600 text-center sm:text-left">
             <h5 className="font-bold  text-black">Battery Level</h5>
             <p className="text-2xl font-bold text-black mt-1">
-              {/* {batterylevel
-                ? (
-                    ((batterylevel - 265) * (100 - 0)) / (540 - 265) +
-                    0
-                  ).toFixed(2) + "%"
-                : "Loading..."} */}
-              {/* {batterylevel ? `${batterylevel}%` : "Loading..."} */}
-              {batteryPercentage}
+              {batteryPercentage}%
             </p>
           </div>
         </div>

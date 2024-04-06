@@ -5,21 +5,67 @@ import { baseUrl } from "../config";
 const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
   const [limitValues, setLimitValues] = useState([]);
   const [dataArray, setDataArray] = useState([]);
+  const [thicknessData, setThickness] = useState([]);
   const [limitData, setLimitData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response1 = await fetch(`${baseUrl}data`);
-
         const data1 = await response1.json();
-
-        console.log("model data", data1);
-
         const thicknessArray = data1.map((sensor) =>
-          parseInt(sensor.thickness)
+          parseFloat(sensor.thickness)
         );
 
+        const response2 = await fetch(`${baseUrl}alllimitdata`);
+        const data2 = await response2.json();
+        const limitData = data2.map((sensor) =>
+          parseFloat(sensor.inputthickness)
+        );
+
+        const limitData2 = data2.map(
+          (sensor) => parseFloat(sensor.inputthickness) + parseFloat(2)
+        );
+
+        // const dataArray = [];
+
+        // // Combine limitValues and comparisonArray into an object or array
+        // for (let index = 0; index < thicknessArray.length; index++) {
+        //   const limitValue =
+        //     ((thicknessArray[index] - 0) * (100 - 0)) / (limitData[index] - 0) +
+        //     0;
+        //   const roundedLimitValue = limitValue.toFixed(2);
+        //   const comparisonValue = thicknessArray[index] > limitData2[index];
+
+        //   // Push both values into dataArray
+        //   dataArray.push({
+        //     limitValue: roundedLimitValue,
+        //     comparisonValue: comparisonValue,
+        //   });
+        // }
+        // setDataArray(dataArray);
+        // console.log("DataArray", dataArray)
+
+        const limitValues = thicknessArray.map((thickness, index) => {
+          const limitValue =
+            ((thickness - 0) * (100 - 0)) / (limitData[index] - 0) + 0;
+          return limitValue.toFixed(2);
+        });
+
+        const comparisonArray = thicknessArray.map((thickness, index) => {
+          return thickness > limitData2[index];
+        });
+
+        setDataArray(limitValues);
+        setThickness(comparisonArray);
+        console.log("thicknessData",thicknessData);
+        onLimitValuesChange(limitValues, limitData);
+
+        // console.log("comparisonArray",comparisonArray);
+        // console.log("thicknessArray:", thicknessArray);
+        // console.log("limitData:", limitData);
+        // console.log("limitData2", limitData2)
+        // console.log("limitvalue", limitValue);
         // const timevalue1 = data1.map((sensor) => sensor.createdAt);
         // const formatDate = (timevalue1) => {
         //   const date = new Date(timevalue1);
@@ -29,31 +75,9 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
         // const formattedDates = timevalue1.map(formatDate);
         // console.log("json for time", formattedDates);
 
-        const response2 = await fetch(`${baseUrl}alllimitdata`);
-
-        const data2 = await response2.json();
-
-        const limitData = data2.map((sensor) =>
-          parseInt(sensor.inputthickness)
-        );
-
-        console.log("thicknessArray:", thicknessArray);
-        console.log("limitData:", limitData);
-
-        const limitValues = thicknessArray.map((thickness, index) => {
-
-
-          const limitValue = ((thickness - 0) * (100 - 0)) / (limitData[index] - 0) + 0;
-          // console.log("limitvalue", limitValue);
-          return limitValue.toFixed(2);
-        });
-       
-        console.log("limitvalues", limitValues);
-
-        setDataArray(limitValues);
-        onLimitValuesChange(limitValues, limitData);
+        // console.log("limitvalues", limitValues);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        // console.error("Error fetching data:", error);
       }
     };
 
@@ -62,15 +86,21 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const getColorBasedOnPercentage = (percentage) => {
-    if (percentage > 108) {
+  // console.log("thicknessData", thicknessData);
+
+  // useEffect(() => {
+  //   const valuess = thickness
+  // });
+
+  const getColorBasedOnPercentage = (percentage, value4) => {
+    console.log("value4", value4);
+    if (value4 == true) {
       return "#38BDF8";
-    } else if (percentage >= 75 && percentage <= 108) {
+    } else if (percentage >= 75 && value4 == false) {
       return "#28a33d";
     } else if (percentage >= 50 && percentage < 75) {
       return "#ED7014";
-    } 
-    else if (percentage == null) {
+    } else if (percentage == null) {
       return "white";
     } else {
       return "#EF4444";
@@ -112,21 +142,22 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
         }`;
       })
     );
-  
+
     const handleClick = (text, value) => {
-      console.log("Clicked text:", text);
-      console.log("Clicked limit values:", value);
+      // console.log("Clicked text:", text);
+      // console.log("Clicked limit values:", value);
       const id = text.slice(2);
-      console.log("Small box clicked with ID: " + id);
+      // console.log("Small box clicked with ID: " + id);
       handleSmallBoxClick(text);
     };
-  
+
     const groupDivs = groups.map((group, groupIndex) => (
       <div key={groupIndex} style={rectangleStyle}>
         {group.map((text, index) => {
           const dataIndex = groupIndex * 10 + index;
           const value = dataArray[dataIndex];
-          const backgroundColor = getColorBasedOnPercentage(value);
+          const value2 = thicknessData[dataIndex];
+          const backgroundColor = getColorBasedOnPercentage(value, value2);
           const showIcon = value > 108;
           const isDisabled = value == null;
           return (
@@ -144,7 +175,7 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
               >
                 {text}
               </div>
-  
+
               <div
                 style={{
                   ...smallBoxStyle,
@@ -177,10 +208,9 @@ const Model = ({ handleSmallBoxClick, onLimitValuesChange }) => {
         })}
       </div>
     ));
-  
+
     return groupDivs;
   };
-  
 
   return (
     <div className="flex gap-2 items-center justify-center w-full overflow-x-auto md:overflow-x-hidden scrollable-container">

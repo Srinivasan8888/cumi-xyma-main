@@ -44,7 +44,6 @@ function Dashboard() {
   }, [deviceNumberForEffect]);
 
   const handleSmallBoxClick = (text) => {
-    // Call the function passed from props directly
     console.log("Small box clicked dash:", text);
     const deviceNumber = text;
     setDeviceNumberForEffect(deviceNumber);
