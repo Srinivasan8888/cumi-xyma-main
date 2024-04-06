@@ -216,7 +216,6 @@ export const timelimit = async (req, res) => {
 //   }
 // };
 
-
 export const getlogdata = async (req, res) => {
   try {
     const logdata = await asset.aggregate([
@@ -249,6 +248,7 @@ export const getlogdata = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
 
 
 
@@ -378,7 +378,7 @@ export const exceldata = async (req, res) => {
 
 export const rawdataapi = async (req, res) => {
   try {
-    const rawData = await RawData.find().limit(500).sort({ updatedAt: -1 });
+    const rawData = await RawData.find().limit(500).sort({ _id: -1 });
     res.json(rawData);
   } catch (error) {
     console.error("Error fetching raw data:", error);
@@ -516,6 +516,50 @@ export const tabledatas = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+export const apilimit = async (req, res) => {
+  try {
+    const limitdataapi = await limit.aggregate([
+      { $match: { device_name: { $nin: ["sensor1", "XY0001", "sensor2"], $type: "string" } } },
+      { $sort: { device_name: 1, _id: -1 } },
+      { $group: { _id: "$device_name", latestData: { $first: "$$ROOT" } } },
+      { $replaceRoot: { newRoot: "$latestData" } },
+      {
+        $addFields: {
+          idNumber: {
+            $cond: [
+              { $regexMatch: { input: "$device_name", regex: /\d+$/ } },
+              { $toInt: { $substrBytes: ["$device_name", { $subtract: [{ $strLenBytes: "$device_name" }, 1] }, -1] } }, // Extract digits and convert to integer
+              0
+            ]
+          }
+        }
+      },
+      { $match: { idNumber: { $ne: 0 } } },
+      { $sort: { idNumber: 1 } },
+      {
+        $project: {
+          device_name: 1,
+          time: 1,
+          inputthickness: 1,
+          _id: 0
+        }
+      },
+      { $sort: { device_name: 1 } }, // Add this stage to sort by device_name
+      { $limit: 40 }
+    ]);
+
+    res.json(limitdataapi);
+  } catch (error) {
+    console.error("Error fetching raw data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
+
+
 
 export const getdatalimit = async (req, res) => {
   try {
