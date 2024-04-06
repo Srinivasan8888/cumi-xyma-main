@@ -216,10 +216,11 @@ export const timelimit = async (req, res) => {
 //   }
 // };
 
+
 export const getlogdata = async (req, res) => {
   try {
     const logdata = await asset.aggregate([
-      { $match: { device_name: { $nin: ["sensor1", "XY0001"] } } },
+      { $match: { device_name: { $nin: ["sensor1", "XY0001", "sensor2"], $type: "string" } } }, // Filter out non-string values for device_name
       { $sort: { device_name: 1, _id: -1 } },
       { $group: { _id: "$device_name", data: { $first: "$$ROOT" } } },
       { $replaceRoot: { newRoot: "$data" } },
@@ -227,13 +228,14 @@ export const getlogdata = async (req, res) => {
         $addFields: {
           idNumber: {
             $cond: [
-              { $ne: ["$device_name", ""] },
-              { $toInt: { $substr: ["$device_name", 2, -1] } },
-              0
+              { $regexMatch: { input: "$device_name", regex: /\d+$/ } }, // Check if device_name ends with digits
+              { $toInt: { $substrBytes: ["$device_name", { $subtract: [{ $strLenBytes: "$device_name" }, 1] }, -1] } }, // Extract digits and convert to integer
+              0 // Set idNumber to 0 if device_name doesn't end with digits
             ]
           }
         }
       },
+      { $match: { idNumber: { $ne: 0 } } }, // Filter out documents where idNumber is 0
       { $sort: { idNumber: 1 } },
       { $project: { idNumber: 0 } },
       { $limit: 40 },
@@ -247,6 +249,8 @@ export const getlogdata = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+
 
 
 // export const getlogdata = async (req, res) => {
