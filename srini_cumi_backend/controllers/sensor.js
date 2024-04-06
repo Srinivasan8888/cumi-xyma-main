@@ -128,7 +128,7 @@ export const createSensor = async (req, res) => {
     // res.status(200).json(savesensor);
     try {
       const sensorData = await limit.aggregate([
-        { $sort: { device_name: 1, updatedAt: -1 } },
+        { $sort: { device_name: 1, _id: -1 } },
         { $group: { _id: "$id", data: { $first: "$$ROOT" } } },
         { $replaceRoot: { newRoot: "$data" } },
         { $addFields: { idNumber: { $toInt: { $substr: ["$id", 2, -1] } } } },
@@ -219,10 +219,21 @@ export const timelimit = async (req, res) => {
 export const getlogdata = async (req, res) => {
   try {
     const logdata = await asset.aggregate([
+      { $match: { device_name: { $ne: "sensor1" } } }, // Exclude "sensor1"
       { $sort: { device_name: 1, timestamp: -1 } },
       { $group: { _id: "$device_name", data: { $first: "$$ROOT" } } },
       { $replaceRoot: { newRoot: "$data" } },
-      { $addFields: { idNumber: { $toInt: { $substr: ["$device_name", 2, -1] } } } },
+      {
+        $addFields: {
+          idNumber: {
+            $cond: [
+              { $ne: ["$device_name", ""] },
+              { $toInt: { $substr: ["$device_name", 2, -1] } },
+              0
+            ]
+          }
+        }
+      },
       { $sort: { idNumber: 1 } },
       { $project: { idNumber: 0 } },
       { $limit: 40 },
@@ -236,6 +247,7 @@ export const getlogdata = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
 
 // export const getlogdata = async (req, res) => {
 //   try {
@@ -381,7 +393,7 @@ export const iddata = async (req, res) => {
     const dataid = await sensorData.save();
     const deviceid = dataid.device_name;
 
-    const assetDocumentArray = await asset.find({ device_name: deviceid }).sort({ timestamp: -1 }).limit(30);
+    const assetDocumentArray = await asset.find({ device_name: deviceid }).sort({ _id: -1 }).limit(30);
 
     if (!assetDocumentArray || assetDocumentArray.length === 0) {
       return res.status(404).json({ error: "No data found" });
@@ -462,12 +474,12 @@ export const tabledatas = async (req, res) => {
     // Query the 'asset' collection directly using the 'device_name'
     const assetDocumentArray = await asset
       .find({ device_name: id })
-      .sort({ timestamp: -1 })
+      .sort({ _id: -1 })
       .limit(30);
 
     const limitsdatas = await limit
       .find({ device_name: id })
-      .sort({ updatedAt: -1 })
+      .sort({ _id: -1 })
       .limit(30);
 
     if (!assetDocumentArray || assetDocumentArray.length === 0) {
@@ -555,7 +567,7 @@ export const idallsetlimit = async (req, res) => {
   console.log("Received id for limit:", id);
 
   try {
-    const sensorData = await limit.findOne({ device_name: id }).sort({ updatedAt: -1 });
+    const sensorData = await limit.findOne({ device_name: id }).sort({ _id: -1 });
 
     if (!sensorData) {
       return res.status(404).json({ error: "No assets found" });
@@ -570,7 +582,7 @@ export const idallsetlimit = async (req, res) => {
 export const allsetlimit = async (req, res) => {
   try {
     const sensorData = await limit.aggregate([
-      { $sort: { device_name: 1, updatedAt: -1 } },
+      { $sort: { device_name: 1, _id: -1 } },
       { $group: { _id: "$device_name", data: { $first: "$$ROOT" } } },
       { $replaceRoot: { newRoot: "$data" } },
       { $addFields: { idNumber: { $toInt: { $substr: ["$device_name", 2, -1] } } } },
