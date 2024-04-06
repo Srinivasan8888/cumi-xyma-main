@@ -44,6 +44,11 @@ const Charttwo = ({ chartData }) => {
         max: Math.max(maxBatteryLevel, maxThickness) + 10, 
       },
     },
+    plugins: {
+      legend: {
+        display: false
+      }
+    }
   };
 
   return (

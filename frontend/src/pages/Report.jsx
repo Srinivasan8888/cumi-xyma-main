@@ -128,10 +128,14 @@ const Report = () => {
               fillColor: [222, 121, 13],
             },
           });
+          
           doc.addPage();
           doc.addImage(logo, "PNG", 10, 10, 40, 20);
           doc.addImage(disclaimer, "PNG", 0, 50, 210, 250);
-          doc.save("sensor_reports.pdf");
+          // doc.save("sensor_reports.pdf");
+          const blob = doc.output("blob");
+          const url = URL.createObjectURL(blob);
+          window.open(url, "_blank");
         } else {
           console.error("Data received is not an array:", data);
         }
