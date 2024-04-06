@@ -31,7 +31,7 @@ app.use(cors());
 
 app.use("/backend", router);
 
-app.listen(5001, () => {
+app.listen(5000, () => {
   connect();
   console.log("Server Started..");
 });

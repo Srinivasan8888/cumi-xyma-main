@@ -16,7 +16,7 @@ export default function Combobox({ onChartData }) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${baseUrl}/data`);
+      const response = await fetch(`${baseUrl}data`);
       let infoVal = await response.json();
       infoVal = infoVal;
       setInfoGraph(infoVal);

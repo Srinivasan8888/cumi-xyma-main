@@ -219,7 +219,7 @@ export const timelimit = async (req, res) => {
 export const getlogdata = async (req, res) => {
   try {
     const logdata = await asset.aggregate([
-      { $match: { device_name: { $ne: "sensor1" } } }, // Exclude "sensor1"
+      { $match: { device_name: { $nin: ["sensor1", "XY0001"] } } },
       { $sort: { device_name: 1, timestamp: -1 } },
       { $group: { _id: "$device_name", data: { $first: "$$ROOT" } } },
       { $replaceRoot: { newRoot: "$data" } },
