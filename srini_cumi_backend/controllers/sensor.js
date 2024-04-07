@@ -112,17 +112,18 @@ export const createSensor = async (req, res) => {
       // timestamp: formattedTimestamp,
     });
 
-    
+
     const savesensor = await sensor.save();
     const limitResponse = await axios.get('http://15.206.193.179:5000/backend/limitsinsert');
-    
+
     if (limitResponse.status === 200) {
       const responseData = limitResponse.data.map(device => `#,${device.device_name},${device.inputthickness},${device.time}`).join(',');
-      res.status(200).send(responseData);
+      const outputArray = [`[${responseData}]`];
+      res.status(200).json(outputArray);
     } else {
       res.status(500).json({ error: 'Failed to retrieve limit data' });
     }
-    
+
     // res.status(200).json(savesensor);
 
   } catch (error) {
@@ -195,7 +196,7 @@ export const getlogdata = async (req, res) => {
       { $sort: { device_name: 1, _id: -1 } },
       { $group: { _id: "$device_name", data: { $first: "$$ROOT" } } },
       { $replaceRoot: { newRoot: "$data" } },
-      
+
       { $match: { idNumber: { $ne: 0 } } }, // Filter out documents where idNumber is 0
       { $sort: { idNumber: 1 } },
       { $project: { idNumber: 0 } },
@@ -486,7 +487,7 @@ export const apilimit = async (req, res) => {
       { $sort: { device_name: 1, _id: -1 } },
       { $group: { _id: "$device_name", latestData: { $first: "$$ROOT" } } },
       { $replaceRoot: { newRoot: "$latestData" } },
-      
+
       { $match: { idNumber: { $ne: 0 } } },
       { $sort: { idNumber: 1 } },
       {
